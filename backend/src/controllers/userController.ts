@@ -1,67 +1,160 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-const knex = require('../../db/knexConfig');
+const knex = require("../../db/knexConfig");
+
+/**
+ * get all users data from the database
+ * @param req
+ * @param res
+ * @param returns all users data
+ */
 const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await knex('users').select('*');
+    const users = await knex("users").select("*");
     res.json(users);
   } catch (err: any) {
-      res.status(500).send(err.message);
+    res.status(500).send(err.message);
   }
 };
 
-// const getUserById = async (req, res) => {
-//   try {
-//       const { id } = req.params;
-//       const result = await pool.query(`SELECT * FROM users WHERE id = ${id}`);
-//       if (result.rows.length > 0) {
-//           res.json(result.rows[0]);
-//       } else {
-//           res.status(404).send('User not found');
-//       }
-//   } catch (err) {
-//       res.status(500).send(err.message);
-//   }
-// };
+/**
+ * get an user data by id from the database
+ * @param req
+ * @param res
+ * @param returns selected user data
+ */
+const getUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const user = await knex("users").where("id", id).select("*");
+    if (user.length > 0) {
+      res.json(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
 
-// const createUser = async (req, res) => {
-//     try {
-//         const { name } = req.body;
-//         const response = await pool.query(`INSERT INTO users (name) VALUES ('${name}') RETURNING *`);
-        
-//         const data = response.rows;
-//         res.send(data);
-//         // res.status(201).send('User created');
-//     } catch (err) {
-//         res.status(500).send(err.message);
-//     }
-// };
+interface RequestBodyInsert {
+  username: string;
+  email: string;
+  password: string;
+  goal_id?: number;
+  level_id?: number;
+  gender?: number;
+  birthday?: Date;
+  height?: number;
+  weight?: number;
+}
 
-// const updateUser = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const { name } = req.body;
-//         await pool.query(`UPDATE users SET name = '${name}' WHERE id = ${id}`);
-//         res.send('User updated');
-//     } catch (err) {
-//         res.status(500).send(err.message);
-//     }
-// };
+/**
+ * insert new user data to the database
+ * @param req
+ * @param res
+ * @param returns inserted user data
+ */
+const createUser = async (
+  req: Request<{}, {}, RequestBodyInsert>,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      username,
+      email,
+      password,
+      goal_id,
+      level_id,
+      gender,
+      birthday,
+      height,
+      weight,
+    } = req.body;
 
-// const deleteUser = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         await pool.query(`DELETE FROM users WHERE id = ${id}`);
-//         res.send('User deleted');
-//     } catch (err) {
-//         res.status(500).send(err.message);
-//     }
-// };
+    const inserted = await knex("users")
+      .insert({
+        username: username,
+        email: email,
+        password: password,
+        goal_id: goal_id,
+        level_id: level_id,
+        gender: gender,
+        birthday: birthday,
+        height: height,
+        weight: weight,
+        registration_datetime: new Date().toISOString(),
+      })
+      .returning("*");
+    res.status(201).json(inserted[0]);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
+
+interface RequestBodyUpdate {
+  username?: string;
+  email?: string;
+  password?: string;
+  goal_id?: number;
+  level_id?: number;
+  gender?: number;
+  birthday?: Date;
+  height?: number;
+  weight?: number;
+}
+interface RequestParamsUpdate {
+  id: string;
+}
+
+/**
+ * update existed user in the database
+ * @param req
+ * @param res
+ * @param returns updated user data
+ */
+const updateUser = async (
+  req: Request<RequestParamsUpdate, {}, RequestBodyUpdate>,
+  res: Response
+): Promise<void> => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const updateData: Partial<RequestBodyUpdate> = {};
+    Object.entries(req.body).forEach(([key, value]) => {
+      if (value !== undefined) {
+        updateData[key as keyof RequestBodyUpdate] = value;
+      }
+    });
+    const updated = await knex("users")
+      .where("id", id)
+      .update(updateData)
+      .returning("*");
+    res.status(201).json(updated[0]);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
+
+/**
+ * delete existed user in the database
+ * @param req
+ * @param res
+ * @param returns deleted user data
+ */
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const deleted = await knex("users").where("id", id).delete().returning("*");
+    res.status(201).json(deleted);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
 
 module.exports = {
   getUsers,
-  // getUserById,
-  // createUser,
-  // updateUser,
-  // deleteUser
-}
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};
