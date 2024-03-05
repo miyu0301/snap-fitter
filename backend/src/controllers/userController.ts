@@ -1,13 +1,14 @@
-// const pool = require('../models/userModel');
+import { Request, Response } from 'express';
 
-// const getUsers = async (req, res) => {
-//     try {
-//         const result = await pool.query('SELECT * FROM users');
-//         res.json(result.rows);
-//     } catch (err) {
-//         res.status(500).send(err.message);
-//     }
-// };
+const knex = require('../../db/knexConfig');
+const getUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await knex('users').select('*');
+    res.json(users);
+  } catch (err: any) {
+      res.status(500).send(err.message);
+  }
+};
 
 // const getUserById = async (req, res) => {
 //   try {
@@ -57,10 +58,10 @@
 //     }
 // };
 
-// module.exports = {
-//   getUsers,
-//   getUserById,
-//   createUser,
-//   updateUser,
-//   deleteUser
-// }
+module.exports = {
+  getUsers,
+  // getUserById,
+  // createUser,
+  // updateUser,
+  // deleteUser
+}
