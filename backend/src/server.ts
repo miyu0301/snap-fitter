@@ -6,6 +6,7 @@ app.use(express.json());
 const port = 3000;
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const exerciseRouters = require("./routes/exerciseRoutes");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.use("/", authRoutes);
 app.use("/users", userRoutes);
+app.use("/exercise", exerciseRouters);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

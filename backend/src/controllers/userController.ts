@@ -26,9 +26,9 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
 const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const user = await knex("users").where("id", id).select("*");
-    if (user.length > 0) {
-      res.json(user);
+    const users = await knex("users").where("id", id).select("*");
+    if (users.length > 0) {
+      res.json(users[0]);
     } else {
       res.status(404).send("User not found");
     }
@@ -145,7 +145,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
     const deleted = await knex("users").where("id", id).delete().returning("*");
-    res.status(201).json(deleted);
+    res.status(201).json(deleted[0]);
   } catch (err: any) {
     res.status(500).send(err.message);
   }
