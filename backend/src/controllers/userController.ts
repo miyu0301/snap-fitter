@@ -6,7 +6,7 @@ const knex = require("../../db/knexConfig");
  * get all users data from the database
  * @param req
  * @param res
- * @param returns all users data
+ * @returns  all users data
  */
 const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -21,7 +21,7 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
  * get an user data by id from the database
  * @param req
  * @param res
- * @param returns selected user data
+ * @returns selected user data
  */
 const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -53,7 +53,7 @@ interface RequestBodyInsert {
  * insert new user data to the database
  * @param req
  * @param res
- * @param returns inserted user data
+ * @returns inserted user data
  */
 const createUser = async (
   req: Request<{}, {}, RequestBodyInsert>,
@@ -111,7 +111,7 @@ interface RequestParamsUpdate {
  * update existed user in the database
  * @param req
  * @param res
- * @param returns updated user data
+ * @returns updated user data
  */
 const updateUser = async (
   req: Request<RequestParamsUpdate, {}, RequestBodyUpdate>,
@@ -139,7 +139,7 @@ const updateUser = async (
  * delete existed user in the database
  * @param req
  * @param res
- * @param returns deleted user data
+ * @returns deleted user data
  */
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
