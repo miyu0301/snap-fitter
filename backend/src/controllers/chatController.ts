@@ -20,13 +20,27 @@ const getChats = async (
   try {
     const { to_user_id, to_channel_id } = req.body;
 
-    let query = knex("chats").select("*");
-    if (to_user_id !== null) {
-      query = query.where("to_user_id", to_user_id);
-    } else if (to_channel_id !== null) {
-      query = query.where("to_channel_id", to_channel_id);
+    let query = knex("chats");
+    if (to_user_id !== null && to_user_id !== undefined) {
+      query = query.where("chats.to_user_id", to_user_id);
+    } else if (to_channel_id !== null && to_channel_id !== undefined) {
+      query = query.where("chats.to_channel_id", to_channel_id);
     }
-    const chats = await query.orderBy("created_datetime", "desc");
+
+    query = query
+      .join("users", "chats.from_user_id", "=", "users.id")
+      .select(
+        "chats.id as id",
+        "chats.from_user_id as from_user_id",
+        "users.username as username",
+        "chats.to_user_id as to_user_id",
+        "chats.to_channel_id as to_channel_id",
+        "chats.comment as comment",
+        "chats.created_datetime as created_datetime"
+      )
+      .orderBy("chats.created_datetime", "desc");
+
+    const chats = await query;
     res.json(chats);
   } catch (err: any) {
     res.status(500).send(err.message);
