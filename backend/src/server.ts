@@ -1,5 +1,6 @@
 require("dotenv").config();
 import express from "express";
+import "./cron/scheduler";
 
 const app = express();
 app.use(express.json());
