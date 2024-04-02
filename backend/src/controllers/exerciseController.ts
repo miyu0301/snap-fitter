@@ -15,9 +15,19 @@ const getExerciseRecordByUserId = async (
   try {
     const user_id: number = parseInt(req.params.user_id);
     const records = await knex("exercise_records")
-      .where("user_id", user_id)
-      .select("*")
-      .orderBy("start_datetime", "desc");
+      .join("m_exercise", "m_exercise.id", "=", "exercise_records.exercise_id")
+      .where("exercise_records.user_id", user_id)
+      .select(
+        "exercise_records.id as id",
+        "m_exercise.name as exercise_name",
+        "exercise_records.user_id as user_id",
+        "exercise_records.start_datetime as start_datetime",
+        "exercise_records.end_datetime as end_datetime",
+        "exercise_records.duration as duration",
+        "exercise_records.burned_calories as burned_calories"
+      )
+      .orderBy("exercise_records.start_datetime", "desc");
+
     res.json(records);
   } catch (err: any) {
     res.status(500).send(err.message);
