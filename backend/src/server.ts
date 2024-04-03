@@ -2,9 +2,16 @@ require("dotenv").config();
 import express from "express";
 import "./cron/scheduler";
 
+
+
 const app = express();
+
 app.use(express.json());
 const port = 3000;
+
+const cors = require('cors');
+app.use(cors());
+
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const exerciseRouters = require("./routes/exerciseRoutes");

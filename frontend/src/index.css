@@ -57,10 +57,49 @@ background-color: #000000;
 color: #ffffff;
 }
 
+.btn-select-option{
+background-color: #ffffff;
+color: #000000;
+border: solid 2px #000000;
+}
+
+.btn-select-option:focus{
+background-color: blue;
+color: #ffffff;
+border: solid 2px #000000;
+}
+
+.navbar-absolute{
+position: absolute;
+right: 10px;
+top: 30px;
+width: 100%;
+}
+
+.date-input{
+width: auto;
+border: solid 1px #333333;
+border-radius: 4px;
+padding: 10px;
+}
+
 .bg-cover{
 background-position: top left;
 background-size: cover;
 background-repeat: no-repeat;
+}
+
+.bg-cover-center{
+background-position: center;
+background-size: cover;
+background-repeat: no-repeat;
+}
+
+.vertical-center-form{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /*home*/
@@ -75,6 +114,11 @@ height: 100vh;
 
 .col-right{
 width: 40%;
+}
+
+.col-50{
+width: 50%;
+height: 100vh;  
 }
 
 /* profile */

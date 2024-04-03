@@ -1,9 +1,48 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom'
 import {Form, Button} from 'react-bootstrap';
+import { useState } from 'react';
 
+interface FormData {
+  name: string;
+  email: string;
+}
 
 const SignIn = () => {
+
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };  
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        console.log('Data sent successfully');
+      } else {
+        console.error('Failed to send data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };  
+
   return (
     
     <div className='d-flex align-items-center'>
@@ -16,11 +55,16 @@ const SignIn = () => {
     <div className="container text-container">
     <h1 className='anton-regular txt-lg uppercase text-center'>Sign In</h1>
     
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="username">
         <Form.Label>Username</Form.Label>
-        <Form.Control type="text" placeholder="Joe Doe" />
+        <Form.Control type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange} placeholder="Joe Doe" />
       </Form.Group>
+
       <Form.Group className="mb-3" controlId="password">
         <Form.Label>Password</Form.Label>
         <Form.Control type="password" placeholder="******" />
