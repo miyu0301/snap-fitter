@@ -26,7 +26,7 @@ const getExerciseRecordByUserId = async (
         "exercise_records.duration as duration",
         "exercise_records.burned_calories as burned_calories"
       )
-      .orderBy("exercise_records.start_datetime", "desc");
+      .orderBy("exercise_records.start_datetime", "asc");
 
     res.json(records);
   } catch (err: any) {
