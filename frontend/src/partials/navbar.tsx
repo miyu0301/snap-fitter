@@ -5,7 +5,6 @@ function UserNavbar() {
   return (
     <Navbar className="navbar-absolute">
       <Container>
-       
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>

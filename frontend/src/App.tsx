@@ -17,7 +17,7 @@ import Welcome from './components/Welcome';
 const App = () => {
   return (
    <>
-      <Router>
+    <Router>
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
@@ -26,13 +26,10 @@ const App = () => {
         <Route path="/your-goals" element={<GoalsForm />} />
         <Route path="/your-level" element={<LevelForm />} />
         <Route path="/generales" element={<UserPropertiesForm />} />
-
         <Route path="/history" element={<History />} />
-
         <Route path="/welcome" element={<Welcome />} />
       </Routes>
-
-      </Router>
+    </Router>
     </>
   )
 }
