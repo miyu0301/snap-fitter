@@ -140,3 +140,7 @@ padding: 15px 0px;
 .text-container{
 padding: 0px 100px;
 }
+
+.text-right{
+    text-align: right;
+}

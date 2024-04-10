@@ -14,7 +14,7 @@ const Welcome = () => {
                   <h2 className='anton-regular txt-md mb-4 text-center'>Welcome!</h2>
 
                   <h2 className='anton-regular txt-md mb-4 text-center'>What do you want to do today?</h2>
-                  <Button className="button btn-select-option w-100 mb-4 text-left">Record Workout</Button>
+                  <Link to="/record-workout" className="button btn-select-option w-100 mb-4 text-left">Record Workout</Link>
                   <Link to="/history" className="button btn-select-option w-100">History</Link>
               </div>
           </div>

@@ -12,6 +12,7 @@ import GoalsForm from './components/GoalsForm';
 import LevelForm from './components/LevelForm';
 import UserPropertiesForm from './components/UserPropertiesForm';
 import Welcome from './components/Welcome';
+import RecordWorkout from './components/RecordWorkout';
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/generales" element={<UserPropertiesForm />} />
         <Route path="/history" element={<History />} />
         <Route path="/welcome" element={<Welcome />} />
+        <Route path="/record-workout" element={<RecordWorkout />} />
       </Routes>
     </Router>
     </>
