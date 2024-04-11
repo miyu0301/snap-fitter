@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import { format } from "date-fns";
+import axios from "axios";
 
 type Record = {
   id: number;
@@ -11,7 +12,29 @@ type Record = {
   duration: number;
   burned_calories: number;
 };
-function HistoryList({ records }: { records: Record[] }) {
+function HistoryList({
+  records,
+  setEditModal,
+  setTargetId,
+  onUpdate,
+}: {
+  records: Record[];
+  setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setTargetId: (id: number) => void;
+  onUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const onEditModal = (id: number) => {
+    setTargetId(id);
+    setEditModal(true);
+  };
+  const deleteRecord = async (id: number) => {
+    try {
+      await axios.delete("http://localhost:3000/exercise/" + id);
+      onUpdate(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Table striped bordered hover>
       <thead>
@@ -33,6 +56,10 @@ function HistoryList({ records }: { records: Record[] }) {
             <td>{record.exercise_name}</td>
             <td>{record.duration}</td>
             <td>{record.burned_calories}</td>
+            <div>
+              <button onClick={() => onEditModal(record.id)}>Edit</button>
+              <button onClick={() => deleteRecord(record.id)}>Delete</button>
+            </div>
           </tr>
         ))}
       </tbody>

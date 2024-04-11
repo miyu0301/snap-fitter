@@ -2,7 +2,15 @@ import express from "express";
 const exerciseRouter = express.Router();
 const exerciseController = require("../controllers/exerciseController");
 
-exerciseRouter.get("/:user_id", exerciseController.getExerciseRecordByUserId);
+exerciseRouter.get(
+  "/all/:user_id",
+  exerciseController.getExerciseRecordByUserId
+);
+exerciseRouter.get(
+  "/all/:user_id/:start_date/:end_date",
+  exerciseController.getExerciseRecordByUserIdForPeriod
+);
+exerciseRouter.get("/:id", exerciseController.getExerciseRecordById);
 exerciseRouter.post("/", exerciseController.createExerciseRecord);
 exerciseRouter.put("/:id", exerciseController.updateExerciseRecord);
 exerciseRouter.delete("/:id", exerciseController.deleteExerciseRecord);

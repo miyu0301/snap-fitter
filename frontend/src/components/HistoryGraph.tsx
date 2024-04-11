@@ -53,7 +53,7 @@ function HistoryGraph({ records }: { records: Record[] }) {
       } else {
         acc[exercise_name] = [{ start_date, ...rest }];
       }
-      //
+
       if (!labels.includes(start_date)) {
         labels.push(start_date);
       }
@@ -61,7 +61,6 @@ function HistoryGraph({ records }: { records: Record[] }) {
     },
     {}
   );
-  console.log(groupedByExerciseName);
   Object.keys(groupedByExerciseName).forEach((exercise_name) => {
     const dataset: {
       label: string;
