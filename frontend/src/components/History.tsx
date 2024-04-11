@@ -52,17 +52,18 @@ const History = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     try {
+      const newStartDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
         "http://localhost:3000/exercise/all/" +
           userId +
           "/" +
-          e.target.value +
+          newStartDate +
           "/" +
           endDate
       );
       setRecords(res.data);
-      setStartDate(e.target.value);
+      setStartDate(newStartDate);
     } catch (err) {
       console.log(err);
     }
@@ -71,6 +72,7 @@ const History = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     try {
+      const newEndDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
         "http://localhost:3000/exercise/all/" +
@@ -78,10 +80,10 @@ const History = () => {
           "/" +
           startDate +
           "/" +
-          e.target.value
+          newEndDate
       );
       setRecords(res.data);
-      setEndDate(e.target.value);
+      setEndDate(newEndDate);
     } catch (err) {
       console.log(err);
     }
@@ -102,12 +104,17 @@ const History = () => {
                 <Form.Label>Start</Form.Label>
                 <Form.Control
                   type="date"
-                  onChange={(e) => handleStartDate(e)}
+                  value={startDate}
+                  onChange={handleStartDate}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="start_datetime">
                 <Form.Label>End</Form.Label>
-                <Form.Control type="date" onChange={(e) => handleEndDate(e)} />
+                <Form.Control
+                  type="date"
+                  value={endDate}
+                  onChange={handleEndDate}
+                />
               </Form.Group>
             </Form>
 

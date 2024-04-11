@@ -7,13 +7,9 @@ import Modal from "react-bootstrap/Modal";
 import moment from "moment";
 
 type Record = {
-  id: number;
-  exercise_id: string;
-  user_id: number;
+  exercise_id: number;
   start_datetime: Date;
   end_datetime: Date;
-  duration: number;
-  burned_calories: number;
 };
 
 function HistoryEditModal({
@@ -44,10 +40,13 @@ function HistoryEditModal({
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: value,
-    }));
+    setFormData((prevFormData) => {
+      if (prevFormData === null) return null;
+      return {
+        ...prevFormData,
+        [id]: value,
+      };
+    });
   };
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -86,19 +85,25 @@ function HistoryEditModal({
               onChange={(e) => handleChange(e)}
             />
           </Form.Group>
+          <Form.Group className="mb-3" controlId="end_datetime">
+            <Form.Label>End Date and Time</Form.Label>
+            <Form.Control
+              type="datetime-local"
+              value={
+                formData
+                  ? moment(new Date(formData.end_datetime)).format(
+                      "YYYY-MM-DDTHH:mm"
+                    )
+                  : ""
+              }
+              onChange={(e) => handleChange(e)}
+            />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="exercise_id">
             <Form.Label>Exercise ID</Form.Label>
             <Form.Control
               type="text"
               value={formData?.exercise_id}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="duration">
-            <Form.Label>Duration</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData?.duration}
               onChange={(e) => handleChange(e)}
             />
           </Form.Group>
