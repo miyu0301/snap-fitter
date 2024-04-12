@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 interface TimerProps {
   onEnd: (timeElapsed: number) => void;
 }
-
 const Timer: React.FC<TimerProps> = ({ onEnd }) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(true);
@@ -23,12 +22,12 @@ const Timer: React.FC<TimerProps> = ({ onEnd }) => {
   }, [isActive]);
 
   const handleEndClick = () => {
-    const currentTimeElapsed = timeElapsed; // Almacenar el tiempo transcurrido actual
+    const currentTimeElapsed = timeElapsed; // Store current elapsed time
     setIsActive(false);
-    onEnd(currentTimeElapsed); // Pasar el tiempo transcurrido almacenado
+    onEnd(currentTimeElapsed); // Spend stored elapsed time
   };
 
-  // Función para formatear el tiempo a formato HH:MM:SS
+  // time to HH:MM:SS format
   const formatTime = (time: number): string => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
