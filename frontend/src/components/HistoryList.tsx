@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import { format } from "date-fns";
+import axios from "axios";
+import common from "../Common";
 
 type Record = {
   id: number;
@@ -8,10 +10,32 @@ type Record = {
   user_id: number;
   start_datetime: Date;
   end_datetime: Date;
-  duration: number;
   burned_calories: number;
 };
-function HistoryList({ records }: { records: Record[] }) {
+function HistoryList({
+  records,
+  setEditModal,
+  setTargetId,
+  onUpdate,
+}: {
+  records: Record[];
+  setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setTargetId: (id: number) => void;
+  onUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const onEditModal = (id: number) => {
+    setTargetId(id);
+    setEditModal(true);
+  };
+  const deleteRecord = async (id: number) => {
+    try {
+      await axios.delete("http://localhost:3000/exercise/" + id);
+      onUpdate(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Table striped bordered hover>
       <thead>
@@ -31,8 +55,17 @@ function HistoryList({ records }: { records: Record[] }) {
               {format(new Date(record.start_datetime), "yyyy/MM/dd HH:mm:ss")}
             </td>
             <td>{record.exercise_name}</td>
-            <td>{record.duration}</td>
+            <td>
+              {common.calculateDurationForDisplay(
+                new Date(record.start_datetime),
+                new Date(record.end_datetime)
+              )}
+            </td>
             <td>{record.burned_calories}</td>
+            <div>
+              <button onClick={() => onEditModal(record.id)}>Edit</button>
+              <button onClick={() => deleteRecord(record.id)}>Delete</button>
+            </div>
           </tr>
         ))}
       </tbody>

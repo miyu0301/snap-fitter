@@ -27,8 +27,87 @@ const getExerciseRecordByUserId = async (
         "exercise_records.burned_calories as burned_calories"
       )
       .orderBy("exercise_records.start_datetime", "asc");
+    const datetime_range = records.reduce(
+      (
+        acc: { oldest_datetime: Date; latest_datetime: Date },
+        record: { start_datetime: number }
+      ) => {
+        const start_datetime = new Date(record.start_datetime);
+        if (!acc.oldest_datetime || start_datetime < acc.oldest_datetime) {
+          acc.oldest_datetime = start_datetime;
+        }
+        if (!acc.latest_datetime || start_datetime > acc.latest_datetime) {
+          acc.latest_datetime = start_datetime;
+        }
+        return acc;
+      },
+      {
+        oldest_datetime: null,
+        latest_datetime: null,
+      }
+    );
+    // console.log(datetime_range);
+    res.json({ records: records, datetime_range: datetime_range });
+    // res.json(records);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
 
+/**
+ * get an exercise record by user id for periods
+ * @param req
+ * @param res
+ * @returns selected user data
+ */
+const getExerciseRecordByUserIdForPeriod = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user_id: number = parseInt(req.params.user_id);
+    const start_date: Date = new Date(req.params.start_date);
+    const end_date: Date = new Date(req.params.end_date);
+
+    console.log(req.params.start_date);
+    console.log(req.params.end_date);
+    let records = await knex("exercise_records")
+      .join("m_exercise", "m_exercise.id", "=", "exercise_records.exercise_id")
+      .where("exercise_records.user_id", user_id)
+      .whereBetween("exercise_records.start_datetime", [start_date, end_date])
+      .select(
+        "exercise_records.id as id",
+        "m_exercise.name as exercise_name",
+        "exercise_records.user_id as user_id",
+        "exercise_records.start_datetime as start_datetime",
+        "exercise_records.end_datetime as end_datetime",
+        "exercise_records.duration as duration",
+        "exercise_records.burned_calories as burned_calories"
+      )
+      .orderBy("exercise_records.start_datetime", "asc");
+
+    console.log(records);
     res.json(records);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
+
+/**
+ * get an exercise record by user id
+ * @param req
+ * @param res
+ * @returns selected user data
+ */
+const getExerciseRecordById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const record = await knex("exercise_records").where("id", id).select("*");
+    console.log(record);
+    res.json(record[0]);
   } catch (err: any) {
     res.status(500).send(err.message);
   }
@@ -142,6 +221,8 @@ const deleteExerciseRecord = async (
 
 module.exports = {
   getExerciseRecordByUserId,
+  getExerciseRecordByUserIdForPeriod,
+  getExerciseRecordById,
   createExerciseRecord,
   updateExerciseRecord,
   deleteExerciseRecord,
