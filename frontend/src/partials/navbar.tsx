@@ -1,17 +1,20 @@
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 function UserNavbar() {
   return (
     <Navbar className="navbar-absolute">
-      <Container>
-        <Navbar.Toggle />
-        <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            Signed in as: <a href="#login">Sara Tancred</a> | <a href="/">Home</a>
-          </Navbar.Text>
-        </Navbar.Collapse>
-      </Container>
+      {/* <Navbar.Brand href="/">FitnessApp</Navbar.Brand> */}
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="ml-auto">
+          <NavDropdown title="Susana" id="basic-nav-dropdown">
+            <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/history">History</NavDropdown.Item>
+            <NavDropdown.Item href="/record-workout">Workout</NavDropdown.Item>
+            <NavDropdown.Item href="#logout">Logout</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
     </Navbar>
   );
 }
