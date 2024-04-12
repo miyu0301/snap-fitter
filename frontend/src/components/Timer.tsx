@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 interface TimerProps {
   onEnd: (timeElapsed: number) => void;
 }
-
 const Timer: React.FC<TimerProps> = ({ onEnd }) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(true);
