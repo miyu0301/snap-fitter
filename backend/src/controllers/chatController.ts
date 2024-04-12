@@ -4,7 +4,7 @@ const knex = require("../../db/knexConfig");
 
 interface RequestBodySelect {
   to_user_id?: number;
-  to_channel_id?: number;
+  to_room_id?: number;
 }
 
 /**
@@ -18,13 +18,13 @@ const getChats = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { to_user_id, to_channel_id } = req.body;
+    const { to_user_id, to_room_id } = req.body;
 
     let query = knex("chats");
     if (to_user_id !== null && to_user_id !== undefined) {
       query = query.where("chats.to_user_id", to_user_id);
-    } else if (to_channel_id !== null && to_channel_id !== undefined) {
-      query = query.where("chats.to_channel_id", to_channel_id);
+    } else if (to_room_id !== null && to_room_id !== undefined) {
+      query = query.where("chats.to_room_id", to_room_id);
     }
 
     query = query
@@ -34,7 +34,7 @@ const getChats = async (
         "chats.from_user_id as from_user_id",
         "users.username as username",
         "chats.to_user_id as to_user_id",
-        "chats.to_channel_id as to_channel_id",
+        "chats.to_room_id as to_room_id",
         "chats.comment as comment",
         "chats.created_datetime as created_datetime"
       )
@@ -70,7 +70,7 @@ const getChatById = async (req: Request, res: Response): Promise<void> => {
 interface RequestBodyInsert {
   from_user_id: number;
   to_user_id?: number;
-  to_channel_id?: number;
+  to_room_id?: number;
   comment?: string;
   created_datetime: Date;
 }
@@ -86,19 +86,14 @@ const createChat = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      from_user_id,
-      to_user_id,
-      to_channel_id,
-      comment,
-      created_datetime,
-    } = req.body;
+    const { from_user_id, to_user_id, to_room_id, comment, created_datetime } =
+      req.body;
 
     const inserted = await knex("chats")
       .insert({
         from_user_id: from_user_id,
         to_user_id: to_user_id,
-        to_channel_id: to_channel_id,
+        to_room_id: to_room_id,
         comment: comment,
         created_datetime: created_datetime,
       })
