@@ -12,7 +12,6 @@ function UserNavbar() {
             <NavDropdown.Item href="/history">History</NavDropdown.Item>
             <NavDropdown.Item href="/record-workout">Workout</NavDropdown.Item>
             <NavDropdown.Item href="#logout">Logout</NavDropdown.Item>
-            
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
