@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 
 const knex = require("../../db/knexConfig");
 
-interface RequestBodySelect {
-  to_user_id?: number;
-  to_room_id?: number;
-}
+// interface RequestBodySelect {
+//   to_user_id?: number;
+//   to_room_id?: number;
+// }
 
 /**
  * get all chats data from the database
@@ -13,30 +13,32 @@ interface RequestBodySelect {
  * @param res
  * @returns  all chats data
  */
-const getChats = async (
-  req: Request<{}, {}, RequestBodySelect>,
-  res: Response
-): Promise<void> => {
+const getChats = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { to_user_id, to_room_id } = req.body;
+    const user_id = req.query.user_id;
+    const room_id = req.query.room_id;
 
     let query = knex("chats");
-    if (to_user_id !== null && to_user_id !== undefined) {
-      query = query.where("chats.to_user_id", to_user_id);
-    } else if (to_room_id !== null && to_room_id !== undefined) {
-      query = query.where("chats.to_room_id", to_room_id);
+    if (user_id !== null && user_id !== undefined) {
+      query = query
+        .where("chats.to_user_id", user_id)
+        .where("chats.to_room_id", null);
+    } else if (room_id !== null && room_id !== undefined) {
+      query = query
+        .where("chats.to_room_id", room_id)
+        .where("chats.to_user_id", null);
     }
 
     query = query
       .join("users", "chats.from_user_id", "=", "users.id")
       .select(
-        "chats.id as id",
-        "chats.from_user_id as from_user_id",
-        "users.username as username",
-        "chats.to_user_id as to_user_id",
-        "chats.to_room_id as to_room_id",
-        "chats.comment as comment",
-        "chats.created_datetime as created_datetime"
+        "chats.id",
+        "chats.from_user_id",
+        "users.username",
+        "chats.to_user_id",
+        "chats.to_room_id",
+        "chats.comment",
+        "chats.created_datetime"
       )
       .orderBy("chats.created_datetime", "desc");
 
@@ -62,6 +64,41 @@ const getChatById = async (req: Request, res: Response): Promise<void> => {
     } else {
       res.status(404).send("chat not found");
     }
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
+
+/**
+ * get all who user sends or rececives message
+ * @param req
+ * @param res
+ * @returns  all direct message list
+ */
+const getDirectMessageList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user_id: number = parseInt(req.params.user_id);
+    let list = await knex
+
+      .from(
+        knex.raw(
+          `( 
+              select id, from_user_id as user_id from chats 
+              where (from_user_id = ? or to_user_id = ?) and to_room_id is null
+              union all
+              select id, to_user_id as user_id from chats 
+              where (from_user_id = ? or to_user_id = ?) and to_room_id is null
+            ) as combined`,
+          [user_id, user_id, user_id, user_id]
+        )
+      )
+      .join("users", "combined.user_id", "=", "users.id")
+      .groupBy("users.id", "users.username")
+      .select("users.id as user_id", "users.username");
+    res.json(list);
   } catch (err: any) {
     res.status(500).send(err.message);
   }
@@ -152,6 +189,7 @@ const deleteChat = async (req: Request, res: Response): Promise<void> => {
 
 module.exports = {
   getChats,
+  getDirectMessageList,
   getChatById,
   createChat,
   updateChat,

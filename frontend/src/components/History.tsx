@@ -6,7 +6,7 @@ import HistoryEditModal from "../components/HistoryEditModal";
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { format } from "date-fns";
 
 const History = () => {
