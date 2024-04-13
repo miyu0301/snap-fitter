@@ -1,41 +1,40 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import {Container} from 'react-bootstrap'
 
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import Home from './components/Home';
-import Profile from './components/Profile';
-import History from './components/History';
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import History from "./components/History";
+import Chat from "./components/Chat";
 
-import GoalsForm from './components/GoalsForm';
-import LevelForm from './components/LevelForm';
-import UserPropertiesForm from './components/UserPropertiesForm';
-import Welcome from './components/Welcome';
-import RecordWorkout from './components/RecordWorkout';
-
+import GoalsForm from "./components/GoalsForm";
+import LevelForm from "./components/LevelForm";
+import UserPropertiesForm from "./components/UserPropertiesForm";
+import Welcome from "./components/Welcome";
+import RecordWorkout from "./components/RecordWorkout";
 
 const App = () => {
   return (
-   <>
-    <Router>
-      <Routes>
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/your-goals" element={<GoalsForm />} />
-        <Route path="/your-level" element={<LevelForm />} />
-        <Route path="/generales" element={<UserPropertiesForm />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/record-workout" element={<RecordWorkout />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/your-goals" element={<GoalsForm />} />
+          <Route path="/your-level" element={<LevelForm />} />
+          <Route path="/generales" element={<UserPropertiesForm />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/record-workout" element={<RecordWorkout />} />
+        </Routes>
+      </Router>
     </>
-  )
-}
+  );
+};
 
-export default App
-
-
+export default App;
