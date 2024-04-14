@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+//import Swal from 'sweetalert2';
 import { Form, Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import DefaultLayout from '../partials/DefaultLayout';
+import { useAuth } from '../auth/AuthProvider';
+import { API_URL } from '../auth/AuthConstants';
+import Cookies from 'js-cookie';
+
 
 interface FormData {
   username: string;
@@ -11,7 +16,8 @@ interface FormData {
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const [isRegistered, setIsRegistered] = useState(false);
+  const auth = useAuth();
+
   const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
@@ -59,7 +65,7 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -71,7 +77,9 @@ const SignUp: React.FC = () => {
         console.log('Data sent successfully:', data);
 
         if (data.isNewUser === true) {
-          setIsRegistered(true);
+          Cookies.set('sessionId', data.user_id);
+          auth.authenticatedUser();
+          navigate('/your-goals');
         } else {
           setErrors(prevErrors => ({
             ...prevErrors,
@@ -86,13 +94,14 @@ const SignUp: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isRegistered) {
-      navigate('/your-goals');
-    }
-  }, [isRegistered, navigate]);
+useEffect(() => {
+if (auth.isAuthenticated) {
+navigate('/your-goals');
+}
+}, [auth.isAuthenticated, navigate]);
 
   return (
+    <DefaultLayout>
     <div className='d-flex align-items-center'>
       <div className='home-bg-image bg-cover col-left'>
         {/* <img src={logo} width="100%" /> */}
@@ -140,6 +149,7 @@ const SignUp: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="******"
+                autoComplete="password"
                 className={errors.password ? 'is-invalid' : ''}
               />
               {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
@@ -155,6 +165,7 @@ const SignUp: React.FC = () => {
         </div>
       </div>
     </div>
+    </DefaultLayout>
   );
 }
 

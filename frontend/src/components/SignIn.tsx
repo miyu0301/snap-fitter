@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom'
 import {Form, Button} from 'react-bootstrap';
 import { useState } from 'react';
+import DefaultLayout from '../partials/DefaultLayout';
 
 interface FormData {
   name: string;
@@ -44,7 +45,7 @@ const SignIn = () => {
   };  
 
   return (
-    
+    <DefaultLayout>
     <div className='d-flex align-items-center'>
         
     <div className='home-bg-image bg-cover col-left'>
@@ -56,7 +57,7 @@ const SignIn = () => {
     <h1 className='anton-regular txt-lg uppercase text-center'>Sign In</h1>
     
     <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="username">
+      <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>
         <Form.Control type="text"
           id="name"
@@ -67,7 +68,7 @@ const SignIn = () => {
 
       <Form.Group className="mb-3" controlId="password">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="******" />
+        <Form.Control type="password" placeholder="******" autoComplete="password" />
       </Form.Group>
       <p className="txt-sm">Forgot your password?</p>
     
@@ -85,6 +86,7 @@ const SignIn = () => {
     </div>
   
   </div>
+  </DefaultLayout>
   )
 }
 

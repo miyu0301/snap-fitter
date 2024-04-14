@@ -18,7 +18,7 @@ import RecordWorkout from './components/RecordWorkout';
 const App = () => {
   return (
    <>
-    <Router>
+    {/* <Router>
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/record-workout" element={<RecordWorkout />} />
       </Routes>
-    </Router>
+    </Router> */}
     </>
   )
 }
