@@ -1,19 +1,19 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import {Container} from 'react-bootstrap'
 
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import Home from './components/Home';
-import Profile from './components/Profile';
-import History from './components/History';
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import History from "./components/History";
+import Chat from "./components/Chat";
 
-import GoalsForm from './components/GoalsForm';
-import LevelForm from './components/LevelForm';
-import UserPropertiesForm from './components/UserPropertiesForm';
-import Welcome from './components/Welcome';
-import RecordWorkout from './components/RecordWorkout';
-
+import GoalsForm from "./components/GoalsForm";
+import LevelForm from "./components/LevelForm";
+import UserPropertiesForm from "./components/UserPropertiesForm";
+import Welcome from "./components/Welcome";
+import RecordWorkout from "./components/RecordWorkout";
 
 const App = () => {
   return (
@@ -33,9 +33,7 @@ const App = () => {
       </Routes>
     </Router> */}
     </>
-  )
-}
+  );
+};
 
-export default App
-
-
+export default App;

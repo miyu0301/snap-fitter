@@ -21,6 +21,7 @@ import Welcome from './components/Welcome';
 import RecordWorkout from './components/RecordWorkout';
 import ProtectedRoute from './routes/ProtectedRoute.tsx'
 import { AuthProvider } from './auth/AuthProvider.tsx'
+import Chat from './components/Chat.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/chat",
+    element: <Chat />,
   },
   {
     path: "/",
@@ -67,6 +72,7 @@ const router = createBrowserRouter([
         path: "/record-workout",
         element: <RecordWorkout />,
       },
+      
     ],
   },
 ]);
