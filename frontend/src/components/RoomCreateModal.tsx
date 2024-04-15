@@ -84,6 +84,17 @@ function RoomCreateModal({
     }
   };
 
+  const handleRemoveMember = (target_id: number) => {
+    const removedMembers = selectedMembers.filter(
+      (member) => member.id != target_id
+    );
+    setSelectedMembers(removedMembers);
+    console.log(selectedMemberIds);
+    const removedMemberIds = selectedMemberIds.filter((id) => id != target_id);
+    console.log(removedMemberIds);
+    setSelectedMembersIds(removedMemberIds);
+  };
+
   return (
     <>
       {" "}
@@ -127,7 +138,12 @@ function RoomCreateModal({
             <strong>Selected Users:</strong>
             <ul>
               {selectedMembers.map((user: Member) => (
-                <li key={user.id}>{user.username}</li>
+                <li key={user.id}>
+                  {user.username}{" "}
+                  <button onClick={() => handleRemoveMember(user.id)}>
+                    Remove
+                  </button>
+                </li>
               ))}
             </ul>
           </div>
