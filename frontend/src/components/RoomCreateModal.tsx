@@ -2,15 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Form,
-  Button,
-  DropdownButton,
-  Dropdown,
-  ListGroup,
-} from "react-bootstrap";
+import { Form, Button, ListGroup } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import moment from "moment";
 
 type Member = {
   id: number;
@@ -39,7 +32,10 @@ function RoomCreateModal({
         members: selectedMemberIds,
       };
 
-      const response = await axios.post(`http://localhost:3000/room`, formData);
+      const response = await axios.post(
+        process.env.API_ENV + `/room`,
+        formData
+      );
       console.log("Update successful", response.data);
       onUpdate(true);
       closeModal();
@@ -60,11 +56,11 @@ function RoomCreateModal({
       return;
     }
     try {
-      const res = await axios.get(`http://localhost:3000/users`);
+      const res = await axios.get(process.env.API_ENV + `/users`);
       console.log(res.data);
 
       const response = await axios.get(
-        `http://localhost:3000/users?search=${searchTerm}`
+        process.env.API_ENV + `/users?search=${searchTerm}`
       );
       setMembers(response.data);
     } catch (error) {

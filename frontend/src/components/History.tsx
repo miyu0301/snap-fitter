@@ -25,7 +25,7 @@ const History = () => {
       try {
         const userId = 2;
         const res = await axios.get(
-          "http://localhost:3000/exercise/all/" + userId
+          process.env.API_ENV + "/exercise/all/" + userId
         );
         setRecords(res.data.records);
         setStartDate(
@@ -55,7 +55,8 @@ const History = () => {
       const newStartDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
-        "http://localhost:3000/exercise/all/" +
+        process.env.API_ENV +
+          "/exercise/all/" +
           userId +
           "/" +
           newStartDate +
@@ -75,7 +76,8 @@ const History = () => {
       const newEndDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
-        "http://localhost:3000/exercise/all/" +
+        process.env.API_ENV +
+          "/exercise/all/" +
           userId +
           "/" +
           startDate +

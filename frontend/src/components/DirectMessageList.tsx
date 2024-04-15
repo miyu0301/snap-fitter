@@ -15,7 +15,7 @@ const DirectMessageList = () => {
     const fechAllRecords = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/chat/direct_message_list/" + user_id
+          process.env.API_ENV + "/chat/direct_message_list/" + user_id
         );
         setMessages(res.data);
       } catch (err) {

@@ -27,7 +27,9 @@ const ChatRoom = () => {
           user_id: 2,
           room_id: undefined,
         };
-        const res = await axios.get("http://localhost:3000/chat", { params });
+        const res = await axios.get(process.env.API_ENV + "/chat", {
+          params,
+        });
         console.log(res.data);
         setChats(res.data);
         onUpdate(false);
@@ -49,7 +51,10 @@ const ChatRoom = () => {
     };
     console.log(formData);
     try {
-      const response = await axios.post(`http://localhost:3000/chat`, formData);
+      const response = await axios.post(
+        process.env.API_ENV + `/chat`,
+        formData
+      );
       console.log("Update successful", response.data);
       setComment("");
       onUpdate(true);

@@ -19,7 +19,7 @@ const RoomList = () => {
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/room");
+        const res = await axios.get(process.env.API_ENV + "/room");
         setRooms(res.data);
       } catch (err) {
         console.log(err);
