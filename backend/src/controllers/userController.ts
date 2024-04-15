@@ -10,7 +10,12 @@ const knex = require("../../db/knexConfig");
  */
 const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await knex("users").select("*");
+    let query = knex("users").select("*");
+    const search = req.query.search;
+    if (search) {
+      query = query.where("username", "like", `%${search}%`);
+    }
+    const users = await query.select("*");
     res.json(users);
   } catch (err: any) {
     res.status(500).send(err.message);

@@ -16,11 +16,11 @@ const Chat = () => {
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const userId = 2;
-        const res = await axios.get(
-          "http://localhost:3000/exercise/all/" + userId
-        );
-        setRecords(res.data.records);
+        // const userId = 2;
+        // const res = await axios.get(
+        //   "http://localhost:3000/exercise/all/" + userId
+        // );
+        // setRecords(res.data.records);
       } catch (err) {
         console.log(err);
       }
@@ -39,6 +39,7 @@ const Chat = () => {
         <RoomList />
         <p>direct message list</p>
         <DirectMessageList />
+        <p>chat room</p>
         <ChatRoom />
       </div>
     </>
