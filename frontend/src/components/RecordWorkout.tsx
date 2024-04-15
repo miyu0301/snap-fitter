@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import UserNavbar from '../partials/navbar';
 import Timer from './Timer';
+import FloatingButton from './FloatingButton';
 
 const RecordWorkout: React.FC = () => {
   const [showTimer, setShowTimer] = useState(false);
@@ -51,6 +52,7 @@ const RecordWorkout: React.FC = () => {
             <p>Total workout time: {workoutTime} seconds <br></br>Calories burned: ???</p>}
           </div>
         </div>
+        <FloatingButton />
       </div>
     </>
   );

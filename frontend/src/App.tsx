@@ -17,22 +17,21 @@ import RecordWorkout from "./components/RecordWorkout";
 
 const App = () => {
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/your-goals" element={<GoalsForm />} />
-          <Route path="/your-level" element={<LevelForm />} />
-          <Route path="/generales" element={<UserPropertiesForm />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/record-workout" element={<RecordWorkout />} />
-        </Routes>
-      </Router>
+   <>
+    {/* <Router>
+      <Routes>
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/your-goals" element={<GoalsForm />} />
+        <Route path="/your-level" element={<LevelForm />} />
+        <Route path="/generales" element={<UserPropertiesForm />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/record-workout" element={<RecordWorkout />} />
+      </Routes>
+    </Router> */}
     </>
   );
 };

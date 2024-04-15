@@ -1,0 +1,57 @@
+.floating-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+  }
+  
+  .floating-button {
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+  }
+  
+  .floating-button.active {
+    background-color: #dc3545; /* Cambia de color cuando se activa */
+  }
+  
+  .floating-button span {
+    width: 2px;
+    height: 20px;
+    background-color: #fff;
+    display: block;
+    margin: 3px 0;
+    transition: transform 0.3s ease;
+  }
+  
+  .floating-button.active span:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+  }
+  
+  .floating-button.active span:nth-child(2) {
+    transform: scaleX(0);
+  }
+  
+  .floating-button.active span:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+  }
+  
+  .options {
+    position: absolute;
+    bottom: 70px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .options button {
+    margin-bottom: 10px;
+  }
+  
