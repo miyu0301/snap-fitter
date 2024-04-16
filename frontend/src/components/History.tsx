@@ -25,8 +25,10 @@ const History = () => {
       try {
         const userId = 2;
         const res = await axios.get(
-          "http://localhost:3000/exercise/all/" + userId
+          import.meta.env.VITE_API_ENV + "/exercise/all/" + userId
         );
+        // const res = await axios.get(`${API_URL}/exercise/all/${userId}`);
+
         setRecords(res.data.records);
         setStartDate(
           format(
@@ -55,7 +57,8 @@ const History = () => {
       const newStartDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
-        "http://localhost:3000/exercise/all/" +
+        import.meta.env.VITE_API_ENV +
+          "/exercise/all/" +
           userId +
           "/" +
           newStartDate +
@@ -75,7 +78,8 @@ const History = () => {
       const newEndDate = e.target.value;
       const userId = 2;
       const res = await axios.get(
-        "http://localhost:3000/exercise/all/" +
+        import.meta.env.VITE_API_ENV +
+          "/exercise/all/" +
           userId +
           "/" +
           startDate +

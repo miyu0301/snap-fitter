@@ -26,7 +26,7 @@ function HistoryEditModal({
     const fechRecord = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/exercise/" + targetId
+          import.meta.env.VITE_API_ENV + "/exercise/" + targetId
         );
         setFormData(res.data);
       } catch (err) {
@@ -52,7 +52,7 @@ function HistoryEditModal({
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:3000/exercise/${targetId}`,
+        import.meta.env.VITE_API_ENV + `/exercise/${targetId}`,
         formData
       );
       console.log("Update successful", response.data);

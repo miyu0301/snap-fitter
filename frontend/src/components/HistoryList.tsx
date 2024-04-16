@@ -29,7 +29,7 @@ function HistoryList({
   };
   const deleteRecord = async (id: number) => {
     try {
-      await axios.delete("http://localhost:3000/exercise/" + id);
+      await axios.delete(import.meta.env.VITE_API_ENV + "/exercise/" + id);
       onUpdate(true);
     } catch (err) {
       console.log(err);

@@ -4,13 +4,8 @@ import RoomList from "./RoomList";
 import DirectMessageList from "./DirectMessageList";
 import ChatRoom from "./ChatRoom";
 import { ChangeEvent, useEffect, useState } from "react";
-import axios from "axios";
-import Modal from "react-bootstrap/Modal";
-import { Form, Button } from "react-bootstrap";
-import { format } from "date-fns";
 
 const Chat = () => {
-  const [records, setRecords] = useState([]);
   const [update, onUpdate] = useState(false);
 
   useEffect(() => {
