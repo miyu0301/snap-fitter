@@ -15,23 +15,36 @@ import UserPropertiesForm from "./components/UserPropertiesForm";
 import Welcome from "./components/Welcome";
 import RecordWorkout from "./components/RecordWorkout";
 
+import { AuthProvider } from './auth/AuthProvider.tsx';
+import { UserProvider } from './user/userProvider.tsx';
+import ProtectedRoute from './routes/ProtectedRoute.tsx';
+
+//chunk-NIIQ5B24.js?v=8b0cfe2c:19409 Uncaught Error: [AuthProvider] is not a <Route> component. All component children of <Routes> must be a <Route> or <React.Fragment
+
 const App = () => {
   return (
    <>
-    {/* <Router>
-      <Routes>
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/your-goals" element={<GoalsForm />} />
-        <Route path="/your-level" element={<LevelForm />} />
-        <Route path="/generales" element={<UserPropertiesForm />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/record-workout" element={<RecordWorkout />} />
-      </Routes>
-    </Router> */}
+    <Router>
+      <AuthProvider>
+        <UserProvider>
+          <Routes>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/" element={<Home />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/your-goal" element={<GoalsForm />} />
+              <Route path="/your-level" element={<LevelForm />} />
+              <Route path="/generales" element={<UserPropertiesForm />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/welcome" element={<Welcome />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/record-workout" element={<RecordWorkout />} />
+            </Route>
+          </Routes>
+        </UserProvider>
+      </AuthProvider>
+    </Router>
     </>
   );
 };

@@ -23,65 +23,64 @@ import ProtectedRoute from './routes/ProtectedRoute.tsx'
 import { AuthProvider } from './auth/AuthProvider.tsx'
 import Chat from './components/Chat.tsx';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/sign-in",
-    element: <SignIn />,
-  },
-  {
-    path: "/sign-up",
-    element: <SignUp />,
-  },
-  {
-    path: "/chat",
-    element: <Chat />,
-  },
-  {
-    path: "/",
-    element: <ProtectedRoute />,
-    children: [
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/history",
-        element: <History />,
-      },
-      {
-        path: "/your-goals",
-        element: <GoalsForm />,
-      },
-      {
-        path: "/your-level",
-        element: <LevelForm />,
-      },
-      {
-        path: "/generales",
-        element: <UserPropertiesForm />,
-      },
-      {
-        path: "/welcome",
-        element: <Welcome />,
-      },
-      {
-        path: "/record-workout",
-        element: <RecordWorkout />,
-      },
+import App from './App.tsx';
+// const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <Home />,
+  // },
+  // {
+  //   path: "/sign-in",
+  //   element: <SignIn />,
+  // },
+  // {
+  //   path: "/sign-up",
+  //   element: <SignUp />,
+  // },
+  // {
+  //   path: "/chat",
+  //   element: <Chat />,
+  // },
+  // {
+  //   path: "/",
+  //   element: <ProtectedRoute />,
+  //   children: [
+  //     {
+  //       path: "/profile",
+  //       element: <Profile />,
+  //     },
+  //     {
+  //       path: "/history",
+  //       element: <History />,
+  //     },
+  //     {
+  //       path: "/your-goals",
+  //       element: <GoalsForm />,
+  //     },
+  //     {
+  //       path: "/your-level",
+  //       element: <LevelForm />,
+  //     },
+  //     {
+  //       path: "/generales",
+  //       element: <UserPropertiesForm />,
+  //     },
+  //     {
+  //       path: "/welcome",
+  //       element: <Welcome />,
+  //     },
+  //     {
+  //       path: "/record-workout",
+  //       element: <RecordWorkout />,
+  //     },
       
-    ],
-  },
-]);
+  //   ],
+  // },
+// ]);
 
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <App />
   </React.StrictMode>
 );
