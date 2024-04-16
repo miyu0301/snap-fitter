@@ -33,7 +33,7 @@ function RoomCreateModal({
       };
 
       const response = await axios.post(
-        process.env.API_ENV + `/room`,
+        import.meta.env.VITE_API_ENV + `/room`,
         formData
       );
       console.log("Update successful", response.data);
@@ -56,11 +56,11 @@ function RoomCreateModal({
       return;
     }
     try {
-      const res = await axios.get(process.env.API_ENV + `/users`);
+      const res = await axios.get(import.meta.env.VITE_API_ENV + `/users`);
       console.log(res.data);
 
       const response = await axios.get(
-        process.env.API_ENV + `/users?search=${searchTerm}`
+        import.meta.env.VITE_API_ENV + `/users?search=${searchTerm}`
       );
       setMembers(response.data);
     } catch (error) {

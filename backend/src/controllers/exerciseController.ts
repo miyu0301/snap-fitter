@@ -23,7 +23,6 @@ const getExerciseRecordByUserId = async (
         "exercise_records.user_id as user_id",
         "exercise_records.start_datetime as start_datetime",
         "exercise_records.end_datetime as end_datetime",
-        "exercise_records.duration as duration",
         "exercise_records.burned_calories as burned_calories"
       )
       .orderBy("exercise_records.start_datetime", "asc");
@@ -46,7 +45,6 @@ const getExerciseRecordByUserId = async (
         latest_datetime: null,
       }
     );
-    // console.log(datetime_range);
     res.json({ records: records, datetime_range: datetime_range });
     // res.json(records);
   } catch (err: any) {
@@ -81,7 +79,6 @@ const getExerciseRecordByUserIdForPeriod = async (
         "exercise_records.user_id as user_id",
         "exercise_records.start_datetime as start_datetime",
         "exercise_records.end_datetime as end_datetime",
-        "exercise_records.duration as duration",
         "exercise_records.burned_calories as burned_calories"
       )
       .orderBy("exercise_records.start_datetime", "asc");
@@ -118,7 +115,6 @@ interface RequestBodyInsert {
   exercise_id: number;
   start_datetime?: Date;
   end_datetime?: Date;
-  duration?: number;
   burned_calories?: number;
 }
 
@@ -138,7 +134,6 @@ const createExerciseRecord = async (
       exercise_id,
       start_datetime,
       end_datetime,
-      duration,
       burned_calories,
     } = req.body;
 
@@ -148,7 +143,6 @@ const createExerciseRecord = async (
         exercise_id: exercise_id,
         start_datetime: start_datetime,
         end_datetime: end_datetime,
-        duration: duration,
         burned_calories: burned_calories,
       })
       .returning("*");
@@ -162,7 +156,6 @@ interface RequestBodyUpdate {
   exercise_id?: number;
   start_datetime?: Date;
   end_datetime?: Date;
-  duration?: number;
   burned_calories?: number;
 }
 interface RequestParamsUpdate {

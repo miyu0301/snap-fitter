@@ -19,7 +19,7 @@ const RoomList = () => {
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const res = await axios.get(process.env.API_ENV + "/room");
+        const res = await axios.get(import.meta.env.VITE_API_ENV + "/room");
         setRooms(res.data);
       } catch (err) {
         console.log(err);

@@ -15,7 +15,7 @@ const DirectMessageList = () => {
     const fechAllRecords = async () => {
       try {
         const res = await axios.get(
-          process.env.API_ENV + "/chat/direct_message_list/" + user_id
+          import.meta.env.VITE_API_ENV + "/chat/direct_message_list/" + user_id
         );
         setMessages(res.data);
       } catch (err) {
