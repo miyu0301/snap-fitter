@@ -2,8 +2,20 @@ require("dotenv").config();
 import express from "express";
 import cors from "cors";
 import "./cron/scheduler";
+import http from "http";
+import { Server } from "socket.io";
 
 const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_API,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true,
+  },
+});
 
 app.use(express.json());
 app.use(cors());
@@ -31,6 +43,18 @@ app.use("/exercise", exerciseRouters);
 app.use("/chat", chatRoutes);
 app.use("/room", roomRoutes);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+io.on("connection", (socket) => {
+  console.log("A user has connected");
+
+  socket.on("sendMessage", (data) => {
+    console.log("Message has been sent: ", data.comment);
+    io.emit("receiveMessage", {
+      created_datetime: data.created_datetime,
+      username: data.username,
+      comment: data.comment,
+    });
+  });
+});
+server.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
 });

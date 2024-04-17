@@ -40,7 +40,7 @@ const getChats = async (req: Request, res: Response): Promise<void> => {
         "chats.comment",
         "chats.created_datetime"
       )
-      .orderBy("chats.created_datetime", "desc");
+      .orderBy("chats.created_datetime", "asc");
 
     const chats = await query;
     res.json(chats);

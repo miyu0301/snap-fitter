@@ -30,14 +30,17 @@ const RoomList = () => {
 
   return (
     <>
-      <Button variant="primary" onClick={() => setCreateModal(true)}>
-        New
-      </Button>
+      <div className="d-flex">
+        <p>room list</p>
+        <Button variant="primary" onClick={() => setCreateModal(true)}>
+          New
+        </Button>
+      </div>
       <Modal show={createModal} onHide={closeModal}>
         <RoomCreateModal closeModal={closeModal} onUpdate={onUpdate} />
       </Modal>
       {rooms.map((room: Room, idx: number) => (
-        <div>{room.room_name}</div>
+        <div key={idx}>{room.room_name}</div>
       ))}
     </>
   );

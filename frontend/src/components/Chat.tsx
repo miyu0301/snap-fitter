@@ -30,12 +30,15 @@ const Chat = () => {
 
       <div className="d-flex flex-column container">
         <h1 className="anton-regular uppercase mb-4">Chat</h1>
-        <p>room list</p>
-        <RoomList />
-        <p>direct message list</p>
-        <DirectMessageList />
-        <p>chat room</p>
-        <ChatRoom />
+        <div className="d-flex">
+          <div className="d-flex flex-column" style={{ width: "50vh" }}>
+            <RoomList />
+            <DirectMessageList />
+          </div>
+          <div className="w-100">
+            <ChatRoom />
+          </div>
+        </div>
       </div>
     </>
   );

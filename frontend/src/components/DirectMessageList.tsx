@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
+import { Button } from "react-bootstrap";
 
 type Message = {
   user_id: number;
@@ -27,8 +28,12 @@ const DirectMessageList = () => {
 
   return (
     <>
+      <div className="d-flex">
+        <p>direct message list</p>
+        <Button variant="primary">New</Button>
+      </div>
       {messages.map((message: Message, idx: number) => (
-        <div>{message.username}</div>
+        <div key={idx}>{message.username}</div>
       ))}
     </>
   );
