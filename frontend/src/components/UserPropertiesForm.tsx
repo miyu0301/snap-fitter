@@ -90,7 +90,6 @@ const UserPropertiesForm = () => {
         navigate('/your-goal');
       }
       
-      
     } else {
       setErrors(newErrors);
     }

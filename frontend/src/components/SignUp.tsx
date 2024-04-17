@@ -53,7 +53,6 @@ const SignUp: React.FC = () => {
       setErrors(newErrors);
       return;
     }
-
     // Validate email format
     const emailPattern = /^\S+@\S+\.\S+$/;
     if (!emailPattern.test(formData.email)) {

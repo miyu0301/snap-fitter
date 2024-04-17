@@ -59,7 +59,7 @@ export const UserProvider: React.FC = ({ children }) => {
   };
 
   //const profileInfo = fetch user id
-  
+
 
   const handleDBUpdate = async (user: any) => {
    
