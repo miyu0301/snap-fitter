@@ -58,6 +58,9 @@ export const UserProvider: React.FC = ({ children }) => {
     console.log('updated')
   };
 
+  //const profileInfo = fetch user id
+  
+
   const handleDBUpdate = async (user: any) => {
    
       try {

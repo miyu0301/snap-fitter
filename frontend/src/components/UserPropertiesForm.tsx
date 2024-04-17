@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useUser } from '../user/userProvider';
+import { useAuth } from '../auth/AuthProvider';
 
 const UserPropertiesForm = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const { user, updateUser,  validateUserObject, handleDBUpdate} = useUser();
   const [gender, setGender] = useState<string>('');
   const [birthday, setBirthday] = useState<string>('');
@@ -71,13 +73,16 @@ const UserPropertiesForm = () => {
       console.log('Birthday:', birthday);
       console.log('Height:', height);
       console.log('Weight:', weight);
+      const userBack = { ...user, gender: parseInt(gender), birthday:birthday, height:parseInt(height), weight:parseInt(weight) };
       updateUser({ gender: parseInt(gender), birthday:birthday, height:parseInt(height), weight:parseInt(weight) });
-      const validateObject = validateUserObject(user)
+      const validateObject = validateUserObject(userBack)
+
       console.log({validateObject})
 
       if(validateObject){
-        const updateDBUser = handleDBUpdate(user)
+        const updateDBUser = handleDBUpdate(userBack)
         console.log(updateDBUser)
+        auth.completedInfo()
         navigate('/welcome');
 
       }else{

@@ -6,10 +6,12 @@ interface AuthProviderProps{
 
 const AuthContext = createContext({
     isAuthenticated: false,
+    isCompletedBasicInfo: false,
     authenticatedUser: () => {},
     logout: () => {},
     validateSession: () => {},
     getSessionId: () => undefined,
+    completedInfo: () => {}
 })
 
 function getCookies() {
@@ -35,7 +37,8 @@ const getSession = () => { // Loaded every time the app is loaded to verify that
 
 
 export function AuthProvider({children}: AuthProviderProps){
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isCompletedBasicInfo, setIsCompletedBasicInfo] = useState(false);
 
     useEffect(
         () => {
@@ -59,8 +62,13 @@ export function AuthProvider({children}: AuthProviderProps){
         setIsAuthenticated(false);
     }
 
+    // TODO: cambiar por un nombre que indique la accion a ejecutar algo como "se completo la informacion"
+    function completedInfo() {
+        setIsCompletedBasicInfo(true);
+    }
+
     return (
-        <AuthContext.Provider value={{isAuthenticated,authenticatedUser,logout,validateSession, getSessionId: getSession}}>
+        <AuthContext.Provider value={{isAuthenticated,authenticatedUser,logout,validateSession, getSessionId: getSession, completedInfo, isCompletedBasicInfo}}>
             {children}
         </AuthContext.Provider>
     )

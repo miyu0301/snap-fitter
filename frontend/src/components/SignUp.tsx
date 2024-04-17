@@ -79,7 +79,7 @@ const SignUp: React.FC = () => {
         if (data.isNewUser === true) {
           Cookies.set('sessionId', data.user_id);
           auth.authenticatedUser();
-          navigate('/your-goals');
+          navigate('/your-goal');
         } else {
           setErrors(prevErrors => ({
             ...prevErrors,
@@ -96,7 +96,7 @@ const SignUp: React.FC = () => {
 
 useEffect(() => {
 if (auth.isAuthenticated) {
-navigate('/your-goals');
+navigate('/your-goal');
 }
 }, [auth.isAuthenticated, navigate]);
 
