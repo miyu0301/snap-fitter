@@ -24,7 +24,6 @@ type Record = {
   user_id: number;
   start_datetime: Date;
   end_datetime: Date;
-  duration: number;
   burned_calories: number;
 };
 
@@ -49,9 +48,9 @@ function HistoryGraph({ records }: { records: Record[] }) {
       let start_date = format(new Date(start_datetime), "yyyy/MM/dd");
       // create array of object with exercise_name as key
       if (acc[exercise_name]) {
-        acc[exercise_name].push({ start_date, ...rest });
+        acc[exercise_name].push({ start_date, start_datetime, ...rest });
       } else {
-        acc[exercise_name] = [{ start_date, ...rest }];
+        acc[exercise_name] = [{ start_date, start_datetime, ...rest }];
       }
 
       if (!labels.includes(start_date)) {
@@ -61,6 +60,14 @@ function HistoryGraph({ records }: { records: Record[] }) {
     },
     {}
   );
+
+  const caluculateMinutes = (start_datetime: string, end_datetime: string) => {
+    const minutes =
+      (new Date(end_datetime).getTime() - new Date(start_datetime).getTime()) /
+      6000;
+    return minutes;
+  };
+
   Object.keys(groupedByExerciseName).forEach((exercise_name) => {
     const dataset: {
       label: string;
@@ -78,15 +85,19 @@ function HistoryGraph({ records }: { records: Record[] }) {
       const result = groupedByExerciseName[exercise_name].filter(
         (record) => record.start_date == start_date
       );
-      durations.push(result.length == 0 ? 0 : result[0].duration);
+      durations.push(
+        result.length == 0
+          ? 0
+          : caluculateMinutes(result[0].start_datetime, result[0].end_datetime)
+      );
     });
     dataset.data = durations;
     dataset.backgroundColor = backgroundColors[datasets.length % 3];
     datasets.push(dataset);
   });
-  console.log("data");
-  console.log(labels);
-  console.log(datasets);
+  // console.log("data");
+  // console.log(labels);
+  // console.log(datasets);
 
   const data = {
     labels,
