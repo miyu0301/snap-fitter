@@ -19,5 +19,22 @@ export const common = {
       return `${seconds}s`;
     }
   },
+
+  GENDER_DICT: {
+    1: "Male",
+    2: "Female",
+    3: "Other",
+  },
+  GOAL_DICT: {
+    1: "Gain muscle",
+    2: "Gain weight",
+    3: "Lose weight",
+  },
+  LEVEL_DICT: {
+    1: "Beginner",
+    2: "Intermediate",
+    3: "Advanced",
+  },
 };
+
 export default common;
