@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 //import Swal from 'sweetalert2';
 import { Form, Button } from 'react-bootstrap';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DefaultLayout from '../partials/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { API_URL } from '../auth/AuthConstants';
@@ -77,6 +77,7 @@ const SignUp: React.FC = () => {
 
         if (data.isNewUser === true) {
           Cookies.set('sessionId', data.user_id);
+          
           auth.authenticatedUser();
           navigate('/your-goal');
         } else {
