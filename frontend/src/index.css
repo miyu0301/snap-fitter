@@ -134,6 +134,22 @@ display: block;
 text-decoration: none;
 color: inherit;
 padding: 15px 0px;
+font-family:"Inter", sans-serif;
+color: #7d7d7d;
+}
+
+.profile-link:hover{
+    color: #000000;
+    }
+
+.border-right{
+    border-right: solid 1px #d8d8d8;
+    padding-right: 0px;
+}
+
+.profile-active-item{
+    border-right:2px solid #24A2E8;
+    color: #000000;
 }
 
 .text-container{
@@ -156,4 +172,6 @@ justify-content: center;
 align-items: center;
 font-size: 35px;
 }
+
+
 

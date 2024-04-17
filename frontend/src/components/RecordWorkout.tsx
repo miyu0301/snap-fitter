@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import UserNavbar from '../partials/navbar';
 import Timer from './Timer';
 import FloatingButton from './FloatingButton';
+import { useUser } from '../user/userProvider';
+import { useAuth } from '../auth/AuthProvider';
 
 const RecordWorkout: React.FC = () => {
+  const user = useUser();
+  const [dbUser, setDbUser] = useState(null);
+  const auth = useAuth()
+  const sessionID:any = auth.getSessionId()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData:any = await user.fetchUserData(sessionID);
+        setDbUser(userData); // Sets the user data once it has been obtained
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
+
+
   const [showTimer, setShowTimer] = useState(false);
   const [workoutTime, setWorkoutTime] = useState(0);
   const [showWorkoutTime, setShowWorkoutTime] = useState(false);
+  
 
   const handleStartClick = () => {
     setShowTimer(true);
@@ -21,7 +43,7 @@ const RecordWorkout: React.FC = () => {
 
   return (
     <>
-      <UserNavbar />
+      <UserNavbar username = {dbUser ? dbUser.username : ''} />
       <div className='d-flex align-items-center justify-items-center'>
         <div className='home-bg-image bg-cover-center col-50'></div>
         <div className='col-50'>

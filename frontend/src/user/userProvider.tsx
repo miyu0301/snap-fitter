@@ -52,11 +52,15 @@ const UserContext = createContext<UserContextType>({
 export const UserProvider: React.FC = ({ children }) => {
   const { getSessionId } = useAuth();
   const [user, setUser] = useState<User>(initialUser);
+  const [dbUser, setDBUser] = useState(Object)
 
   const updateUser = (newUser: Partial<User>) => {
     setUser(prevUser => ({ ...prevUser, ...newUser }));
     console.log('updated')
   };
+
+  //const profileInfo = fetch user id
+
 
   const handleDBUpdate = async (user: any) => {
    
@@ -90,7 +94,10 @@ export const UserProvider: React.FC = ({ children }) => {
     try {
       const userData = await fetch(`${API_URL}/users/${id}`);
       const userJson = await userData.json();
-      setUser(userJson);
+      setDBUser(userJson)
+      console.log(userJson)
+      return userJson;
+      //setUser(userJson);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
