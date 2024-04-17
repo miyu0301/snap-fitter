@@ -4,6 +4,10 @@ import { useUser } from '../user/userProvider';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from 'react-bootstrap';
+import { FaRunning } from "react-icons/fa";
+import { BsGraphUp } from "react-icons/bs";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 const Profile = () => {
   const user = useUser();
@@ -70,10 +74,10 @@ const Profile = () => {
         <div className='row'>
           <div className='col-sm-12 col-md-4'>
             <h1 className='anton-regular uppercase'>User Profile</h1>            
-            <Link className="profile-link" to="/record-workout">Record Workout</Link>
-            <Link className="profile-link" to="/history">History</Link>
-            <Link className="profile-link" to="/chat">Chat</Link>
-            <Button onClick={handleLogout}>Logout</Button>
+            <Link className="profile-link" to="/record-workout"><FaRunning size="1.5em" /> Record Workout</Link>
+            <Link className="profile-link" to="/history"><BsGraphUp size="1.2em" /> History</Link>
+            <Link className="profile-link" to="/chat"><IoChatbubbleEllipsesOutline size="1.5em" /> Chat</Link>
+            <Button onClick={handleLogout}><RiLogoutCircleLine /> Logout</Button>
             
           </div>
           <div className='col-sm-12 col-md-8'>
