@@ -97,7 +97,12 @@ const getDirectMessageList = async (
       )
       .join("users", "combined.user_id", "=", "users.id")
       .groupBy("users.id", "users.username")
-      .select("users.id as user_id", "users.username");
+      .select(
+        "users.id as user_id",
+        "users.username",
+        "users.goal_id",
+        "users.level_id"
+      );
     res.json(list);
   } catch (err: any) {
     res.status(500).send(err.message);

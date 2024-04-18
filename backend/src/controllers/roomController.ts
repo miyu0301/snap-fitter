@@ -150,8 +150,13 @@ interface Room {
 
 const getRoomWithMembers = async (id: number): Promise<Room | null> => {
   const rooms = await knex("rooms")
-    .join("room_user_mappings", "rooms.id", "=", "room_user_mappings.room_id")
-    .join("users", "room_user_mappings.user_id", "=", "users.id")
+    .leftJoin(
+      "room_user_mappings",
+      "rooms.id",
+      "=",
+      "room_user_mappings.room_id"
+    )
+    .leftJoin("users", "room_user_mappings.user_id", "=", "users.id")
     .where("rooms.id", id)
     .select(
       "rooms.id as id",

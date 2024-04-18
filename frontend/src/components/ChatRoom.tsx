@@ -1,86 +1,150 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { format } from "date-fns";
 import { io } from "socket.io-client";
+import { useAuth } from "../auth/AuthProvider";
 
 type Chat = {
-  id: number;
   created_datetime: Date;
-  user_id: number;
   username: string;
   comment: string;
 };
 
-const ChatRoom = () => {
-  const logined_user_id = 3;
-  const user_id = 2;
-  const room_id = undefined;
+const ChatRoom = ({
+  toUserId,
+  toRoomId,
+}: {
+  toUserId: number;
+  toRoomId: number;
+}) => {
   const socket = io(import.meta.env.VITE_API_ENV);
-  const [chats, setChats] = useState([]);
+  const [loginedUserName, setLoginedUserName] = useState("");
+  const [roomChatMode, setRoomChatMode] = useState(false);
+  const [toUsername, setToUsername] = useState("");
+  const [toRoomName, setToRoomName] = useState("");
+  const [chats, setChats] = useState<Chat[]>([]);
   const [comment, setComment] = useState("");
-  const [update, onUpdate] = useState(false);
-
-  const [test, setTest] = useState<string[]>([]);
+  const auth = useAuth();
+  const logined_user_id: number | undefined = auth.getSessionId();
 
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
+        const user = await axios.get(
+          import.meta.env.VITE_API_ENV + "/users/" + logined_user_id
+        );
+        setLoginedUserName(user.data.username);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fechAllRecords();
+  }, []);
+
+  useEffect(() => {
+    const fechAllRecords = async () => {
+      try {
+        const user = await axios.get(
+          import.meta.env.VITE_API_ENV + "/users/" + toUserId
+        );
+        setRoomChatMode(false);
+        setToUsername(user.data.username);
+
         const params = {
-          user_id: 2,
+          user_id: toUserId,
           room_id: undefined,
         };
         const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
           params,
         });
         setChats(res.data);
-        onUpdate(false);
       } catch (err) {
         console.log(err);
       }
     };
     fechAllRecords();
-  }, [update]);
+  }, [toUserId]);
+
+  useEffect(() => {
+    const fechAllRecords = async () => {
+      try {
+        const room = await axios.get(
+          import.meta.env.VITE_API_ENV + "/room/" + toRoomId
+        );
+        setRoomChatMode(true);
+        setToRoomName(room.data.room_name);
+
+        const params = {
+          user_id: undefined,
+          room_id: toRoomId,
+        };
+        const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
+          params,
+        });
+        setChats(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fechAllRecords();
+  }, [toRoomId]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const created_datetime = new Date();
-    const formData = {
+    let formData: {
+      from_user_id: number | undefined;
+      to_user_id: number | undefined;
+      to_room_id: number | undefined;
+      comment: string;
+      created_datetime: Date;
+    } = {
       from_user_id: logined_user_id,
-      to_user_id: user_id,
-      to_room_id: room_id,
+      to_user_id: undefined,
+      to_room_id: undefined,
       comment: comment,
       created_datetime: created_datetime,
     };
-    console.log(formData);
+    if (roomChatMode) {
+      formData.to_room_id = toRoomId;
+    } else {
+      formData.to_user_id = toUserId;
+    }
+
     try {
       const response = await axios.post(
         import.meta.env.VITE_API_ENV + `/chat`,
         formData
       );
       console.log("Update successful", response.data);
-      socket.emit("sendMessage", {
+
+      const newChat = {
         created_datetime: created_datetime,
-        username: logined_user_id,
+        username: loginedUserName,
         comment: comment,
-      });
+      };
+      socket.emit("sendMessage", newChat);
+      // add chats
+      let updatedChats = [...chats];
+      updatedChats.push(newChat);
+      setChats(updatedChats);
       setComment("");
-      onUpdate(true);
     } catch (err) {
       console.error("Failed to update record", err);
     }
   };
   socket.on("receiveMessage", (message) => {
-    const updatedTest = [...test];
-    updatedTest.push(message);
-    setTest(updatedTest);
+    let updatedChats = [...chats];
+    updatedChats.push(message);
+    setChats(updatedChats);
   });
-  console.log(test);
 
   return (
     <>
       <div className="">
+        <p>{roomChatMode ? toRoomName : toUsername}</p>
         <div className="overflow-auto" style={{ height: "70vh" }}>
           {chats.map((chat: Chat, idx: number) => (
             <div key={idx}>
