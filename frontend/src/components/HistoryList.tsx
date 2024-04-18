@@ -10,6 +10,7 @@ type Record = {
   user_id: number;
   start_datetime: Date;
   end_datetime: Date;
+  pause: number;
   burned_calories: number;
 };
 function HistoryList({
@@ -58,7 +59,8 @@ function HistoryList({
             <td>
               {common.calculateDurationForDisplay(
                 new Date(record.start_datetime),
-                new Date(record.end_datetime)
+                new Date(record.end_datetime),
+                record.pause
               )}
             </td>
             <td>{record.burned_calories}</td>
