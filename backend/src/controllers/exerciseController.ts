@@ -23,6 +23,7 @@ const getExerciseRecordByUserId = async (
         "exercise_records.user_id as user_id",
         "exercise_records.start_datetime as start_datetime",
         "exercise_records.end_datetime as end_datetime",
+        "exercise_records.pause as pause",
         "exercise_records.burned_calories as burned_calories"
       )
       .orderBy("exercise_records.start_datetime", "asc");
@@ -67,8 +68,6 @@ const getExerciseRecordByUserIdForPeriod = async (
     const start_date: Date = new Date(req.params.start_date);
     const end_date: Date = new Date(req.params.end_date);
 
-    console.log(req.params.start_date);
-    console.log(req.params.end_date);
     let records = await knex("exercise_records")
       .join("m_exercise", "m_exercise.id", "=", "exercise_records.exercise_id")
       .where("exercise_records.user_id", user_id)
@@ -79,11 +78,11 @@ const getExerciseRecordByUserIdForPeriod = async (
         "exercise_records.user_id as user_id",
         "exercise_records.start_datetime as start_datetime",
         "exercise_records.end_datetime as end_datetime",
+        "exercise_records.pause as pause",
         "exercise_records.burned_calories as burned_calories"
       )
       .orderBy("exercise_records.start_datetime", "asc");
 
-    console.log(records);
     res.json(records);
   } catch (err: any) {
     res.status(500).send(err.message);
@@ -103,7 +102,6 @@ const getExerciseRecordById = async (
   try {
     const id: number = parseInt(req.params.id);
     const record = await knex("exercise_records").where("id", id).select("*");
-    console.log(record);
     res.json(record[0]);
   } catch (err: any) {
     res.status(500).send(err.message);
@@ -115,6 +113,7 @@ interface RequestBodyInsert {
   exercise_id: number;
   start_datetime?: Date;
   end_datetime?: Date;
+  pause?: number;
   burned_calories?: number;
 }
 
@@ -134,6 +133,7 @@ const createExerciseRecord = async (
       exercise_id,
       start_datetime,
       end_datetime,
+      pause,
       burned_calories,
     } = req.body;
 
@@ -143,6 +143,7 @@ const createExerciseRecord = async (
         exercise_id: exercise_id,
         start_datetime: start_datetime,
         end_datetime: end_datetime,
+        pause: pause,
         burned_calories: burned_calories,
       })
       .returning("*");
@@ -156,6 +157,7 @@ interface RequestBodyUpdate {
   exercise_id?: number;
   start_datetime?: Date;
   end_datetime?: Date;
+  pause?: number;
   burned_calories?: number;
 }
 interface RequestParamsUpdate {

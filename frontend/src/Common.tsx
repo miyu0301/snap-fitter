@@ -5,8 +5,14 @@ export const common = {
    * @param end_datetime
    * @returns
    */
-  calculateDurationForDisplay: (start_datetime: Date, end_datetime: Date) => {
-    const diff = end_datetime.getTime() - start_datetime.getTime();
+  calculateDurationForDisplay: (
+    start_datetime: Date,
+    end_datetime: Date,
+    pause: number
+  ) => {
+    const pause_milliseconds = pause * 1000;
+    const diff =
+      end_datetime.getTime() - start_datetime.getTime() - pause_milliseconds;
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);

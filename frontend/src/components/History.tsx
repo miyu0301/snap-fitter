@@ -8,8 +8,11 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 import { format } from "date-fns";
+import { useAuth } from "../auth/AuthProvider";
 
 const History = () => {
+  const auth = useAuth();
+  const logined_user_id: number | undefined = auth.getSessionId();
   const [records, setRecords] = useState([]);
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
@@ -23,11 +26,9 @@ const History = () => {
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const userId = 2;
         const res = await axios.get(
-          import.meta.env.VITE_API_ENV + "/exercise/all/" + userId
+          import.meta.env.VITE_API_ENV + "/exercise/all/" + logined_user_id
         );
-        // const res = await axios.get(`${API_URL}/exercise/all/${userId}`);
 
         setRecords(res.data.records);
         setStartDate(
