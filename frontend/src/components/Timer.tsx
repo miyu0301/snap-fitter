@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 interface TimerProps {
   onEnd: (timeElapsed: number) => void;
+  isPaused: boolean;
 }
 
-const Timer: React.FC<TimerProps> = ({ onEnd }) => {
+const Timer: React.FC<TimerProps> = ({ onEnd, isPaused }) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
   const [pausedTime, setPausedTime] = useState(0);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Timer: React.FC<TimerProps> = ({ onEnd }) => {
 
     if (isActive && !isPaused) {
       interval = setInterval(() => {
-        setTimeElapsed((prevTimeElapsed) => prevTimeElapsed + 1);
+        setTimeElapsed(prevTimeElapsed => prevTimeElapsed + 1);
       }, 1000);
     } else {
       clearInterval(interval);
@@ -25,7 +25,7 @@ const Timer: React.FC<TimerProps> = ({ onEnd }) => {
   }, [isActive, isPaused]);
 
   const handlePauseClick = () => {
-    setIsPaused(prevIsPaused => !prevIsPaused);
+    setIsActive(prevIsActive => !prevIsActive);
     if (!isPaused) {
       setPausedTime(timeElapsed);
     }
@@ -37,7 +37,7 @@ const Timer: React.FC<TimerProps> = ({ onEnd }) => {
     onEnd(currentTimeElapsed);
   };
 
-  // time to HH:MM:SS format
+  // Función para formatear el tiempo en HH:MM:SS
   const formatTime = (time: number): string => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -50,7 +50,7 @@ const Timer: React.FC<TimerProps> = ({ onEnd }) => {
     <>
       <div className="text-center m-auto">
         <div className="timer">{formatTime(timeElapsed)}</div>
-        <button className='button btn-solid mt-4' onClick={handlePauseClick}>{isPaused ? 'Resume' : 'Pause'}</button>
+        <button className='button btn-solid mt-4' onClick={handlePauseClick}>{isActive ? 'Pause' : 'Resume'}</button>
         <br></br>
         <button className='button btn-solid mt-4' onClick={handleEndClick}>End Workout</button>
       </div>
