@@ -30,6 +30,7 @@ const port = process.env.PORT;
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const exerciseRouters = require("./routes/exerciseRoutes");
+const mExerciseRoutes = require("./routes/mExerciseRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 app.use("/", authRoutes);
 app.use("/users", userRoutes);
 app.use("/exercise", exerciseRouters);
+app.use("/m_exercise", mExerciseRoutes);
 app.use("/chat", chatRoutes);
 app.use("/room", roomRoutes);
 
