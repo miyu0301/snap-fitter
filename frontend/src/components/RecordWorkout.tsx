@@ -5,7 +5,8 @@ import Timer from './Timer';
 import FloatingButton from './FloatingButton';
 import { useUser } from '../user/userProvider';
 import { useAuth } from '../auth/AuthProvider';
-import { fetchActivities, calculateCaloriesBurned } from './CaloriesApi/api';
+import { calculateCaloriesBurned } from './CaloriesApi/api';
+import { fetchExercises } from './Exercises/exercises';
 import { common } from '../Common';
 import { API_URL } from '../auth/AuthConstants';
 import { Link } from 'react-router-dom';
@@ -29,7 +30,7 @@ const RecordWorkout: React.FC = () => {
   const [showTimer, setShowTimer] = useState(false);
   const [workoutTime, setWorkoutTime] = useState<string[]>();
   const [showWorkoutTime, setShowWorkoutTime] = useState(false); //store the total time 
-  const [activities, setActivities] = useState<any[]>([]); //store activities from api
+  const [activities, setActivities] = useState<[] | any>([]); //store activities from api
   const [selectedActivity, setSelectedActivity] = useState<string>(''); //store the activity selected by the user
   const [selectedActivityName, setSelectedActivityName] = useState<string>('');
   const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Estado de pausa del temporizador 
@@ -46,7 +47,7 @@ const RecordWorkout: React.FC = () => {
     start_datetime: null,
     end_datetime: null,
     pauseStartTime: null,
-    pause: null,
+    pause: 0,
     burned_calories: null,
   });
 
@@ -69,8 +70,9 @@ const RecordWorkout: React.FC = () => {
   useEffect(() => {  /// get activities from API
     const fetchActivityData = async () => {
       try {
-        const objActivities = await fetchActivities();
+        const objActivities = await fetchExercises();
         setActivities(objActivities);
+        console.log(objActivities)
       } catch (error) {
         console.error('Error fetching activities:', error);
       }
@@ -123,7 +125,7 @@ const RecordWorkout: React.FC = () => {
     setEndDateTime(endTime)
     const duration = common.calculateDurationForDisplay(workout.start_datetime, endTime, workout.pause);
     let durationMinutes = calculateDurationMinutes(workout.start_datetime, endTime, workout.pause);
-    const burnedCalories = await caloriesBurned(selectedActivity, durationMinutes)  /// llamada a la función asincrona para realizar el 
+    const burnedCalories = await caloriesBurned(selectedActivityName, durationMinutes)  /// llamada a la función asincrona para realizar el 
 
     setWorkout({
       ...workout,
@@ -131,21 +133,14 @@ const RecordWorkout: React.FC = () => {
     });
 
     setCalories(burnedCalories)
-
-    console.log('Total workout duration:', duration);
     setShowTimer(false);
-    console.log({workout})
     setIsWokoutEnd(true)
-    console.log({workout})
     setShowWorkoutTime(true);
-    console.log({workout})
     setWorkoutTime(duration)
-    console.log({workout})
-    //saveRecordToDatabase(workout);
     
   };  
 
-  const caloriesBurned = async (exercise:string, duration:number ) => {
+  const caloriesBurned = async (selectedActivityName:string, duration:number ) => {
     try {
         const response = await calculateCaloriesBurned(selectedActivityName, duration); //función que gestiona la llamada a una api
         return response[0].total_calories
@@ -157,13 +152,17 @@ const RecordWorkout: React.FC = () => {
 
 
   const handleSelectActivity = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOption = event.target.selectedOptions[0];
+    const name = selectedOption.getAttribute('data-name');
     setSelectedActivity(event.target.value);
-    setSelectedActivityName('Unicycling')
+    setSelectedActivityName(name ? name : ''); // Si el atributo data-name está presente, establece el valor; de lo contrario, establece
+    
     setWorkout({
-      ...workout,
-      exercise_id: event.target.value,
+        ...workout,
+        exercise_id: event.target.value,
     });
-  };
+};
+
 
   const saveRecordToDatabase = async (workout: Workout) => {
     console.log({workout})
@@ -212,40 +211,11 @@ const RecordWorkout: React.FC = () => {
   
   }, [isWokoutEnd,calories,endDateTime]);
 
-  // useEffect(() => {
-  //   console.log({workout})
-  //   // Verificar si workout tiene todas las propiedades necesarias para guardar
-  //   if (workout.start_datetime !== null && workout.end_datetime !== null && workout.burned_calories !== 0) {
-  //     // Llamar a la función para guardar el registro en la base de datos
-  //     const saveDB = saveRecordToDatabase(workout);
-  //     console.log({saveDB})
-  //   }
-  // }, [calories]);  
-
 
   const handleStartNewRecord = () => {
     window.location.reload();
   }
 
-
-  
-
-  const activitiesStatic = {
-    "activities": [
-      "Cycling, mountain bike, bmx",
-      "Cycling, <10 mph, leisure bicycling",
-      "Cycling, >20 mph, racing",
-      "Cycling, 10-11.9 mph, light",
-      "Cycling, 12-13.9 mph, moderate",
-      "Cycling, 14-15.9 mph, vigorous",
-      "Cycling, 16-19 mph, very fast, racing",
-      "Unicycling",
-      "Stationary cycling, very light",
-      "Stationary cycling, light",
-      "Stationary cycling, moderate",
-      "Stationary cycling, vigorous",
-    ]
-  }
   return (
     <>
       <UserNavbar username={dbUser ? dbUser.username : ''} />
@@ -258,11 +228,14 @@ const RecordWorkout: React.FC = () => {
                 <h2 className='anton-regular txt-md mb-4 text-center'>Record workout</h2>
                 <p>Select workout:</p>
                 <Form.Select aria-label="Default select example" onChange={handleSelectActivity} value={selectedActivity}>
-                  <option>Select type of activity</option>
-                  {Object.entries(activitiesStatic.activities).map(([key, value]) => (
-                    <option key={key} value={key}>{value}</option>
-                  ))}
+                <option>Select type of activity</option>
+                {
+                activities.map((activity:any, id: number) => {
+                return <option data-name={activity.name} value={activity.id} key={id}>{activity.name}</option>;
+                })
+                }
                 </Form.Select>
+
                 <div className="text-right">
                   <button className='button btn-solid w-50 mt-4' onClick={handleStartClick}>Start</button>
                 </div>

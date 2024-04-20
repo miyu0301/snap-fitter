@@ -64,7 +64,7 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_ENV}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
