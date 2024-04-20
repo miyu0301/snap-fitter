@@ -2,11 +2,6 @@ import { Request, Response } from "express";
 
 const knex = require("../../db/knexConfig");
 
-// interface RequestBodySelect {
-//   to_user_id?: number;
-//   to_room_id?: number;
-// }
-
 /**
  * get all chats data from the database
  * @param req
@@ -22,9 +17,20 @@ const getChats = async (req: Request, res: Response): Promise<void> => {
     let query = knex("chats");
     if (user_id !== null && user_id !== undefined) {
       query = query
-        .where("chats.from_user_id", from_user_id)
-        .where("chats.to_user_id", user_id)
-        .where("chats.to_room_id", null);
+        .where("chats.to_room_id", null)
+        .andWhere((builder: any) =>
+          builder
+            .where((sub: any) =>
+              sub
+                .where("from_user_id", from_user_id)
+                .andWhere("to_user_id", user_id)
+            )
+            .orWhere((sub: any) =>
+              sub
+                .where("from_user_id", user_id)
+                .andWhere("to_user_id", from_user_id)
+            )
+        );
     } else if (room_id !== null && room_id !== undefined) {
       query = query
         .where("chats.to_room_id", room_id)
@@ -45,6 +51,7 @@ const getChats = async (req: Request, res: Response): Promise<void> => {
       .orderBy("chats.created_datetime", "asc");
 
     const chats = await query;
+    console.log(chats);
     res.json(chats);
   } catch (err: any) {
     res.status(500).send(err.message);

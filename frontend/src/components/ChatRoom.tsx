@@ -1,10 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Modal } from "react-bootstrap";
 import { format } from "date-fns";
 import { io } from "socket.io-client";
 import { useUser } from "../user/userProvider";
+import RoomCreateModal from "./RoomCreateModal";
+import RoomEditModal from "./RoomEditModal";
 
 type Chat = {
   created_datetime: Date;
@@ -15,32 +17,30 @@ type Chat = {
 const ChatRoom = ({
   toUserId,
   toRoomId,
+  setToRoomId,
+  onPageUpdate,
 }: {
   toUserId: number;
   toRoomId: number;
+  setToRoomId: (id: number) => void;
+  onPageUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const socket = io(import.meta.env.VITE_API_ENV);
+  const socket = io(import.meta.env.VITE_API_ENV, {
+    autoConnect: false,
+  });
+  socket.connect();
+  socket.on("connect_error", (err) => {
+    console.log(`connect_error due to ${err.message}`);
+  });
   const { dbUser } = useUser();
-  // const [loginedUserName, setLoginedUserName] = useState("");
   const [roomChatMode, setRoomChatMode] = useState(false);
   const [toUsername, setToUsername] = useState("");
   const [toRoomName, setToRoomName] = useState("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [comment, setComment] = useState("");
-
-  // useEffect(() => {
-  //   const fechAllRecords = async () => {
-  //     try {
-  //       const user = await axios.get(
-  //         import.meta.env.VITE_API_ENV + "/users/" + dbUser.id
-  //       );
-  //       setLoginedUserName(user.data.username);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fechAllRecords();
-  // }, []);
+  const [update, onUpdate] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const closeModal = () => setEditModal(false);
 
   useEffect(() => {
     const fechAllRecords = async () => {
@@ -59,13 +59,14 @@ const ChatRoom = ({
         const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
           params,
         });
+        console.log(res.data);
         setChats(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fechAllRecords();
-  }, [toUserId]);
+  }, [update, toUserId]);
 
   useEffect(() => {
     const fechAllRecords = async () => {
@@ -89,7 +90,7 @@ const ChatRoom = ({
       }
     };
     fechAllRecords();
-  }, [toRoomId]);
+  }, [update, toRoomId]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -148,7 +149,18 @@ const ChatRoom = ({
   return (
     <>
       <div className="">
-        <p>{roomChatMode ? toRoomName : toUsername}</p>
+        {roomChatMode ? (
+          <div className="d-flex">
+            <p>{toRoomName}</p>
+            <div>
+              <Button variant="primary" onClick={() => setEditModal(true)}>
+                setting
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <p>{toUsername}</p>
+        )}
         <div className="overflow-auto" style={{ height: "70vh" }}>
           {chats.map((chat: Chat, idx: number) => (
             <div key={idx}>
@@ -175,6 +187,15 @@ const ChatRoom = ({
           </div>
         </Form>
       </div>
+      <Modal show={editModal} onHide={closeModal}>
+        <RoomEditModal
+          closeModal={closeModal}
+          onUpdate={onUpdate}
+          toRoomId={toRoomId}
+          setToRoomId={setToRoomId}
+          onPageUpdate={onPageUpdate}
+        />
+      </Modal>
     </>
   );
 };

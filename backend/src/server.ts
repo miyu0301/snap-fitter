@@ -12,8 +12,6 @@ const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_API,
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
   },
 });
 
