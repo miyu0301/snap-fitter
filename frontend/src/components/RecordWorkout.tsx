@@ -1,123 +1,196 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import UserNavbar from '../partials/navbar';
 import Timer from './Timer';
 import FloatingButton from './FloatingButton';
 import { useUser } from '../user/userProvider';
 import { useAuth } from '../auth/AuthProvider';
-import { fetchActivities } from './CaloriesApi/api';
-import { format } from "date-fns";
+import { fetchActivities, calculateCaloriesBurned } from './CaloriesApi/api';
+import { common } from '../Common';
+import { API_URL } from '../auth/AuthConstants';
+import { Link } from 'react-router-dom';
 
-type Record = {
-  id: number;
-  exercise_name: string;
-  user_id: number;
-  start_datetime: string;
-  end_datetime: string;
-  burned_calories: number;
+type Workout = {
+  user_id: number  | null;
+  exercise_id: number  | null;
+  start_datetime: Date | null;
+  end_datetime: Date | null;
+  pauseStartTime: Date | null;
+  pause: number; // Time in seconds that the user was paused
+  burned_calories: 0 | null;
 };
+
+interface CaloriesResponse {
+  calories: number;
+}
 
 const RecordWorkout: React.FC = () => {
   const user = useUser();
-  const [dbUser, setDbUser] = useState(null);
   const auth = useAuth();
   const sessionID: any = auth.getSessionId();
+  const [dbUser, setDbUser] = useState(null);
 
-  useEffect(() => {
+  const [showTimer, setShowTimer] = useState(false);
+  const [workoutTime, setWorkoutTime] = useState<string[]>();
+  const [showWorkoutTime, setShowWorkoutTime] = useState(false); //store the total time 
+  const [activities, setActivities] = useState<any[]>([]); //store activities from api
+  const [selectedActivity, setSelectedActivity] = useState<string>(''); //store the activity selected by the user
+  const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Estado de pausa del temporizador  
+
+  const [calories, setCalories] = useState<number | null>(null);
+
+  const [workout, setWorkout] = useState<Workout>({
+    user_id: null,
+    exercise_id: null,
+    start_datetime: null,
+    end_datetime: null,
+    pauseStartTime: null,
+    pause: 0,
+    burned_calories: 0,
+  });
+
+  useEffect(() => { /// Getting the user data
     const fetchData = async () => {
       try {
         const userData: any = await user.fetchUserData(sessionID);
         setDbUser(userData);
+        setWorkout({
+          ...workout,
+          user_id: userData.id,
+        });
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
     fetchData();
   }, []);
 
-  const [showTimer, setShowTimer] = useState(false);
-  const [workoutTime, setWorkoutTime] = useState(0);
-  const [showWorkoutTime, setShowWorkoutTime] = useState(false);
-  const [activities, setActivities] = useState<any[]>([]);
-  const [selectedActivity, setSelectedActivity] = useState<string>('');
-  const [record, setRecord] = useState<Record | null>(null);
-  const [isTimerPaused, setIsTimerPaused] = useState(false); // Estado de pausa del temporizador
 
-  useEffect(() => {
+ 
+  useEffect(() => {  /// get activities from API
     const fetchActivityData = async () => {
       try {
-        const apiCalories = await fetchActivities();
-        setActivities(apiCalories);
+        const objActivities = await fetchActivities();
+        setActivities(objActivities);
       } catch (error) {
         console.error('Error fetching activities:', error);
       }
     };
-
     if (activities.length === 0) {
       fetchActivityData();
     }
   }, [activities]);
 
+
   const handleStartClick = () => {
-    setShowTimer(true);
-    setIsTimerPaused(false); // Reinicia el estado de pausa
-    const currentDate = new Date();
-    const startDateFormat = format(currentDate, 'yyyy/MM/dd HH:mm:ss');
+    setShowTimer(true);  // Show timer
+    setWorkout({
+      ...workout,
+      start_datetime: new Date(),
+    });
+  };
 
-    if (selectedActivity) {
-      const newRecord: Record = {
-        id: 1, // Asigna un ID apropiado
-        exercise_name: selectedActivity,
-        user_id: dbUser.id,
-        start_datetime: startDateFormat,
-        end_datetime: "",
-        burned_calories: 0,
-      };
-      setRecord(newRecord);
+  const handlePauseClick = () => {
+    if (!workout.pauseStartTime) {
+      setWorkout({
+        ...workout,
+        pauseStartTime: new Date(),
+      });
     }
   };
 
-  const handleEndClick = (timeElapsed: number) => {
-    if (!isTimerPaused) { // Detener el temporizador solo si no está pausado
-      const currentDate = new Date();
-      const endDateFormat = format(currentDate, 'yyyy/MM/dd HH:mm:ss');
-
-      setShowTimer(false);
-      setWorkoutTime(timeElapsed);
-      setShowWorkoutTime(true);
-      if (record) {
-        setRecord(prevRecord => ({
-          ...prevRecord,
-          end_datetime: endDateFormat,
-        }));
-      }
+  const handleResumeClick = () => {
+    if (workout.pauseStartTime) {
+      const pauseEndTime = new Date();
+      const pauseDuration = Math.floor((pauseEndTime.getTime() - workout.pauseStartTime.getTime()) / 1000);
+      setWorkout({
+        ...workout,
+        pause: workout.pause + pauseDuration,
+      });
     }
-  };
+  }; 
+
+  const handleEndClick = () => {
+    console.log({workout});
+    const endTime = new Date();
+    setWorkout({
+      ...workout,
+      end_datetime: endTime,
+    });
+    console.log(workout.start_datetime)
+    const duration = common.calculateDurationForDisplay(workout.start_datetime, endTime, workout.pause);
+    //const duration2 = calculateDuration(workout.start_datetime, endTime, workout.pause);
+    console.log('Total workout duration:', duration);
+    console.log({workout});
+    setShowTimer(false);
+    setIsWokoutEnd(true)
+    setShowWorkoutTime(true);
+    setWorkoutTime(duration)
+  };  
+
 
   const handleSelectActivity = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedActivity(event.target.value);
+    setWorkout({
+      ...workout,
+      exercise_id: event.target.value,
+    });
   };
 
-  const calculateCalories = (startTime: Date, endTime: Date, timeElapsed: number): number => {
-    console.log(record)
-    return 0; // Devuelve un valor apropiado
-  };
+  const saveRecordToDatabase = async (workout: Workout) => {
+    console.log({workout})
+    try {
+      const response = await fetch(`${API_URL}/exercise`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(workout)
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Data sent successfully:', data);
+      } else {
+        console.error('Failed to send data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  // useEffect(()=> {
+  //   setWorkout({
+  //     ...workout,
+  //     burned_calories: calories,
+  //   });
+  //   console.log('CALORIES')
+  //   console.log(workout)
+  // }, [calories])
 
   useEffect(() => {
-    if (record) {
-      const endTime = new Date(record.end_datetime);
-      const startTime = new Date(record.start_datetime);
-      const timeElapsed = (endTime.getTime() - startTime.getTime()) / 1000; // Tiempo transcurrido en segundos
-      const calories = calculateCalories(startTime, endTime, timeElapsed);
-      if (record.burned_calories !== calories) { // Verificar si las calorías han cambiado
-        setRecord(prevRecord => ({
-          ...prevRecord,
-          burned_calories: calories,
-        }));
-      }
-    }
-  }, [record]);
+    console.log(workout)
+    if(isWokoutEnd){
+    saveRecordToDatabase(workout)
+    
+    // const caloriesBurned = async () => {
+    //   try {
+    //     const response = await calculateCaloriesBurned('Unicycling', 30);
+    //     setCalories(response.total_calories);
+    //     console.log(response.total_calories)
+    //   } catch (error) {
+    //     console.error('Error calculating calories:', error);
+    //   }
+    // }; 
+
+    // caloriesBurned()
+  }   
+  
+  }, [isWokoutEnd]);
+
+  const handleStartNewRecord = () => {
+    window.location.reload();
+  }
+  
 
   const activitiesStatic = {
     "activities": [
@@ -135,7 +208,6 @@ const RecordWorkout: React.FC = () => {
       "Stationary cycling, vigorous",
     ]
   }
-
   return (
     <>
       <UserNavbar username={dbUser ? dbUser.username : ''} />
@@ -150,7 +222,7 @@ const RecordWorkout: React.FC = () => {
                 <Form.Select aria-label="Default select example" onChange={handleSelectActivity} value={selectedActivity}>
                   <option>Select type of activity</option>
                   {Object.entries(activitiesStatic.activities).map(([key, value]) => (
-                    <option key={key} value={value}>{value}</option>
+                    <option key={key} value={key}>{value}</option>
                   ))}
                 </Form.Select>
                 <div className="text-right">
@@ -159,10 +231,18 @@ const RecordWorkout: React.FC = () => {
               </div>
             ) : null}
             {showTimer && !showWorkoutTime && (
-              <Timer onEnd={handleEndClick} isPaused={isTimerPaused} />
+              <Timer             
+              onPause={handlePauseClick} 
+              onResume={handleResumeClick} 
+              onEnd={handleEndClick}             
+            />
             )}
             {showWorkoutTime && (
-              <p>Total workout time: {workoutTime} seconds <br />Calories burned: {record?.burned_calories}</p>
+              <div className='text-center'>
+              <p>Total workout time: {workoutTime} <br />Calories burned: {workout?.burned_calories}</p>
+              <Button className="button btn-solid mt-4" onClick={handleStartNewRecord}>Record new workout</Button>
+              <Link className="button btn-solid mt-4" to="/history">See History</Link>
+              </div>
             )}
           </div>
         </div>
