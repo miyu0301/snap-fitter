@@ -172,6 +172,7 @@ interface Room {
   create_user_id: number;
   created_datetime: Date;
   members: [];
+  member_ids: number[];
 }
 
 const getRoomWithMembers = async (id: number): Promise<Room | null> => {
@@ -194,15 +195,19 @@ const getRoomWithMembers = async (id: number): Promise<Room | null> => {
     );
 
   if (rooms.length > 0) {
+    let member_ids: number[] = [];
+    rooms.map((room: { user_id: number }) => member_ids.push(room.user_id));
+
     let result: Room = {
       id: rooms[0].id,
       room_name: rooms[0].room_name,
       create_user_id: rooms[0].create_user_id,
       created_datetime: rooms[0].created_datetime,
       members: rooms.map((room: { user_id: number; username: string }) => ({
-        user_id: room.user_id,
+        id: room.user_id,
         username: room.username,
       })),
+      member_ids: member_ids,
     };
     return result;
   } else {

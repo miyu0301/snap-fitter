@@ -17,18 +17,20 @@ const Chat = () => {
   const [loading, setLoading] = useState(true);
   const [toUserId, setToUserId] = useState(0);
   const [toRoomId, setToRoomId] = useState(0);
+  const [pageUpdate, onPageUpdate] = useState(false);
 
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
         fetchUserData(logined_user_id);
         setLoading(false);
+        onPageUpdate(false);
       } catch (err) {
         console.log(err);
       }
     };
     fechAllRecords();
-  }, []);
+  }, [pageUpdate]);
 
   return (
     <>
@@ -42,7 +44,12 @@ const Chat = () => {
               <DirectMessageList setToUserId={setToUserId} />
             </div>
             <div className="w-100">
-              <ChatRoom toUserId={toUserId} toRoomId={toRoomId} />
+              <ChatRoom
+                toUserId={toUserId}
+                toRoomId={toRoomId}
+                setToRoomId={setToRoomId}
+                onPageUpdate={onPageUpdate}
+              />
             </div>
           </div>
         </div>
