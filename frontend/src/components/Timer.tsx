@@ -1,61 +1,70 @@
 import React, { useState, useEffect } from 'react';
 
 interface TimerProps {
-  onEnd: (timeElapsed: number) => void;
-  isPaused: boolean;
+  onPause: () => void;
+  onResume: () => void;
+  onEnd: () => void;
 }
 
-const Timer: React.FC<TimerProps> = ({ onEnd, isPaused }) => {
+const Timer: React.FC<TimerProps> = ({ onPause, onResume, onEnd }) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [isActive, setIsActive] = useState(true);
-  const [pausedTime, setPausedTime] = useState(0);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let intervalId: NodeJS.Timeout;
 
     if (isActive && !isPaused) {
-      interval = setInterval(() => {
-        setTimeElapsed(prevTimeElapsed => prevTimeElapsed + 1);
+      intervalId = setInterval(() => {
+        setTimeElapsed(prevTime => prevTime + 1);
       }, 1000);
-    } else {
-      clearInterval(interval);
+    }else {
+      clearInterval(intervalId);
     }
 
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
   }, [isActive, isPaused]);
 
-  const handlePauseClick = () => {
-    setIsActive(prevIsActive => !prevIsActive);
-    if (!isPaused) {
-      setPausedTime(timeElapsed);
-    }
+  const handlePause = () => {
+    setIsPaused(true);
+    onPause();
   };
 
-  const handleEndClick = () => {
-    const currentTimeElapsed = isPaused ? pausedTime : timeElapsed;
+  const handleResume = () => {
+    setIsPaused(false);
+    onResume();
+  };
+
+  const handleEnd = () => {
     setIsActive(false);
-    onEnd(currentTimeElapsed);
-  };
-
-  // Función para formatear el tiempo en HH:MM:SS
-  const formatTime = (time: number): string => {
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
-
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+    onEnd()
+  }
 
   return (
-    <>
-      <div className="text-center m-auto">
-        <div className="timer">{formatTime(timeElapsed)}</div>
-        <button className='button btn-solid mt-4' onClick={handlePauseClick}>{isActive ? 'Pause' : 'Resume'}</button>
-        <br></br>
-        <button className='button btn-solid mt-4' onClick={handleEndClick}>End Workout</button>
-      </div>
-    </>
+    <div className="text-center m-auto">
+      <div className="timer">{formatTime(timeElapsed)}</div>
+      {isPaused ? (
+        <button className="button btn-solid mt-4" onClick={handleResume}>
+          Resume
+        </button>
+      ) : (
+        <button className="button btn-solid mt-4" onClick={handlePause}>
+          Pause
+        </button>
+      )}
+      <br />
+      <button className="button btn-solid mt-4" onClick={handleEnd}>
+        End Workout
+      </button>
+    </div>
   );
+};
+
+const formatTime = (time: number): string => {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = time % 60;
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };
 
 export default Timer;
