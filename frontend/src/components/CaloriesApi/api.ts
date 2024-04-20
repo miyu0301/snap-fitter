@@ -25,7 +25,11 @@ export const fetchActivities = async () => {
 
 
 export const calculateCaloriesBurned = async (exercise:string, duration:number) => {
-  try {
+  if(duration <= 0){
+    duration = 1;
+  }
+
+  try {  
     //exercise: name of the excercise
     //duration: minutes
       const response = await fetch(`https://api.api-ninjas.com/v1/caloriesburned?activity=${exercise}&duration=${duration}`, {
@@ -40,6 +44,7 @@ export const calculateCaloriesBurned = async (exercise:string, duration:number) 
       throw new Error('Error fetching calories');
     }
     const data = await response.json();
+    console.log({data})
     return data;
 
   } catch (error) {
