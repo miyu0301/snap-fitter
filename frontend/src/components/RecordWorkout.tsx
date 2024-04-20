@@ -16,13 +16,9 @@ type Workout = {
   start_datetime: Date | null;
   end_datetime: Date | null;
   pauseStartTime: Date | null;
-  pause: number; // Time in seconds that the user was paused
-  burned_calories: 0 | null;
+  pause: null | number; // Time in seconds that the user was paused
+  burned_calories: null;
 };
-
-interface CaloriesResponse {
-  calories: number;
-}
 
 const RecordWorkout: React.FC = () => {
   const user = useUser();
@@ -35,9 +31,14 @@ const RecordWorkout: React.FC = () => {
   const [showWorkoutTime, setShowWorkoutTime] = useState(false); //store the total time 
   const [activities, setActivities] = useState<any[]>([]); //store activities from api
   const [selectedActivity, setSelectedActivity] = useState<string>(''); //store the activity selected by the user
-  const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Estado de pausa del temporizador  
+  const [selectedActivityName, setSelectedActivityName] = useState<string>('');
+  const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Estado de pausa del temporizador 
+ 
+  const [startDateTime, setStartDateTime] = useState<Date | null>(null); // Estado de pausa del temporizador 
+  const [endDateTime, setEndDateTime] = useState<Date | null>(null); // Estado de pausa del temporizador 
+  const [pauseDuration, setPauseDuration] = useState<Date | null>(null); // Estado de pausa del temporizador  
 
-  const [calories, setCalories] = useState<number | null>(null);
+  const [calories, setCalories] = useState<null | number>(null);
 
   const [workout, setWorkout] = useState<Workout>({
     user_id: null,
@@ -45,8 +46,8 @@ const RecordWorkout: React.FC = () => {
     start_datetime: null,
     end_datetime: null,
     pauseStartTime: null,
-    pause: 0,
-    burned_calories: 0,
+    pause: null,
+    burned_calories: null,
   });
 
   useEffect(() => { /// Getting the user data
@@ -64,8 +65,6 @@ const RecordWorkout: React.FC = () => {
     };
     fetchData();
   }, []);
-
-
  
   useEffect(() => {  /// get activities from API
     const fetchActivityData = async () => {
@@ -82,11 +81,14 @@ const RecordWorkout: React.FC = () => {
   }, [activities]);
 
 
+  
   const handleStartClick = () => {
     setShowTimer(true);  // Show timer
+    const start_datetime = new Date();
+    setStartDateTime(start_datetime)
     setWorkout({
       ...workout,
-      start_datetime: new Date(),
+      start_datetime: start_datetime,
     });
   };
 
@@ -107,30 +109,56 @@ const RecordWorkout: React.FC = () => {
         ...workout,
         pause: workout.pause + pauseDuration,
       });
+      setPauseDuration((workout.pause + pauseDuration))
     }
   }; 
 
-  const handleEndClick = () => {
+  const handleEndClick = async () => {
     console.log({workout});
     const endTime = new Date();
+    setWorkout((prevWorkout) => ({
+      ...prevWorkout,
+      end_datetime: endTime,
+    }));
+    setEndDateTime(endTime)
+    const duration = common.calculateDurationForDisplay(workout.start_datetime, endTime, workout.pause);
+    let durationMinutes = calculateDurationMinutes(workout.start_datetime, endTime, workout.pause);
+    const burnedCalories = await caloriesBurned(selectedActivity, durationMinutes)  /// llamada a la función asincrona para realizar el 
+
     setWorkout({
       ...workout,
-      end_datetime: endTime,
+      burned_calories: burnedCalories,
     });
-    console.log(workout.start_datetime)
-    const duration = common.calculateDurationForDisplay(workout.start_datetime, endTime, workout.pause);
-    //const duration2 = calculateDuration(workout.start_datetime, endTime, workout.pause);
+
+    setCalories(burnedCalories)
+
     console.log('Total workout duration:', duration);
-    console.log({workout});
     setShowTimer(false);
+    console.log({workout})
     setIsWokoutEnd(true)
+    console.log({workout})
     setShowWorkoutTime(true);
+    console.log({workout})
     setWorkoutTime(duration)
+    console.log({workout})
+    //saveRecordToDatabase(workout);
+    
+  };  
+
+  const caloriesBurned = async (exercise:string, duration:number ) => {
+    try {
+        const response = await calculateCaloriesBurned(selectedActivityName, duration); //función que gestiona la llamada a una api
+        return response[0].total_calories
+        
+      } catch (error) {
+         console.error('Error calculating calories:', error);
+      }
   };  
 
 
   const handleSelectActivity = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedActivity(event.target.value);
+    setSelectedActivityName('Unicycling')
     setWorkout({
       ...workout,
       exercise_id: event.target.value,
@@ -149,7 +177,7 @@ const RecordWorkout: React.FC = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('Data sent successfully:', data);
+        return data;
       } else {
         console.error('Failed to send data');
       }
@@ -158,38 +186,48 @@ const RecordWorkout: React.FC = () => {
     }
   }
 
-  // useEffect(()=> {
-  //   setWorkout({
-  //     ...workout,
-  //     burned_calories: calories,
-  //   });
-  //   console.log('CALORIES')
-  //   console.log(workout)
-  // }, [calories])
+  //tmp function
+  const calculateDurationMinutes = (start_datetime: Date, end_datetime: Date, pause:number) => {
+    const pause_milliseconds = pause * 1000
+    const diff = end_datetime.getTime() - start_datetime.getTime() - pause_milliseconds
+    return Math.floor(diff / 60000)
+  }
+
 
   useEffect(() => {
-    console.log(workout)
-    if(isWokoutEnd){
-    saveRecordToDatabase(workout)
-    
-    // const caloriesBurned = async () => {
-    //   try {
-    //     const response = await calculateCaloriesBurned('Unicycling', 30);
-    //     setCalories(response.total_calories);
-    //     console.log(response.total_calories)
-    //   } catch (error) {
-    //     console.error('Error calculating calories:', error);
-    //   }
-    // }; 
+    //console.log(workout)
+    if(isWokoutEnd && calories && endDateTime !== null){
+      const workOutBack = { ...workout, user_id: dbUser.id, exercise_id: selectedActivity, start_datetime: startDateTime, end_datetime:endDateTime, pause: pauseDuration, burned_calories: calories };
 
-    // caloriesBurned()
+      console.log({workOutBack})
+      const saveDB = saveRecordToDatabase(workOutBack);
+      console.log({saveDB})
+
+      console.log("workout is completed")
+      console.log(workout)
+      console.log(endDateTime)
+      console.log(isWokoutEnd)
+      console.log(calories)
   }   
   
-  }, [isWokoutEnd]);
+  }, [isWokoutEnd,calories,endDateTime]);
+
+  // useEffect(() => {
+  //   console.log({workout})
+  //   // Verificar si workout tiene todas las propiedades necesarias para guardar
+  //   if (workout.start_datetime !== null && workout.end_datetime !== null && workout.burned_calories !== 0) {
+  //     // Llamar a la función para guardar el registro en la base de datos
+  //     const saveDB = saveRecordToDatabase(workout);
+  //     console.log({saveDB})
+  //   }
+  // }, [calories]);  
+
 
   const handleStartNewRecord = () => {
     window.location.reload();
   }
+
+
   
 
   const activitiesStatic = {
