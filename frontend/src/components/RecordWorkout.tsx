@@ -241,6 +241,7 @@ const RecordWorkout: React.FC = () => {
               <div className='text-center'>
               <p>Total workout time: {workoutTime} <br />Calories burned: {workout?.burned_calories}</p>
               <Button className="button btn-solid mt-4" onClick={handleStartNewRecord}>Record new workout</Button>
+              <br></br>
               <Link className="button btn-solid mt-4" to="/history">See History</Link>
               </div>
             )}
