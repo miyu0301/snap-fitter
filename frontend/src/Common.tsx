@@ -26,6 +26,24 @@ export const common = {
     }
   },
 
+  /**
+   * caluculate exercise duration minutes
+   * @param start_datetime
+   * @param end_datetime
+   * @param pause
+   * @returns
+   */
+  calculateDurationMinutes: (
+    start_datetime: Date,
+    end_datetime: Date,
+    pause: number
+  ) => {
+    const pause_milliseconds = pause * 1000;
+    const diff =
+      end_datetime.getTime() - start_datetime.getTime() - pause_milliseconds;
+    return Math.floor(diff / 60000);
+  },
+
   GENDER_DICT: {
     1: "Male",
     2: "Female",
@@ -44,3 +62,10 @@ export const common = {
 };
 
 export default common;
+
+export type UserInfo = {
+  id: number;
+  username: string;
+  goal_id: 1 | 2 | 3;
+  level_id: 1 | 2 | 3;
+};

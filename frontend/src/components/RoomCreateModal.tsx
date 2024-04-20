@@ -4,32 +4,33 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-
-type Member = {
-  id: number;
-  username: string;
-};
+import { useUser } from "../user/userProvider";
+import common, { UserInfo } from "../Common";
 
 function RoomCreateModal({
   closeModal,
   onUpdate,
+  setToRoomId,
 }: {
   closeModal: () => void;
   onUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setToRoomId: (id: number) => void;
 }) {
-  const user_id = 2;
+  const { dbUser } = useUser();
   const [roomName, setRoomName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [members, setMembers] = useState<Member[]>([]);
-  const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
-  const [selectedMemberIds, setSelectedMembersIds] = useState<number[]>([]);
+  const [users, setUsers] = useState<UserInfo[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([dbUser]);
+  const [selectedUserIds, setSelectedUsersIds] = useState<number[]>([
+    dbUser.id,
+  ]);
 
   const handleCraeteRoom = async () => {
     try {
       const formData = {
         room_name: roomName,
-        create_user_id: user_id,
-        members: selectedMemberIds,
+        create_user_id: dbUser.id,
+        members: selectedUserIds,
       };
 
       const response = await axios.post(
@@ -37,6 +38,7 @@ function RoomCreateModal({
         formData
       );
       console.log("Update successful", response.data);
+      setToRoomId(response.data.id);
       onUpdate(true);
       closeModal();
     } catch (err) {
@@ -46,49 +48,44 @@ function RoomCreateModal({
 
   const handleSearchChange = (e: { target: { value: string } }) => {
     const { value } = e.target;
-    setSearchTerm(value);
-    searchMembers(value);
+    setSearchTerm(value.split(" ")[0]);
+    searchMembers(value.split(" ")[0]);
   };
 
   const searchMembers = async (searchTerm: string) => {
     if (!searchTerm) {
-      setMembers([]);
+      setUsers([]);
       return;
     }
     try {
-      const res = await axios.get(import.meta.env.VITE_API_ENV + `/users`);
-      console.log(res.data);
-
       const response = await axios.get(
         import.meta.env.VITE_API_ENV + `/users?search=${searchTerm}`
       );
-      setMembers(response.data);
+      setUsers(response.data);
     } catch (error) {
       console.error("Error fetching members:", error);
-      setMembers([]);
+      setUsers([]);
     }
   };
 
   const handleSelectMember = (
     e: MouseEvent<Element, globalThis.MouseEvent>,
-    member: Member
+    member: UserInfo
   ) => {
     e.preventDefault();
-    if (!selectedMembers.some((m: Member) => m.id === member.id)) {
-      setSelectedMembers([...selectedMembers, member]);
-      setSelectedMembersIds([...selectedMemberIds, member.id]);
+    if (!selectedUsers.some((m: UserInfo) => m.id === member.id)) {
+      setSelectedUsers([...selectedUsers, member]);
+      setSelectedUsersIds([...selectedUserIds, member.id]);
     }
   };
 
   const handleRemoveMember = (target_id: number) => {
-    const removedMembers = selectedMembers.filter(
-      (member) => member.id != target_id
-    );
-    setSelectedMembers(removedMembers);
-    console.log(selectedMemberIds);
-    const removedMemberIds = selectedMemberIds.filter((id) => id != target_id);
+    const removedMembers = selectedUsers.filter((user) => user.id != target_id);
+    setSelectedUsers(removedMembers);
+    console.log(selectedUserIds);
+    const removedMemberIds = selectedUserIds.filter((id) => id != target_id);
     console.log(removedMemberIds);
-    setSelectedMembersIds(removedMemberIds);
+    setSelectedUsersIds(removedMemberIds);
   };
 
   return (
@@ -115,25 +112,27 @@ function RoomCreateModal({
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          {members.length > 0 && (
+          {users.length > 0 && (
             <ListGroup>
-              {members.map((member: Member) => (
+              {users.map((user: UserInfo) => (
                 <ListGroup.Item
-                  key={member.id}
-                  onClick={(e) => handleSelectMember(e, member)}
+                  key={user.id}
+                  onClick={(e) => handleSelectMember(e, user)}
                   action
                 >
-                  {member.username}
+                  {`${user.username} ${common.GOAL_DICT[user.goal_id]} / ${
+                    common.LEVEL_DICT[user.level_id]
+                  }`}
                 </ListGroup.Item>
               ))}
             </ListGroup>
           )}
         </Form.Group>
-        {selectedMembers.length > 0 && (
+        {selectedUsers.length > 0 && (
           <div>
             <strong>Selected Users:</strong>
             <ul>
-              {selectedMembers.map((user: Member) => (
+              {selectedUsers.map((user: UserInfo) => (
                 <li key={user.id}>
                   {user.username}{" "}
                   <button onClick={() => handleRemoveMember(user.id)}>

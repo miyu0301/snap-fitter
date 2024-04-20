@@ -4,7 +4,7 @@ import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { format } from "date-fns";
 import { io } from "socket.io-client";
-import { useAuth } from "../auth/AuthProvider";
+import { useUser } from "../user/userProvider";
 
 type Chat = {
   created_datetime: Date;
@@ -20,28 +20,27 @@ const ChatRoom = ({
   toRoomId: number;
 }) => {
   const socket = io(import.meta.env.VITE_API_ENV);
-  const [loginedUserName, setLoginedUserName] = useState("");
+  const { dbUser } = useUser();
+  // const [loginedUserName, setLoginedUserName] = useState("");
   const [roomChatMode, setRoomChatMode] = useState(false);
   const [toUsername, setToUsername] = useState("");
   const [toRoomName, setToRoomName] = useState("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [comment, setComment] = useState("");
-  const auth = useAuth();
-  const logined_user_id: number | undefined = auth.getSessionId();
 
-  useEffect(() => {
-    const fechAllRecords = async () => {
-      try {
-        const user = await axios.get(
-          import.meta.env.VITE_API_ENV + "/users/" + logined_user_id
-        );
-        setLoginedUserName(user.data.username);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fechAllRecords();
-  }, []);
+  // useEffect(() => {
+  //   const fechAllRecords = async () => {
+  //     try {
+  //       const user = await axios.get(
+  //         import.meta.env.VITE_API_ENV + "/users/" + dbUser.id
+  //       );
+  //       setLoginedUserName(user.data.username);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fechAllRecords();
+  // }, []);
 
   useEffect(() => {
     const fechAllRecords = async () => {
@@ -53,6 +52,7 @@ const ChatRoom = ({
         setToUsername(user.data.username);
 
         const params = {
+          from_user_id: dbUser.id,
           user_id: toUserId,
           room_id: undefined,
         };
@@ -94,24 +94,13 @@ const ChatRoom = ({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const created_datetime = new Date();
-    let formData: {
-      from_user_id: number | undefined;
-      to_user_id: number | undefined;
-      to_room_id: number | undefined;
-      comment: string;
-      created_datetime: Date;
-    } = {
-      from_user_id: logined_user_id,
-      to_user_id: undefined,
-      to_room_id: undefined,
+    const formData = {
+      from_user_id: dbUser.id,
+      to_user_id: roomChatMode ? undefined : toUserId,
+      to_room_id: roomChatMode ? toRoomId : undefined,
       comment: comment,
       created_datetime: created_datetime,
     };
-    if (roomChatMode) {
-      formData.to_room_id = toRoomId;
-    } else {
-      formData.to_user_id = toUserId;
-    }
 
     try {
       const response = await axios.post(
@@ -120,11 +109,15 @@ const ChatRoom = ({
       );
       console.log("Update successful", response.data);
 
-      const newChat = {
+      let newChat = {
         created_datetime: created_datetime,
-        username: loginedUserName,
+        username: dbUser.username,
+        is_to_room: roomChatMode,
+        to_user_id: roomChatMode ? undefined : toUserId,
+        to_room_id: roomChatMode ? toRoomId : undefined,
         comment: comment,
       };
+
       socket.emit("sendMessage", newChat);
       // add chats
       let updatedChats = [...chats];
@@ -135,10 +128,21 @@ const ChatRoom = ({
       console.error("Failed to update record", err);
     }
   };
+
   socket.on("receiveMessage", (message) => {
-    let updatedChats = [...chats];
-    updatedChats.push(message);
-    setChats(updatedChats);
+    if (message.is_to_room) {
+      if (message.to_room_id == toRoomId) {
+        let updatedChats = [...chats];
+        updatedChats.push(message);
+        setChats(updatedChats);
+      }
+    } else {
+      if (message.to_user_id == toUserId) {
+        let updatedChats = [...chats];
+        updatedChats.push(message);
+        setChats(updatedChats);
+      }
+    }
   });
 
   return (
