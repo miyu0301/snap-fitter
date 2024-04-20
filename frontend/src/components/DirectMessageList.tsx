@@ -1,60 +1,69 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "react-bootstrap";
-import common from "../Common";
-
-type Message = {
-  user_id: number;
-  username: string;
-  goal_id: 1 | 2 | 3;
-  level_id: 1 | 2 | 3;
-};
+import { Button, Modal } from "react-bootstrap";
+import common, { UserInfo } from "../Common";
+import { useUser } from "../user/userProvider";
+import DirectMessageCreateModal from "./DirectMessageCreateModal";
 
 const DirectMessageList = ({
   setToUserId,
 }: {
   setToUserId: (id: number) => void;
 }) => {
-  const user_id = 3;
-  const [messages, setMessages] = useState([]);
+  const { dbUser } = useUser();
+  const [recipients, setRecipients] = useState([]);
+  const [createModal, setCreateModal] = useState(false);
+  const closeModal = () => setCreateModal(false);
 
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
         const res = await axios.get(
-          import.meta.env.VITE_API_ENV + "/chat/direct_message_list/" + user_id
+          import.meta.env.VITE_API_ENV +
+            "/chat/direct_message_list/" +
+            dbUser.id
         );
-        setMessages(res.data);
-        setToUserId(res.data[0].user_id);
+        setRecipients(res.data);
+        // setToUserId(res.data[0].user_id);
       } catch (err) {
         console.log(err);
       }
     };
     fechAllRecords();
-  }, []);
+  }, [dbUser]);
 
   return (
     <>
-      <div className="h-50 overflow-auto">
+      <div className="h-50">
         <div className="d-flex">
           <p>direct message list</p>
-          <Button variant="primary">New</Button>
+          <Button variant="primary" onClick={() => setCreateModal(true)}>
+            New
+          </Button>
         </div>
-        {messages.map((message: Message, idx: number) => (
+        {recipients.map((recipient: UserInfo, idx: number) => (
           <div
             key={idx}
             style={{ cursor: "pointer" }}
-            onClick={() => setToUserId(message.user_id)}
+            onClick={() => setToUserId(recipient.id)}
           >
-            {message.username}
+            <div>{recipient.username}</div>
             <div className="">
-              {common.GOAL_DICT[message.goal_id] +
+              {common.GOAL_DICT[recipient.goal_id] +
                 " / " +
-                common.LEVEL_DICT[message.level_id]}
+                common.LEVEL_DICT[recipient.level_id]}
             </div>
           </div>
         ))}
+        <Modal show={createModal} onHide={closeModal}>
+          <DirectMessageCreateModal
+            recipients={recipients}
+            setRecipients={setRecipients}
+            closeModal={closeModal}
+            setToUserId={setToUserId}
+          />
+        </Modal>
       </div>
     </>
   );

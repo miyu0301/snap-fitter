@@ -15,12 +15,14 @@ const knex = require("../../db/knexConfig");
  */
 const getChats = async (req: Request, res: Response): Promise<void> => {
   try {
+    const from_user_id = req.query.from_user_id;
     const user_id = req.query.user_id;
     const room_id = req.query.room_id;
 
     let query = knex("chats");
     if (user_id !== null && user_id !== undefined) {
       query = query
+        .where("chats.from_user_id", from_user_id)
         .where("chats.to_user_id", user_id)
         .where("chats.to_room_id", null);
     } else if (room_id !== null && room_id !== undefined) {
@@ -82,7 +84,6 @@ const getDirectMessageList = async (
   try {
     const user_id: number = parseInt(req.params.user_id);
     let list = await knex
-
       .from(
         knex.raw(
           `( 
@@ -97,12 +98,7 @@ const getDirectMessageList = async (
       )
       .join("users", "combined.user_id", "=", "users.id")
       .groupBy("users.id", "users.username")
-      .select(
-        "users.id as user_id",
-        "users.username",
-        "users.goal_id",
-        "users.level_id"
-      );
+      .select("users.id", "users.username", "users.goal_id", "users.level_id");
     res.json(list);
   } catch (err: any) {
     res.status(500).send(err.message);

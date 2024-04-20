@@ -37,6 +37,32 @@ const getRoomById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * get an room list by user id from the database
+ * @param req
+ * @param res
+ * @returns selected room data
+ */
+const getRoomByUserId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user_id: number = parseInt(req.params.user_id);
+    const rooms = await knex("rooms")
+      .leftJoin(
+        "room_user_mappings",
+        "rooms.id",
+        "=",
+        "room_user_mappings.room_id"
+      )
+      .where("room_user_mappings.user_id", user_id)
+      .leftJoin("users", "room_user_mappings.user_id", "=", "users.id")
+      .groupBy("rooms.id", "rooms.room_name")
+      .select("rooms.id as id", "rooms.room_name as room_name");
+    res.json(rooms);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
+
 interface RequestBodyInsert {
   room_name: string;
   create_user_id: number;
@@ -187,6 +213,7 @@ const getRoomWithMembers = async (id: number): Promise<Room | null> => {
 module.exports = {
   getRooms,
   getRoomById,
+  getRoomByUserId,
   createRoom,
   updateRoom,
   deleteRoom,
