@@ -3,20 +3,27 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
+  LineController,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import "chart.js/auto";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  LineController
 );
+
+import { Line } from "react-chartjs-2";
 
 type Record = {
   id: number;
@@ -26,14 +33,22 @@ type Record = {
   end_datetime: Date;
   burned_calories: number;
 };
+type Calorie = {
+  start_datetime: Date;
+  total_calories: number;
+};
 
-function HistoryGraph({ records }: { records: Record[] }) {
-  const labels: string[] = [];
-  const datasets: {
-    label: string;
-    data: number[];
-    backgroundColor: string;
-  }[] = [];
+function HistoryGraph({
+  records,
+  calories,
+}: {
+  records: Record[];
+  calories: Calorie[];
+}) {
+  let labels: string[] = [];
+  let datasets: any[] = [];
+  let data: any = {};
+  let options: any = {};
   const backgroundColors: string[] = [
     "rgb(255, 99, 132)",
     "rgb(75, 192, 192)",
@@ -68,18 +83,37 @@ function HistoryGraph({ records }: { records: Record[] }) {
     return minutes;
   };
 
+  let caloryData: number[] = [];
+  for (let calorie of calories) {
+    caloryData.push(calorie.total_calories);
+  }
+  const calorieDdataset = {
+    type: "line",
+    label: "Burned Calories",
+    data: caloryData,
+    borderWidth: 2,
+    borderColor: "rgba(254,97,132,0.8)",
+    fill: false,
+    yAxisID: "y2",
+  };
+  datasets.push(calorieDdataset);
+
   Object.keys(groupedByExerciseName).forEach((exercise_name) => {
-    const dataset: {
+    const exercisDdataset: {
+      type: string;
       label: string;
       data: number[];
       backgroundColor: string;
+      yAxisID: string;
     } = {
+      type: "bar",
       label: "",
       data: [],
       backgroundColor: "",
+      yAxisID: "y1",
     };
     const durations: number[] = [];
-    dataset.label = exercise_name;
+    exercisDdataset.label = exercise_name;
 
     labels.forEach((start_date) => {
       const result = groupedByExerciseName[exercise_name].filter(
@@ -91,39 +125,50 @@ function HistoryGraph({ records }: { records: Record[] }) {
           : caluculateMinutes(result[0].start_datetime, result[0].end_datetime)
       );
     });
-    dataset.data = durations;
-    dataset.backgroundColor = backgroundColors[datasets.length % 3];
-    datasets.push(dataset);
+    exercisDdataset.data = durations;
+    exercisDdataset.backgroundColor = backgroundColors[datasets.length % 3];
+    datasets.push(exercisDdataset);
   });
-  // console.log("data");
-  // console.log(labels);
-  // console.log(datasets);
 
-  const data = {
+  console.log(datasets);
+  data = {
     labels,
     datasets: datasets,
     // datasets: [
     //   {
+    //     type: "line",
+    //     label: "Sample Line",
+    //     data: [100, 300, 200],
+    //     borderWidth: 2,
+    //     borderColor: "rgba(254,97,132,0.8)",
+    //     fill: false,
+    //     yAxisID: "y2",
+    //   },
+    //   {
+    //     type: "bar",
     //     label: "Running",
-    //     data: data1,
-    //     // data: [10, 20, 5],
+    //     data: [10, 20, 5],
     //     backgroundColor: "rgb(255, 99, 132)",
+    //     yAxisID: "y1",
     //   },
     //   {
+    //     type: "bar",
     //     label: "Walking",
-    //     data: data2,
-    //     // data: [30, 0, 0],
+    //     data: [30, 0, 0],
     //     backgroundColor: "rgb(75, 192, 192)",
+    //     yAxisID: "y1",
     //   },
     //   {
+    //     type: "bar",
     //     label: "Swimming",
-    //     data: data3,
-    //     // data: [20, 0, 50],
+    //     data: [20, 0, 50],
     //     backgroundColor: "rgb(53, 162, 235)",
+    //     yAxisID: "y1",
     //   },
     // ],
   };
-  const options = {
+
+  options = {
     plugins: {
       title: {
         display: true,
@@ -135,15 +180,36 @@ function HistoryGraph({ records }: { records: Record[] }) {
       x: {
         stacked: true,
       },
-      y: {
+      y1: {
         stacked: true,
+        ticks: {
+          callback: function (value: number) {
+            return `${value} m`;
+          },
+        },
+      },
+      y2: {
+        position: "right",
+        stacked: false,
+        ticks: {
+          callback: function (value: number) {
+            return `${value} cal`;
+          },
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
       },
     },
   };
 
+  // console.log("data");
+  // console.log(labels);
+  // console.log(datasets);
+
   return (
     <>
-      <Bar options={options} data={data} />
+      <Line data={data} options={options} />
     </>
   );
 }
