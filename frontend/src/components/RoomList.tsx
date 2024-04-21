@@ -3,15 +3,22 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal } from "react-bootstrap";
 import RoomCreateModal from "./RoomCreateModal";
-import { useUser } from "../user/userProvider";
+// import { useUser } from "../user/userProvider";
+import { UserInfo } from "../Common";
 
 type Room = {
   id: number;
   room_name: string;
 };
 
-const RoomList = ({ setToRoomId }: { setToRoomId: (id: number) => void }) => {
-  const { dbUser } = useUser();
+const RoomList = ({
+  loginedUser,
+  setToRoomId,
+}: {
+  loginedUser: UserInfo | undefined;
+  setToRoomId: (id: number) => void;
+}) => {
+  // const { dbUser } = useUser();
   const [rooms, setRooms] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const [update, onUpdate] = useState(false);
@@ -22,7 +29,7 @@ const RoomList = ({ setToRoomId }: { setToRoomId: (id: number) => void }) => {
     const fechAllRecords = async () => {
       try {
         const res = await axios.get(
-          import.meta.env.VITE_API_ENV + "/room/room_list/" + dbUser.id
+          import.meta.env.VITE_API_ENV + "/room/room_list/" + loginedUser?.id
         );
         console.log(res.data);
         setRooms(res.data);
@@ -31,7 +38,7 @@ const RoomList = ({ setToRoomId }: { setToRoomId: (id: number) => void }) => {
       }
     };
     fechAllRecords();
-  }, [dbUser, update]);
+  }, [loginedUser, update]);
 
   return (
     <>
