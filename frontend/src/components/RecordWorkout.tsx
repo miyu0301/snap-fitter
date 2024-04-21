@@ -1,3 +1,4 @@
+import logo from '../assets/images/logo_v2.png';
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import UserNavbar from '../partials/navbar';
@@ -10,6 +11,10 @@ import { fetchExercises } from './Exercises/exercises';
 import { common } from '../Common';
 import { API_URL } from '../auth/AuthConstants';
 import { Link } from 'react-router-dom';
+import { FaPlay, FaRunning } from 'react-icons/fa';
+import { MdOutlineTimer } from 'react-icons/md';
+import { LuFlame } from 'react-icons/lu';
+import { GoFlame } from 'react-icons/go';
 
 type Workout = {
   user_id: number  | null;
@@ -219,16 +224,26 @@ const RecordWorkout: React.FC = () => {
   return (
     <>
       <UserNavbar username={dbUser ? dbUser.username : ''} />
-      <div className='d-flex align-items-center justify-items-center'>
-        <div className='home-bg-image bg-cover-center col-50'></div>
+      <div className='d-flex align-items-center justify-content-center columns'>
+      
+    
+      <div className='selectworkout-bg-image bg-cover-center col-50 bg-image-border relative'>
+      <div className="div-image-border-radius"></div>
+      </div>
+    
+
         <div className='col-50'>
-          <div className="container text-container vertical-center-form">
+          <div className="container text-container align-items-center vertical-center-form">
+          <div className="w-100">
+          <div className='text-center mb-4'>
+          <img src={logo} width={200} alt='Logo of the app' />
+          </div>
+
             {!showTimer && !showWorkoutTime ? (
-              <div>
-                <h2 className='anton-regular txt-md mb-4 text-center'>Record workout</h2>
-                <p>Select workout:</p>
-                <Form.Select aria-label="Default select example" onChange={handleSelectActivity} value={selectedActivity}>
-                <option>Select type of activity</option>
+             <>                
+                <h2 className='anton-regular txt-md mb-4 text-center'>Select workout</h2>                
+                <Form.Select className="select-custom" aria-label="Default select example" onChange={handleSelectActivity} value={selectedActivity}>
+                <option className='anton-regular'>Select type of activity</option>
                 {
                 activities.map((activity:any, id: number) => {
                 return <option data-name={activity.name} value={activity.id} key={id}>{activity.name}</option>;
@@ -236,13 +251,14 @@ const RecordWorkout: React.FC = () => {
                 }
                 </Form.Select>
 
-                <div className="text-right">
+                <div className="text-center">
                   <button className='button btn-solid w-50 mt-4' onClick={handleStartClick}>Start</button>
                 </div>
-              </div>
+            </>
+              
             ) : null}
             {showTimer && !showWorkoutTime && (
-              <Timer             
+            <Timer             
               onPause={handlePauseClick} 
               onResume={handleResumeClick} 
               onEnd={handleEndClick}             
@@ -250,12 +266,16 @@ const RecordWorkout: React.FC = () => {
             )}
             {showWorkoutTime && (
               <div className='text-center'>
-              <p>Total workout time: {workoutTime} <br />Calories burned: {workout?.burned_calories}</p>
-              <Button className="button btn-solid mt-4" onClick={handleStartNewRecord}>Record new workout</Button>
+              <p className="mb-0 pb-0">Duration:</p>
+              <h2 className="anton-regular"><MdOutlineTimer className="svg-fill" /> {workoutTime} </h2>
+              <p className="mt-4 mb-0 pb-0">Calories:</p>
+              <h2 className="anton-regular"><GoFlame className="svg-fill" /> {workout?.burned_calories}</h2>
+              <Button className="btn-solid button bg-dark text-white mt-4 w-50" onClick={handleStartNewRecord}>New workout</Button>
               <br></br>
-              <Link className="button btn-solid mt-4" to="/history">See History</Link>
+              <Link className="btn-solid button bg-dark text-white mt-4 w-50" to="/history">See History</Link>
               </div>
             )}
+          </div>
           </div>
         </div>
         <FloatingButton />

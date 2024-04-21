@@ -20,12 +20,12 @@ function UserNavbar(props: any) {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <NavDropdown className="" title={<><FaUserCircle size="2.5em" /> {props.username}</>} id="basic-nav-dropdown">
-            <NavDropdown.Item href="/profile"><FaUser size="1em" /> Profile</NavDropdown.Item>
-            <NavDropdown.Item href="/history"><BsGraphUp size="1em" /> History</NavDropdown.Item>
-            <NavDropdown.Item href="/record-workout"><FaRunning size="1em" /> Workout</NavDropdown.Item>
-            <NavDropdown.Item href="/chat"><IoChatbubbleEllipsesSharp size="1rem" /> Chat</NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}><RiLogoutCircleLine /> Logout</NavDropdown.Item>
+          <NavDropdown title={<><span><FaUserCircle size="2.5em" className="navIcon" /></span><span> {props.username}</span></>} id="basic-nav-dropdown">
+            <NavDropdown.Item href="/profile"><FaUser className="navIcon" size="1.4em" /> Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/history"><BsGraphUp className="navIcon" size="1.3em" /> History</NavDropdown.Item>
+            <NavDropdown.Item href="/record-workout"><FaRunning className="navIcon" size="1.5em" /> Workout</NavDropdown.Item>
+            <NavDropdown.Item href="/chat"><IoChatbubbleEllipsesSharp className="navIcon" size="1.4rem" /> Chat</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}><RiLogoutCircleLine className="navIcon" size="1.4rem" /> Logout</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>

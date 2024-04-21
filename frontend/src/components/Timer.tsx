@@ -42,8 +42,14 @@ const Timer: React.FC<TimerProps> = ({ onPause, onResume, onEnd }) => {
   }
 
   return (
-    <div className="text-center m-auto">
-      <div className="timer">{formatTime(timeElapsed)}</div>
+    <div className="text-center m-auto relative">
+      
+      <div className="timer relative">
+      
+      <div className={`spinner ${isActive && !isPaused ? 'active' : ''}`}></div>
+        {formatTime(timeElapsed)}
+      </div>
+      
       {isPaused ? (
         <button className="button btn-solid mt-4" onClick={handleResume}>
           Resume
