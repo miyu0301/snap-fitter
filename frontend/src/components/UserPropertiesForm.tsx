@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useUser } from '../user/userProvider';
 import { useAuth } from '../auth/AuthProvider';
+import { MdOutlineNavigateNext } from 'react-icons/md';
+import logo from '../assets/images/logo_v2.png';
+import { GoArrowLeft } from 'react-icons/go';
 
 const UserPropertiesForm = () => {
   const navigate = useNavigate();
@@ -40,28 +43,28 @@ const UserPropertiesForm = () => {
     const newErrors = { ...errors };
 
     if (!gender) {
-      newErrors.gender = 'Please select a gender.';
+      newErrors.gender = 'Select a gender.';
       formValid = false;
     } else {
       newErrors.gender = '';
     }
 
     if (!birthday) {
-      newErrors.birthday = 'Please select a birthday.';
+      newErrors.birthday = 'Select a birthday.';
       formValid = false;
     } else {
       newErrors.birthday = '';
     }
 
     if (!height || isNaN(Number(height))) {
-      newErrors.height = 'Please enter a valid height.';
+      newErrors.height = 'Enter a valid height.';
       formValid = false;
     } else {
       newErrors.height = '';
     }
 
     if (!weight || isNaN(Number(weight))) {
-      newErrors.weight = 'Please enter a valid weight.';
+      newErrors.weight = 'Enter a valid weight.';
       formValid = false;
     } else {
       newErrors.weight = '';
@@ -100,12 +103,16 @@ const UserPropertiesForm = () => {
   }, [user]);
 
   return (
-    <div className='d-flex align-items-center justify-items-center'>
+    <div className='d-flex align-items-center justify-content-center columns m-column-reverse'>
       <div className='col-50'>
-        <div className="container text-container vertical-center-form">
+      <div className="container home-text-container vertical-center-form">
+          <div className='text-center'>
+            <img src={logo} width={200} alt='Logo of the app' />
+          </div>
           <Form>
-            <h2 className='anton-regular txt-md mb-4'>Gender</h2>
+            
             <div className="mb-3">
+            <h2 className='anton-regular txt-md mt-4'>Gender</h2>
               <Form.Check
                 inline
                 label="Female"
@@ -130,56 +137,57 @@ const UserPropertiesForm = () => {
                 value="3"
                 onChange={handleGenderChange}
               />
+            {errors.gender && <p className="error-msg alert alert-danger small text-center mt-2">{errors.gender}</p>}
             </div>
 
-            {errors.gender && <p className="error-msg alert alert-danger small">{errors.gender}</p>}
-
+            
+            <div className="mb-3">
             <h2 className='anton-regular txt-md'>Birthday</h2>
             <input
               type="date"
-              className="date-input w-100 mb-4"
+              className="date-input w-100 mb-2"
               value={birthday}
               onChange={handleBirthdayChange}
             />
+            {errors.birthday && <p className="error-msg alert alert-danger small text-center">{errors.birthday}</p>}
+            </div>
 
-            {errors.birthday && <p className="error-msg alert alert-danger small">{errors.birthday}</p>}
-
-            <div className='d-flex gap-3'>
+            <div className='d-flex gap-3 mb-2'>
               <div className="input-height w-50">
                 <h2 className='anton-regular txt-md'>Height</h2>
                 <input
                   type="text"
-                  className="date-input w-100"
+                  className="date-input w-100 mb-2"
                   value={height}
                   onChange={handleHeightChange}
                   placeholder="cm"
                 />
-
-                {errors.height && <p className="error-msg alert alert-danger small">{errors.height}</p>}
+                {errors.height && <p className="error-msg alert alert-danger small text-center">{errors.height}</p>}
               </div>
 
               <div className="input-height w-50">
                 <h2 className='anton-regular txt-md'>Weight</h2>
                 <input
                   type="text"
-                  className="date-input w-100"
+                  className="date-input w-100 mb-2"
                   value={weight}
                   onChange={handleWeightChange}
                   placeholder="lib"
                 />
-
-                {errors.weight && <p className="error-msg alert alert-danger small">{errors.weight}</p>}
+                {errors.weight && <p className="error-msg alert alert-danger small text-center">{errors.weight}</p>}
               </div>
             </div>
           </Form>
 
-          <Button className="btn-solid button bg-dark text-white w-100 mt-4" onClick={handleNextClick}>Next</Button>
+          <Button className="btn-solid button bg-dark text-white w-100 mt-2" onClick={handleNextClick}>Next<MdOutlineNavigateNext /></Button>
 
-          <Link to="/your-level" className="link mt-4 text-center">Back</Link>
+          <Link to="/your-level" className="link mt-4 text-center small"><GoArrowLeft />Back</Link>
         </div>
       </div>
 
-      <div className='home-bg-image bg-cover-center col-50'></div>
+      <div className='gender-bg-image bg-cover-center col-50 bg-image-left-border relative'>
+      <div className="div-image-border-radius"></div>
+      </div>
     </div>
   );
 }

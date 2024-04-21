@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-//import Swal from 'sweetalert2';
-import { Form, Button } from 'react-bootstrap';
+import logo from '../assets/images/logo_v2.png';
+import { Form, InputGroup, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import DefaultLayout from '../partials/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
-import { API_URL } from '../auth/AuthConstants';
 import Cookies from 'js-cookie';
+import { BsEnvelopeFill, BsLockFill, BsPersonFill } from 'react-icons/bs';
+import { FaHome } from 'react-icons/fa';
 
 
 interface FormData {
@@ -102,65 +103,85 @@ navigate('/your-goal');
 
   return (
     <DefaultLayout>
-    <div className='d-flex align-items-center'>
-      <div className='home-bg-image bg-cover col-left'>
-        {/* <img src={logo} width="100%" /> */}
+    <div className='d-flex align-items-center columns'>
+      <div className='signup-bg-image bg-image-border bg-cover col-image col-left relative'>
+      <div className="div-image-border-radius"></div>
       </div>
 
       <div className='col-right'>
-        <div className="container text-container">
-          <h1 className='anton-regular txt-lg uppercase text-center'>Sign Up</h1>
+        <div className="container home-text-container">
+          <div className='text-center'>
+            <Link to="/"><img src={logo} width={250} alt='Logo of the app' /></Link>
+          </div>
+          <p className='txt-ms text-center'>Create an account</p>
           
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                id="name"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Joe Doe"
-                className={errors.username ? 'is-invalid' : ''}
-              />
-              {errors.username && <Form.Text className="text-danger">{errors.username}</Form.Text>}
-            </Form.Group>
+          <Form className='form-w' onSubmit={handleSubmit}>
+            
+          <Form.Group className="mb-3">
+          <Form.Label>Name</Form.Label>
+          <InputGroup className={errors.username ? 'is-invalid' : ''}>
+          <Form.Control
+          type="text"
+          id="name"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Joe Doe"
+          />
+          <InputGroup.Text>
+          <BsPersonFill />
+          </InputGroup.Text>
+          </InputGroup>
+          {errors.username && <Form.Text className="text-danger">{errors.username}</Form.Text>}
+          </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="joe@mail.com"
-                className={errors.email ? 'is-invalid' : ''}
-              />
-              {errors.email && <Form.Text className="text-danger">{errors.email}</Form.Text>}
-            </Form.Group>
+          <Form.Group className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <InputGroup className={errors.email ? 'is-invalid' : ''}>
+          <Form.Control
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="joe@mail.com"          
+          />
+          <InputGroup.Text>
+          <BsEnvelopeFill />
+          </InputGroup.Text>
+          </InputGroup>
+          {errors.email && <Form.Text className="text-danger">{errors.email}</Form.Text>}
+          </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="******"
-                autoComplete="password"
-                className={errors.password ? 'is-invalid' : ''}
-              />
-              {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
-            </Form.Group>
 
-            <Button type="submit" variant="outline-dark button w-100 mt-2 mb-4">Sign Up</Button>
+          <Form.Group className="mb-3">
+          <Form.Label>Password</Form.Label>
+          <InputGroup className={errors.password ? 'is-invalid' : ''}>
+          <Form.Control
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="******"
+          autoComplete="password"          
+          />
+          <InputGroup.Text>
+          <BsLockFill />
+          </InputGroup.Text>
+          </InputGroup>
+          {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
+          </Form.Group>
+
+          <Button type="submit" variant="outline-dark button w-100 mt-2 mb-4">Sign Up</Button>
 
           </Form>
 
           <p className="txt-sm mt-4 text-center">
-            Do you have an account? <Link to="/sign-in">Sign in here</Link>
+            Do you have an account?<br/><Link to="/sign-in">Sign in here</Link>
+          </p>
+          <p className="txt-sm mt-4 text-center"><Link to="/">
+              <FaHome className="text-dark" size="1.8em" /></Link>
           </p>
         </div>
       </div>

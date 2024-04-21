@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 interface TimerProps {
   onPause: () => void;
   onResume: () => void;
