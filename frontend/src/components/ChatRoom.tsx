@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 // import { useUser } from "../user/userProvider";
 import RoomEditModal from "./RoomEditModal";
 import { UserInfo } from "../Common";
+import { IoSettingsOutline } from "react-icons/io5";
 
 type Chat = {
   is_to_room: boolean;
@@ -155,13 +156,11 @@ const ChatRoom = ({
     <>
       <div className="">
         {roomChatMode ? (
-          <div className="d-flex">
-            <p>{toRoomName}</p>
-            <div>
-              <Button variant="primary" onClick={() => setEditModal(true)}>
-                setting
+          <div className="d-flex gap-3">
+            <p className="m-0 p-0"><b>{toRoomName}</b></p>         
+              <Button className="no-button" variant="primary" onClick={() => setEditModal(true)}>
+              <IoSettingsOutline size="2rem" />
               </Button>
-            </div>
           </div>
         ) : (
           <p>{toUsername}</p>

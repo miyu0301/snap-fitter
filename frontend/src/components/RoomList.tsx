@@ -5,6 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 import RoomCreateModal from "./RoomCreateModal";
 // import { useUser } from "../user/userProvider";
 import { UserInfo } from "../Common";
+import { CiSquarePlus } from "react-icons/ci";
 
 type Room = {
   id: number;
@@ -43,10 +44,10 @@ const RoomList = ({
   return (
     <>
       <div className="h-50">
-        <div className="d-flex">
-          <p>room list</p>
+        <div className="roomListHeader">
+          <p className="m-0 p-0">Room list</p>
           <Button variant="primary" onClick={() => setCreateModal(true)}>
-            New
+          <CiSquarePlus size="2rem" />
           </Button>
         </div>
         <Modal show={createModal} onHide={closeModal}>
@@ -58,6 +59,7 @@ const RoomList = ({
         </Modal>
         {rooms.map((room: Room, idx: number) => (
           <div
+            className="roomItem"
             key={idx}
             style={{ cursor: "pointer" }}
             onClick={() => setToRoomId(room.id)}
