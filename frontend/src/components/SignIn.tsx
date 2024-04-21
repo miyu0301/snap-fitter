@@ -1,10 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom'
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import DefaultLayout from '../partials/DefaultLayout';
 import Cookies from 'js-cookie';
 import { useAuth } from '../auth/AuthProvider';
+import logo from '../assets/images/logo_v2.png';
+import { FaHome } from "react-icons/fa";
+import { BsLockFill, BsPersonFill } from 'react-icons/bs';
 
 interface FormData {
   username: string;
@@ -87,46 +90,63 @@ const SignIn = () => {
 
   return (
     <DefaultLayout>
-      <div className='d-flex align-items-center'>
-        <div className='home-bg-image bg-cover col-left'>
-            {/* <img src={logo} width="100%" /> */}
-        </div>
+      <div className='d-flex align-items-center columns'>
+      <div className='signin-bg-image bg-image-border bg-cover col-image col-left relative'>
+      <div className="div-image-border-radius"></div>
+      </div>
         <div className='col-right'>
-          <div className="container text-container">
-            <h1 className='anton-regular txt-lg uppercase text-center'>Sign In</h1>
+          <div className="container home-text-container">
+          <div className='text-center'>
+            <Link to="/"><img src={logo} width={250} alt='Logo of the app' /></Link>
+          </div>
+          <p className='txt-ms text-center'>Login</p>
             {errors['general'] && <div className="alert alert-danger small text-center">{errors['general']}</div>} {/* Display general error message */}
-            <Form onSubmit={handleSubmit}>
+            <Form className='form-w' onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="username">
                 <Form.Label>Username</Form.Label>
+                <InputGroup className={errors.username ? 'is-invalid' : ''}>
                 <Form.Control 
                   type="text"
                   name="username"
                   value={formData.username}
                   onChange={handleChange} 
                   placeholder="Joe Doe"
-                  className={errors['username'] ? 'is-invalid' : ''}
                 />
+                <InputGroup.Text>
+                <BsPersonFill />
+                </InputGroup.Text>
+                </InputGroup>
                 {errors['username'] && <Form.Text className="text-danger">{errors['username']}</Form.Text>}
               </Form.Group>
+
               <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
+                <InputGroup className={errors.password ? 'is-invalid' : ''}>
                 <Form.Control 
                   type="password" 
                   name="password"
                   value={formData.password}
                   onChange={handleChange} 
                   placeholder="******" 
-                  autoComplete="password"
-                  className={errors['password'] ? 'is-invalid' : ''}
+                  autoComplete="password"                  
                 />
-                {errors['password'] && <Form.Text className="text-danger">{errors['password']}</Form.Text>}
+                <InputGroup.Text>
+                <BsLockFill />
+                </InputGroup.Text>
+                </InputGroup>
+                {errors['password'] && <Form.Text className="text-danger">{errors['password']}</Form.Text>}                
               </Form.Group>
+
+
               <p className="txt-sm">Forgot your password?</p>
               <Button type="submit" className="button btn-solid w-100 text-center">Enter</Button>
             </Form>
-            <Button variant="outline-dark w-100 mt-4">Continue with Google</Button>
-            <Button variant="outline-dark w-100 mt-4">Continue with Facebook</Button>
-            <p className="txt-sm mt-4 text-center">Don't have an account? <Link to="/sign-up">Sign up here</Link></p>
+            {/* <Button variant="outline-dark w-100 mt-4">Continue with Google</Button>
+            <Button variant="outline-dark w-100 mt-4">Continue with Facebook</Button> */}
+            <p className="txt-sm mt-4 text-center">Don't have an account?<br></br><Link to="/sign-up">Sign up here</Link></p>
+            <p className="txt-sm mt-4 text-center"><Link to="/">
+              <FaHome className="text-dark" size="1.8em" /></Link>
+            </p>
           </div>
         </div>
       </div>
