@@ -8,11 +8,18 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 import { format } from "date-fns";
+// import { useUser } from "../user/userProvider";
 import { useAuth } from "../auth/AuthProvider";
+import { UserInfo } from "../Common";
 
 const History = () => {
+  // const { dbUser } = useUser();
   const auth = useAuth();
-  const logined_user_id: number | undefined = auth.getSessionId();
+  const logined_user_id = auth.getSessionId();
+  if (logined_user_id === undefined) {
+    throw new Error("Session ID is undefined");
+  }
+  const [loginedUser, setLoginedUser] = useState<UserInfo>();
   const [records, setRecords] = useState([]);
   const [calories, setCalories] = useState([]);
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
@@ -27,6 +34,12 @@ const History = () => {
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
+        const userResponse = await axios.get(
+          import.meta.env.VITE_API_ENV + "/users/" + logined_user_id
+        );
+        const user: UserInfo = userResponse.data;
+        setLoginedUser(user);
+
         const res = await axios.get(
           import.meta.env.VITE_API_ENV + "/exercise/all/" + logined_user_id
         );
@@ -101,7 +114,7 @@ const History = () => {
 
   return (
     <>
-      <UserNavbar />
+      <UserNavbar username={loginedUser ? loginedUser.username : ""} />
 
       <div className="d-flex flex-column container">
         <h1 className="anton-regular uppercase mb-4">MY WORKOUTS</h1>

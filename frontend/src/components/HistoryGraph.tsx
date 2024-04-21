@@ -184,7 +184,7 @@ function HistoryGraph({
         stacked: true,
         ticks: {
           callback: function (value: number) {
-            return `${value} m`;
+            return `${value} min`;
           },
         },
       },
