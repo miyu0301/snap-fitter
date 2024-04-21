@@ -4,22 +4,27 @@ import axios from "axios";
 import { Form, Button, Modal } from "react-bootstrap";
 import { format } from "date-fns";
 import { io } from "socket.io-client";
-import { useUser } from "../user/userProvider";
-import RoomCreateModal from "./RoomCreateModal";
+// import { useUser } from "../user/userProvider";
 import RoomEditModal from "./RoomEditModal";
+import { UserInfo } from "../Common";
 
 type Chat = {
-  created_datetime: Date;
+  is_to_room: boolean;
+  to_user_id: number | undefined;
+  to_room_id: number | undefined;
   username: string;
   comment: string;
+  created_datetime: Date;
 };
 
 const ChatRoom = ({
+  loginedUser,
   toUserId,
   toRoomId,
   setToRoomId,
   onPageUpdate,
 }: {
+  loginedUser: UserInfo | undefined;
   toUserId: number;
   toRoomId: number;
   setToRoomId: (id: number) => void;
@@ -32,7 +37,7 @@ const ChatRoom = ({
   socket.on("connect_error", (err) => {
     console.log(`connect_error due to ${err.message}`);
   });
-  const { dbUser } = useUser();
+  // const { dbUser } = useUser();
   const [roomChatMode, setRoomChatMode] = useState(false);
   const [toUsername, setToUsername] = useState("");
   const [toRoomName, setToRoomName] = useState("");
@@ -52,7 +57,7 @@ const ChatRoom = ({
         setToUsername(user.data.username);
 
         const params = {
-          from_user_id: dbUser.id,
+          from_user_id: loginedUser?.id,
           user_id: toUserId,
           room_id: undefined,
         };
@@ -96,7 +101,7 @@ const ChatRoom = ({
     e.preventDefault();
     const created_datetime = new Date();
     const formData = {
-      from_user_id: dbUser.id,
+      from_user_id: loginedUser?.id,
       to_user_id: roomChatMode ? undefined : toUserId,
       to_room_id: roomChatMode ? toRoomId : undefined,
       comment: comment,
@@ -110,9 +115,9 @@ const ChatRoom = ({
       );
       console.log("Update successful", response.data);
 
-      let newChat = {
+      let newChat: Chat = {
         created_datetime: created_datetime,
-        username: dbUser.username,
+        username: loginedUser ? loginedUser.username : "",
         is_to_room: roomChatMode,
         to_user_id: roomChatMode ? undefined : toUserId,
         to_room_id: roomChatMode ? toRoomId : undefined,
@@ -121,7 +126,7 @@ const ChatRoom = ({
 
       socket.emit("sendMessage", newChat);
       // add chats
-      let updatedChats = [...chats];
+      let updatedChats: Chat[] = [...chats];
       updatedChats.push(newChat);
       setChats(updatedChats);
       setComment("");

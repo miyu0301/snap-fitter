@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal } from "react-bootstrap";
 import common, { UserInfo } from "../Common";
-import { useUser } from "../user/userProvider";
+// import { useUser } from "../user/userProvider";
 import DirectMessageCreateModal from "./DirectMessageCreateModal";
 
 const DirectMessageList = ({
+  loginedUser,
   setToUserId,
 }: {
+  loginedUser: UserInfo | undefined;
   setToUserId: (id: number) => void;
 }) => {
-  const { dbUser } = useUser();
   const [recipients, setRecipients] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const closeModal = () => setCreateModal(false);
@@ -22,7 +23,7 @@ const DirectMessageList = ({
         const res = await axios.get(
           import.meta.env.VITE_API_ENV +
             "/chat/direct_message_list/" +
-            dbUser.id
+            loginedUser?.id
         );
         setRecipients(res.data);
         // setToUserId(res.data[0].user_id);
@@ -31,7 +32,7 @@ const DirectMessageList = ({
       }
     };
     fechAllRecords();
-  }, [dbUser]);
+  }, [loginedUser]);
 
   return (
     <>
