@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './../assets/css/FloatingButton.css';
 import { AiOutlineBars, AiOutlineClose } from 'react-icons/ai';
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { FaRunning } from "react-icons/fa";
+import { FaHome, FaRunning } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom'
 
 const FloatingButton = () => {
@@ -32,6 +32,7 @@ const FloatingButton = () => {
         <div className="options">
           <button className="floating-options-button floating-chat-button" onClick={handleChatClick}> <IoChatbubbleEllipsesSharp size="1.5rem" /> </button>
           <button className="floating-options-button floating-workout-button" onClick={handleWorkoutClick}><FaRunning size="1.5rem" /></button>
+          <a className="floating-options-button floating-workout-button" href="/welcome"><FaHome size="1.5em" /></a>
         </div>
       )}
     </div>
