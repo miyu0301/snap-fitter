@@ -88,6 +88,31 @@ const getExerciseRecordByUserIdForPeriod = async (
     res.status(500).send(err.message);
   }
 };
+/**
+ * get an exercise record by user id
+ * @param req
+ * @param res
+ * @returns selected user data
+ */
+const getBurnedCaloriesByUserId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    console.log("HI");
+    const user_id: number = parseInt(req.params.user_id);
+    const records = await knex("exercise_records")
+      .select("start_datetime")
+      .where("user_id", user_id)
+      .groupBy("start_datetime")
+      .sum("burned_calories as total_calories")
+      .orderBy("start_datetime", "asc");
+    console.log(records);
+    res.json(records);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+};
 
 /**
  * get an exercise record by user id
@@ -217,6 +242,7 @@ const deleteExerciseRecord = async (
 module.exports = {
   getExerciseRecordByUserId,
   getExerciseRecordByUserIdForPeriod,
+  getBurnedCaloriesByUserId,
   getExerciseRecordById,
   createExerciseRecord,
   updateExerciseRecord,

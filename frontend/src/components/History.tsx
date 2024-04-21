@@ -14,6 +14,7 @@ const History = () => {
   const auth = useAuth();
   const logined_user_id: number | undefined = auth.getSessionId();
   const [records, setRecords] = useState([]);
+  const [calories, setCalories] = useState([]);
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [viewGraph, setViewGraph] = useState(false);
@@ -43,6 +44,12 @@ const History = () => {
             "yyyy-MM-dd"
           )
         );
+        const response = await axios.get(
+          import.meta.env.VITE_API_ENV +
+            "/exercise/burned_calories/" +
+            logined_user_id
+        );
+        setCalories(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -56,11 +63,10 @@ const History = () => {
   ) => {
     try {
       const newStartDate = e.target.value;
-      const userId = 2;
       const res = await axios.get(
         import.meta.env.VITE_API_ENV +
           "/exercise/all/" +
-          userId +
+          logined_user_id +
           "/" +
           newStartDate +
           "/" +
@@ -77,11 +83,10 @@ const History = () => {
   ) => {
     try {
       const newEndDate = e.target.value;
-      const userId = 2;
       const res = await axios.get(
         import.meta.env.VITE_API_ENV +
           "/exercise/all/" +
-          userId +
+          logined_user_id +
           "/" +
           startDate +
           "/" +
@@ -137,7 +142,7 @@ const History = () => {
               </label>
             </div>
             {viewGraph ? (
-              <HistoryGraph records={records} />
+              <HistoryGraph records={records} calories={calories} />
             ) : (
               <HistoryList
                 records={records}

@@ -10,6 +10,11 @@ exerciseRouter.get(
   "/all/:user_id/:start_date/:end_date",
   exerciseController.getExerciseRecordByUserIdForPeriod
 );
+exerciseRouter.get(
+  "/burned_calories/:user_id",
+  exerciseController.getBurnedCaloriesByUserId
+);
+
 exerciseRouter.get("/:id", exerciseController.getExerciseRecordById);
 exerciseRouter.post("/", exerciseController.createExerciseRecord);
 exerciseRouter.put("/:id", exerciseController.updateExerciseRecord);
