@@ -226,6 +226,20 @@ background-color: transparent;
 .br-0{
 border-right: 0px;
 }
+.bl-0{
+border-left: 0px;
+}
+
+.brl-0{
+border-radius: 0px 8px 8px 0px; 
+}
+.brr-0{
+border-radius: 8px 0px 0px 8px; 
+}
+
+.input-group-text {
+border: var(--bs-border-width) solid #000000;
+}
 
 /*image bg*/
 .home-bg-image{
@@ -535,6 +549,16 @@ margin-top: 80px;
 height: calc(50% - 100px) !important;
 }
 
+.form-check-input:checked {
+    background-color: #24A2E8;
+    border-color: #24A2E8;
+}
+.tr-sm{
+    font-size: 13px;
+}
+
+
+
 /*Querys*/
 @media only screen and (max-width: 1200px) {
 .home-text-container {
@@ -622,6 +646,35 @@ width: 100%;
 height: 100px!important;
 overflow-y: scroll;
 margin-bottom: 20px;
+}
+
+.datesFilters{
+flex-direction: column;
+align-items: center;
+gap: 0px !important;
+}
+
+.form-switch{
+display: flex;
+flex-direction: row;
+justify-content: center;
+gap: 4px;
+}
+
+/*history table*/
+.table {
+width: auto;
+border-collapse: collapse;
+}
+
+.table td,
+.table th {
+padding: 8px;
+white-space: nowrap;
+}
+.table td,
+.table th {
+width: fit-content;
 }
 
 }

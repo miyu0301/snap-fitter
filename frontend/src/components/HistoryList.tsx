@@ -2,6 +2,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
 import common from "../Common";
+import { BsCalendar } from "react-icons/bs";
+import { FaRegClock, FaRunning } from "react-icons/fa";
+import { LuFlame } from "react-icons/lu";
+import { FiEdit } from "react-icons/fi";
+import { MdOutlineDelete } from "react-icons/md";
 
 type Record = {
   id: number;
@@ -37,24 +42,25 @@ function HistoryList({
   };
 
   return (
-    <Table striped bordered hover>
+    <div className="table-responsive historyList">
+    <Table striped  hover className="table-auto">
       <thead>
         <tr>
           <th>#</th>
-          <th>start date</th>
-          <th>end date</th>
-          <th>pause</th>
-          <th>Workout</th>
-          <th>Duration</th>
-          <th>Burned Calories</th>
+          <th><BsCalendar /> Start date</th>
+          <th><BsCalendar /> End date</th>
+          <th><FaRegClock /> Pause</th>
+          <th><FaRunning /> Workout</th>
+          <th><FaRegClock /> Duration</th>
+          <th><LuFlame /> Burned Calories</th>
         </tr>
       </thead>
       <tbody>
         {records.map((record, idx: number) => (
-          <tr key={idx}>
+          <tr className="tr-sm" key={idx}>
             <td>{idx + 1}</td>
-            <td>{common.getDatetimeForDisplay(record.start_datetime)}</td>
-            <td>{common.getDatetimeForDisplay(record.end_datetime)}</td>
+            {/* <td>{common.getDatetimeForDisplay(record.start_datetime)}</td>
+            <td>{common.getDatetimeForDisplay(record.end_datetime)}</td> */}
             <td>{common.getMinutesForDisplay(record.pause)}</td>
             <td>{record.exercise_name}</td>
             <td>
@@ -68,14 +74,16 @@ function HistoryList({
             <td>
               {" "}
               <div>
-                <button onClick={() => onEditModal(record.id)}>Edit</button>
-                <button onClick={() => deleteRecord(record.id)}>Delete</button>
+                <button className="no-button ms-4" onClick={() => onEditModal(record.id)}><FiEdit size="1.3rem" /></button>
+                <button className="no-button ms-4" onClick={() => deleteRecord(record.id)}><MdOutlineDelete size="1.5rem" /></button>
               </div>
             </td>
+            <td></td>
           </tr>
         ))}
       </tbody>
     </Table>
+    </div>
   );
 }
 

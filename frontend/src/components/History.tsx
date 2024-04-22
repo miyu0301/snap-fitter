@@ -6,11 +6,13 @@ import HistoryEditModal from "../components/HistoryEditModal";
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import { Form } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 import { useAuth } from "../auth/AuthProvider";
 import { UserInfo } from "../Common";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaRunning } from "react-icons/fa";
+import { BsCalendar } from "react-icons/bs";
 
 const History = () => {
   // const { dbUser } = useUser();
@@ -100,32 +102,51 @@ const History = () => {
     <>
       <UserNavbar username={loginedUser ? loginedUser.username : ""} />
 
-      <div className="d-flex flex-column container">
-        <h1 className="anton-regular uppercase mb-4">MY WORKOUTS</h1>
+      <div className="container mt-80">
+        
+        <div className="historyHeader">
+        <h1 className="anton-regular uppercase mb-4"><FaRunning /> MY WORKOUTS</h1>
+        </div>
 
-        {records.length == 0 && <div>No Data</div>}
+
+        {records.length == 0 && <div className="alert alert-warning text-center">You haven't added any activities yet, start now!</div>}
         {records.length > 0 && (
           <>
-            <Form>
-              <Form.Group className="mb-3" controlId="start_datetime">
-                <Form.Label>Start</Form.Label>
+          
+            <Form className="d-flex justify-content-end gap-4 datesFilters">
+              <Form.Group className="mb-3 d-flex flex-column" controlId="start_datetime">
+                <Form.Label className="small">Start</Form.Label>
+                <InputGroup>                
                 <DatePicker
                   selected={startDate}
                   onChange={(e) => handleStartDate(e)}
                   dateFormat="MMM d, yyyy"
                   customInput={<Form.Control />}
+                  className="brr-0"
                 />
+                <InputGroup.Text>
+                <BsCalendar />
+                </InputGroup.Text>
+                </InputGroup>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="start_datetime">
-                <Form.Label>End</Form.Label>
+
+              <Form.Group className="mb-3 d-flex flex-column" controlId="start_datetime">
+                <Form.Label className="small">End</Form.Label>
+                <InputGroup>  
                 <DatePicker
                   selected={endDate}
                   onChange={(e) => handleEndDate(e)}
                   dateFormat="MMM d, yyyy"
                   customInput={<Form.Control />}
+                  className="brr-0"
                 />
+                <InputGroup.Text>
+                <BsCalendar />
+                </InputGroup.Text>
+                </InputGroup>
               </Form.Group>
-            </Form>
+            </Form>         
+            
 
             <div className="form-check form-switch">
               <input
@@ -134,12 +155,13 @@ const History = () => {
                 onChange={() => setViewGraph(!viewGraph)}
               />
               <label
-                className="form-check-label"
+                className="form-check-label mb-4"
                 htmlFor="flexSwitchCheckDefault"
               >
-                view graph
+                View graph
               </label>
             </div>
+
             {viewGraph ? (
               <HistoryGraph records={records} calories={calories} />
             ) : (
@@ -150,6 +172,7 @@ const History = () => {
                 onUpdate={onUpdate}
               />
             )}
+            
             <Modal show={editModal} onHide={closeModal}>
               <HistoryEditModal
                 targetId={targetId}
@@ -157,8 +180,11 @@ const History = () => {
                 onUpdate={onUpdate}
               />
             </Modal>
+
           </>
         )}
+
+
       </div>
     </>
   );
