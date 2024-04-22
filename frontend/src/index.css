@@ -37,10 +37,10 @@ font-style: normal;
 body {
 font-family: "Inter", sans-serif;
 margin: 0 auto;
-display: flex;
+/* display: flex; */
 place-items: center;
-min-width: 320px;
 min-height: 100vh;
+/* height: calc(100vh - 72px); */
 width: 100%;
 }
 
