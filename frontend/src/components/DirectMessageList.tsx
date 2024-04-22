@@ -5,6 +5,8 @@ import { Button, Modal } from "react-bootstrap";
 import common, { UserInfo } from "../Common";
 // import { useUser } from "../user/userProvider";
 import DirectMessageCreateModal from "./DirectMessageCreateModal";
+import { CiSquarePlus } from "react-icons/ci";
+import { FaUserCircle } from "react-icons/fa";
 
 const DirectMessageList = ({
   loginedUser,
@@ -36,27 +38,35 @@ const DirectMessageList = ({
 
   return (
     <>
-      <div className="h-50">
-        <div className="d-flex">
-          <p>direct message list</p>
-          <Button variant="primary" onClick={() => setCreateModal(true)}>
-            New
+      <div className="h-custom-50">
+      <div className="roomListHeader">
+          <p className="m-0 p-0">Direct Message</p>
+          <Button className="no-button" onClick={() => setCreateModal(true)}>
+          <CiSquarePlus size="2rem" />
           </Button>
         </div>
+        <div className="itemsScroll">
         {recipients.map((recipient: UserInfo, idx: number) => (
+          <div className="dmItem">
+          <div className="dmProfilePicure">
+          <FaUserCircle size="2.5rem" />
+          </div>
           <div
+            className="dmProfile"
             key={idx}
             style={{ cursor: "pointer" }}
             onClick={() => setToUserId(recipient.id)}
           >
-            <div>{recipient.username}</div>
-            <div className="">
+            <div className="dmUserName">{recipient.username}</div>
+            <div className="small dmGoal">
               {common.GOAL_DICT[recipient.goal_id] +
                 " / " +
                 common.LEVEL_DICT[recipient.level_id]}
             </div>
           </div>
+          </div>
         ))}
+        </div>
         <Modal show={createModal} onHide={closeModal}>
           <DirectMessageCreateModal
             recipients={recipients}

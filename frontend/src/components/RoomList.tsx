@@ -5,6 +5,8 @@ import { Button, Modal } from "react-bootstrap";
 import RoomCreateModal from "./RoomCreateModal";
 // import { useUser } from "../user/userProvider";
 import { UserInfo } from "../Common";
+import { CiSquarePlus } from "react-icons/ci";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 type Room = {
   id: number;
@@ -42,11 +44,11 @@ const RoomList = ({
 
   return (
     <>
-      <div className="h-50">
-        <div className="d-flex">
-          <p>room list</p>
-          <Button variant="primary" onClick={() => setCreateModal(true)}>
-            New
+      <div className="h-custom-50">
+        <div className="roomListHeader">
+          <p className="m-0 p-0">Room list</p>
+          <Button className="no-button" variant="primary" onClick={() => setCreateModal(true)}>
+          <CiSquarePlus size="2rem" />
           </Button>
         </div>
         <Modal show={createModal} onHide={closeModal}>
@@ -56,15 +58,24 @@ const RoomList = ({
             setToRoomId={setToRoomId}
           />
         </Modal>
+        <div className="itemsScroll">
         {rooms.map((room: Room, idx: number) => (
-          <div
+        <div className="roomItems">
+            <div className="roomItemIcon">
+            <IoChatbubblesOutline size="1.5rem" />
+            </div>   
+
+            <div
+            className="roomItem"
             key={idx}
             style={{ cursor: "pointer" }}
             onClick={() => setToRoomId(room.id)}
-          >
+            >
             {room.room_name}
-          </div>
+            </div>
+        </div>
         ))}
+        </div>
       </div>
     </>
   );

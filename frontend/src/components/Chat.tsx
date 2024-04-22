@@ -8,6 +8,7 @@ import { useAuth } from "../auth/AuthProvider";
 // import { fetchUserData } from "../user/userProvider";
 import { UserInfo } from "../Common";
 import axios from "axios";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 const Chat = () => {
   // const { dbUser } = useUser();
@@ -44,18 +45,25 @@ const Chat = () => {
     <>
       <UserNavbar username={loginedUser ? loginedUser.username : ""} />
       {!loading && (
-        <div className="d-flex flex-column container">
-          <h1 className="anton-regular uppercase mb-4">Chat</h1>
-          <div className="d-flex">
-            <div className="d-flex flex-column" style={{ width: "50vh" }}>
-              <RoomList loginedUser={loginedUser} setToRoomId={setToRoomId} />
+        <div className="d-flex flex-column container mt-80">    
+        <div className="row">
+          
+          <div className="col-sm-12">
+          <h1 className="anton-regular uppercase mb-4"><IoChatbubbleEllipsesOutline /> Chat Room</h1>
+          </div>
 
+          <div className="col-sm-12">
+          <div className="d-flex chatContainer gap-4">
+            
+            <div className="d-flex flex-column chatLeftCol">
+              <RoomList loginedUser={loginedUser} setToRoomId={setToRoomId} />
+              <hr className="hr"></hr>
               <DirectMessageList
                 loginedUser={loginedUser}
                 setToUserId={setToUserId}
               />
-            </div>
-            <div className="w-100">
+            </div>            
+            <div className="w-100 chatRoom">
               <ChatRoom
                 loginedUser={loginedUser}
                 toUserId={toUserId}
@@ -64,8 +72,12 @@ const Chat = () => {
                 onPageUpdate={onPageUpdate}
               />
             </div>
+
           </div>
+          </div>
+        
         </div>
+        </div>/*d-flex container*/
       )}
     </>
   );

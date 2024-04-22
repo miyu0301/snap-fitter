@@ -6,6 +6,7 @@ import { Form, Button, ListGroup } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { useUser } from "../user/userProvider";
 import common, { UserInfo } from "../Common";
+import { FaRegTrashAlt, FaUserCircle } from "react-icons/fa";
 
 function RoomCreateModal({
   closeModal,
@@ -92,12 +93,12 @@ function RoomCreateModal({
     <>
       {" "}
       <Modal.Header closeButton>
-        <Modal.Title>Create Room</Modal.Title>
+        <Modal.Title className="anton-regular">Create Room</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {" "}
         <Form.Group className="mb-3" controlId="room_name">
-          <Form.Label>name</Form.Label>
+          <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
             value={roomName}
@@ -129,14 +130,18 @@ function RoomCreateModal({
           )}
         </Form.Group>
         {selectedUsers.length > 0 && (
-          <div>
+          <div className="mt-4">
             <strong>Selected Users:</strong>
-            <ul>
+            <ul className="roomSelectedUserList">
               {selectedUsers.map((user: UserInfo) => (
-                <li key={user.id}>
+                <li  key={user.id}>
+                  <div className="dmProfilePicure">
+                  <FaUserCircle className="me-2" size="1.8rem" />
                   {user.username}{" "}
+                  </div>
+                  
                   <button onClick={() => handleRemoveMember(user.id)}>
-                    Remove
+                  <FaRegTrashAlt />
                   </button>
                 </li>
               ))}
@@ -145,10 +150,10 @@ function RoomCreateModal({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="" className="button btn-outline" onClick={closeModal}>
           Close
         </Button>
-        <Button variant="primary" type="submit" onClick={handleCraeteRoom}>
+        <Button  className="button btn-solid w-50" type="submit" onClick={handleCraeteRoom}>
           Create
         </Button>
       </Modal.Footer>
