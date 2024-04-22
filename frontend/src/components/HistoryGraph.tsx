@@ -184,7 +184,7 @@ function HistoryGraph({
         stacked: true,
         ticks: {
           callback: function (value: number) {
-            return `${value} min`;
+            return `${value.toLocaleString()} min`;
           },
         },
       },
@@ -193,7 +193,7 @@ function HistoryGraph({
         stacked: false,
         ticks: {
           callback: function (value: number) {
-            return `${value} cal`;
+            return `${value.toLocaleString()} cal`;
           },
         },
         grid: {

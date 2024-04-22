@@ -47,11 +47,14 @@ const History = () => {
         setRecords(res.data.records);
         setStartDate(res.data.datetime_range.oldest_datetime);
         setEndDate(res.data.datetime_range.latest_datetime);
+
+        // get calories data for graph
         const response = await axios.get(
           import.meta.env.VITE_API_ENV +
             "/exercise/burned_calories/" +
             logined_user_id
         );
+        console.log(response.data);
         setCalories(response.data);
       } catch (err) {
         console.log(err);

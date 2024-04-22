@@ -65,9 +65,8 @@ const getExerciseRecordByUserIdForPeriod = async (
 ): Promise<void> => {
   try {
     const user_id: number = parseInt(req.params.user_id);
-    const start_date: Date = new Date(req.params.start_date);
-    const end_date: Date = new Date(req.params.end_date);
-
+    const start_date: Date = truncateStartDate(new Date(req.params.start_date));
+    const end_date: Date = truncateEndDate(new Date(req.params.end_date));
     let records = await knex("exercise_records")
       .join("m_exercise", "m_exercise.id", "=", "exercise_records.exercise_id")
       .where("exercise_records.user_id", user_id)
@@ -88,6 +87,24 @@ const getExerciseRecordByUserIdForPeriod = async (
     res.status(500).send(err.message);
   }
 };
+
+const truncateStartDate = (date: Date) => {
+  if (date) {
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
+  }
+  return date;
+};
+const truncateEndDate = (date: Date) => {
+  if (date) {
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59)
+    );
+  }
+  return date;
+};
+
 /**
  * get an exercise record by user id
  * @param req
@@ -101,11 +118,11 @@ const getBurnedCaloriesByUserId = async (
   try {
     const user_id: number = parseInt(req.params.user_id);
     const records = await knex("exercise_records")
-      .select("start_datetime")
+      .select(knex.raw("date_trunc('day', start_datetime) as start_date"))
       .where("user_id", user_id)
-      .groupBy("start_datetime")
+      .groupByRaw("date_trunc('day', start_datetime)")
       .sum("burned_calories as total_calories")
-      .orderBy("start_datetime", "asc");
+      .orderBy("start_date", "asc");
     res.json(records);
   } catch (err: any) {
     res.status(500).send(err.message);
