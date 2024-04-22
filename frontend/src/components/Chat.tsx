@@ -45,7 +45,7 @@ const Chat = () => {
     <>
       <UserNavbar username={loginedUser ? loginedUser.username : ""} />
       {!loading && (
-        <div className="d-flex flex-column container">    
+        <div className="d-flex flex-column container mt-80">    
         <div className="row">
           
           <div className="col-sm-12">
@@ -53,16 +53,16 @@ const Chat = () => {
           </div>
 
           <div className="col-sm-12">
-          <div className="d-flex">
+          <div className="d-flex chatContainer gap-4">
             
-            <div className="d-flex flex-column" style={{ width: "50vh" }}>
+            <div className="d-flex flex-column chatLeftCol">
               <RoomList loginedUser={loginedUser} setToRoomId={setToRoomId} />
+              <hr className="hr"></hr>
               <DirectMessageList
                 loginedUser={loginedUser}
                 setToUserId={setToUserId}
               />
-            </div>
-
+            </div>            
             <div className="w-100 chatRoom">
               <ChatRoom
                 loginedUser={loginedUser}

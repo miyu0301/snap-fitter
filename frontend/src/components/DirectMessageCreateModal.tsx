@@ -69,12 +69,12 @@ function DirectMessageCreateModal({
     <>
       {" "}
       <Modal.Header closeButton>
-        <Modal.Title>Choose Member</Modal.Title>
+        <Modal.Title className="anton-regular">Choose Member</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {" "}
         <Form.Group className="mb-3">
-          <Form.Label>name</Form.Label>
+          <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter member name"
@@ -99,11 +99,11 @@ function DirectMessageCreateModal({
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="" className="button btn-outline" onClick={closeModal}>
           Close
         </Button>
         <Button
-          variant="primary"
+          className="button btn-solid w-50"
           type="submit"
           onClick={handleCreateDirectMessage}
         >

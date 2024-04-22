@@ -8,6 +8,8 @@ import { io } from "socket.io-client";
 import RoomEditModal from "./RoomEditModal";
 import { UserInfo } from "../Common";
 import { IoSettingsOutline } from "react-icons/io5";
+import { FaUserCircle } from "react-icons/fa";
+import { IoMdSend } from "react-icons/io";
 
 type Chat = {
   is_to_room: boolean;
@@ -154,43 +156,52 @@ const ChatRoom = ({
 
   return (
     <>
-      <div className="">
+     
         {roomChatMode ? (
-          <div className="d-flex gap-3">
+          <div className="d-flex gap-3 mb-4">
             <p className="m-0 p-0"><b>{toRoomName}</b></p>         
               <Button className="no-button" variant="primary" onClick={() => setEditModal(true)}>
               <IoSettingsOutline size="2rem" />
               </Button>
           </div>
         ) : (
-          <p>{toUsername}</p>
+          <p className="dmName">{toUsername}</p>
         )}
-        <div className="overflow-auto" style={{ height: "70vh" }}>
+        <div className="overflow-auto" style={{ height: "60vh" }}>
           {chats.map((chat: Chat, idx: number) => (
             <div key={idx}>
-              <div>
+              
+              
+              <div className="d-flex align-items-center gap-2">
+              <div><FaUserCircle size="2rem" /></div>
+              <div className="chat-comment">
+              <div className="chat-date">
                 {format(new Date(chat.created_datetime), "yyyy/MM/dd HH:mm:ss")}
               </div>
-              <div>{chat.username}</div>
+              <div className="chat-username">{chat.username}</div>
               <div>{chat.comment}</div>
+              </div>
+              
+              </div>
             </div>
           ))}
         </div>
         <Form onSubmit={handleSubmit}>
-          <div className="d-flex ">
-            <Form.Group className="mb-3 w-100" controlId="exercise_id">
+          <div className="d-flex align-items-center">
+            <Form.Group className="w-100" controlId="exercise_id">
               <Form.Control
+                className="chatInput"
                 type="text"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Send
+            <Button variant="primary" className="chatBtnSubmit" type="submit">
+              Send <IoMdSend />
             </Button>
           </div>
         </Form>
-      </div>
+     
       <Modal show={editModal} onHide={closeModal}>
         <RoomEditModal
           closeModal={closeModal}
