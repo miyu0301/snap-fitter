@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 export const common = {
   /**
    * caluculate exercise duration for display
@@ -25,6 +26,14 @@ export const common = {
       return `${seconds}s`;
     }
   },
+  getMinutesForDisplay: (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m`;
+    }
+  },
 
   /**
    * caluculate exercise duration minutes
@@ -42,6 +51,14 @@ export const common = {
     const diff =
       end_datetime.getTime() - start_datetime.getTime() - pause_milliseconds;
     return Math.floor(diff / 60000);
+  },
+
+  getDatetimeForDisplay: (datetime_value: Date) => {
+    return format(datetime_value, "MMM d, yyyy h:mm a");
+  },
+
+  getDateForDisplay: (datetime_value: Date) => {
+    return format(datetime_value, "MMM d, yyyy");
   },
 
   GENDER_DICT: {

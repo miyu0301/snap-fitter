@@ -7,10 +7,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
-import { format } from "date-fns";
-// import { useUser } from "../user/userProvider";
 import { useAuth } from "../auth/AuthProvider";
 import { UserInfo } from "../Common";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const History = () => {
   // const { dbUser } = useUser();
@@ -22,8 +22,8 @@ const History = () => {
   const [loginedUser, setLoginedUser] = useState<UserInfo>();
   const [records, setRecords] = useState([]);
   const [calories, setCalories] = useState([]);
-  const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [startDate, setStartDate] = useState<Date | null>();
+  const [endDate, setEndDate] = useState<Date | null>();
   const [viewGraph, setViewGraph] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [targetId, setTargetId] = useState(0);
@@ -45,18 +45,8 @@ const History = () => {
         );
 
         setRecords(res.data.records);
-        setStartDate(
-          format(
-            new Date(res.data.datetime_range.oldest_datetime),
-            "yyyy-MM-dd"
-          )
-        );
-        setEndDate(
-          format(
-            new Date(res.data.datetime_range.latest_datetime),
-            "yyyy-MM-dd"
-          )
-        );
+        setStartDate(res.data.datetime_range.oldest_datetime);
+        setEndDate(res.data.datetime_range.latest_datetime);
         const response = await axios.get(
           import.meta.env.VITE_API_ENV +
             "/exercise/burned_calories/" +
@@ -71,11 +61,8 @@ const History = () => {
     onUpdate(false);
   }, [update]);
 
-  const handleStartDate = async (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleStartDate = async (newStartDate: Date | null) => {
     try {
-      const newStartDate = e.target.value;
       const res = await axios.get(
         import.meta.env.VITE_API_ENV +
           "/exercise/all/" +
@@ -91,11 +78,8 @@ const History = () => {
       console.log(err);
     }
   };
-  const handleEndDate = async (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleEndDate = async (newEndDate: Date | null) => {
     try {
-      const newEndDate = e.target.value;
       const res = await axios.get(
         import.meta.env.VITE_API_ENV +
           "/exercise/all/" +
@@ -125,18 +109,20 @@ const History = () => {
             <Form>
               <Form.Group className="mb-3" controlId="start_datetime">
                 <Form.Label>Start</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={startDate}
-                  onChange={handleStartDate}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(e) => handleStartDate(e)}
+                  dateFormat="MMM d, yyyy"
+                  customInput={<Form.Control />}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="start_datetime">
                 <Form.Label>End</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={endDate}
-                  onChange={handleEndDate}
+                <DatePicker
+                  selected={endDate}
+                  onChange={(e) => handleEndDate(e)}
+                  dateFormat="MMM d, yyyy"
+                  customInput={<Form.Control />}
                 />
               </Form.Group>
             </Form>

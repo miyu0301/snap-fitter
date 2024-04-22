@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
-import { format } from "date-fns";
 import axios from "axios";
 import common from "../Common";
 
@@ -42,19 +41,21 @@ function HistoryList({
       <thead>
         <tr>
           <th>#</th>
-          <th>Date</th>
+          <th>start date</th>
+          <th>end date</th>
+          <th>pause</th>
           <th>Workout</th>
           <th>Duration</th>
-          <th>Calories</th>
+          <th>Burned Calories</th>
         </tr>
       </thead>
       <tbody>
         {records.map((record, idx: number) => (
-          <tr>
+          <tr key={idx}>
             <td>{idx + 1}</td>
-            <td>
-              {format(new Date(record.start_datetime), "yyyy/MM/dd HH:mm:ss")}
-            </td>
+            <td>{common.getDatetimeForDisplay(record.start_datetime)}</td>
+            <td>{common.getDatetimeForDisplay(record.end_datetime)}</td>
+            <td>{common.getMinutesForDisplay(record.pause)}</td>
             <td>{record.exercise_name}</td>
             <td>
               {common.calculateDurationForDisplay(
@@ -63,11 +64,14 @@ function HistoryList({
                 record.pause
               )}
             </td>
-            <td>{record.burned_calories}</td>
-            <div>
-              <button onClick={() => onEditModal(record.id)}>Edit</button>
-              <button onClick={() => deleteRecord(record.id)}>Delete</button>
-            </div>
+            <td>{record.burned_calories} cal</td>
+            <td>
+              {" "}
+              <div>
+                <button onClick={() => onEditModal(record.id)}>Edit</button>
+                <button onClick={() => deleteRecord(record.id)}>Delete</button>
+              </div>
+            </td>
           </tr>
         ))}
       </tbody>
