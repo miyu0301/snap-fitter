@@ -99,7 +99,6 @@ const getBurnedCaloriesByUserId = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("HI");
     const user_id: number = parseInt(req.params.user_id);
     const records = await knex("exercise_records")
       .select("start_datetime")
@@ -107,7 +106,6 @@ const getBurnedCaloriesByUserId = async (
       .groupBy("start_datetime")
       .sum("burned_calories as total_calories")
       .orderBy("start_datetime", "asc");
-    console.log(records);
     res.json(records);
   } catch (err: any) {
     res.status(500).send(err.message);
@@ -126,7 +124,10 @@ const getExerciseRecordById = async (
 ): Promise<void> => {
   try {
     const id: number = parseInt(req.params.id);
-    const record = await knex("exercise_records").where("id", id).select("*");
+    const record = await knex("exercise_records")
+      .where("exercise_records.id", id)
+      .join("m_exercise", "m_exercise.id", "=", "exercise_records.exercise_id")
+      .select("exercise_records.*", "m_exercise.name");
     res.json(record[0]);
   } catch (err: any) {
     res.status(500).send(err.message);

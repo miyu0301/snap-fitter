@@ -60,7 +60,7 @@ function HistoryGraph({
       acc: { [key: string]: any[] },
       { exercise_name, start_datetime, ...rest }
     ) => {
-      let start_date = format(new Date(start_datetime), "yyyy/MM/dd");
+      let start_date = format(new Date(start_datetime), "MMM d, yyyy");
       // create array of object with exercise_name as key
       if (acc[exercise_name]) {
         acc[exercise_name].push({ start_date, start_datetime, ...rest });
