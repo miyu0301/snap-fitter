@@ -4,7 +4,7 @@ import UserNavbar from '../partials/navbar';
 import { useUser } from '../user/userProvider';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from 'react-bootstrap';
-import { FaRunning, FaUserCircle, FaMale, FaFemale, FaWeight, FaEnvelope, FaRuler } from "react-icons/fa";
+import { FaRunning, FaUserCircle, FaMale, FaFemale, FaWeight, FaEnvelope, FaRuler, FaBirthdayCake } from "react-icons/fa";
 import { BsGraphUp } from "react-icons/bs";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { RiLogoutCircleLine } from "react-icons/ri";
@@ -27,8 +27,8 @@ const Profile = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [age, setAge] = useState<number | null>(null);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null); // Estado para almacenar la imagen seleccionada
-  const [selectedGender, setSelectedGender] = useState<number | null>(null); // Estado para almacenar el género seleccionado
+  const [selectedImage, setSelectedImage] = useState<File | null>(null); // State to store the selected image
+  const [selectedGender, setSelectedGender] = useState<number | null>(null);
   const auth = useAuth();
   const sessionID: any = auth.getSessionId();
 
@@ -38,7 +38,7 @@ const Profile = () => {
         try {
           const userData: any = await user.fetchUserData(sessionID);
           setDbUser(userData);
-          setSelectedGender(userData.gender); // Establece el género seleccionado al valor del dbUser.gender al cargar los datos
+          setSelectedGender(userData.gender);
           calculateAge(userData.birthday);
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -120,7 +120,7 @@ const Profile = () => {
             <Link className="profile-link" to="/record-workout"><FaRunning size="1.5em" /> Record Workout</Link>
             <Link className="profile-link" to="/history"><BsGraphUp size="1.2em" /> History</Link>
             <Link className="profile-link" to="/chat"><IoChatbubbleEllipsesOutline size="1.5em" /> Chat</Link>
-            <Button className="mt-4 mb-4" onClick={handleLogout}><RiLogoutCircleLine /> Logout</Button>
+            <Button className="mt-4 mb-4 no-button" onClick={handleLogout}><RiLogoutCircleLine /> Logout</Button>
           </div>
           <div className='col-sm-12 col-md-9'>
             <div className="container">
@@ -139,11 +139,11 @@ const Profile = () => {
                 <div className="mb-3 col-sm-12 md-text-center">
                   <Button variant="" className={`button ${selectedGender === 1 ? 'btn-solid' : 'btn-outline'}`} onClick={() => handleGenderClick(1)}>
                     Male
-                    <FaMale className="ms-1" /> {/* Icono de male */}
+                    <FaMale className="ms-1" />
                   </Button>
                   <Button variant="" className={`button ${selectedGender === 2 ? 'btn-solid' : 'btn-outline'} ms-2`} onClick={() => handleGenderClick(2)}>
                     Female
-                    <FaFemale className="ms-1" /> {/* Icono de female */}
+                    <FaFemale className="ms-1" />
                   </Button>
                 </div>
               </div>
@@ -152,13 +152,14 @@ const Profile = () => {
                   <label htmlFor="email" className="form-label">Email</label>
                   <div className="input-group">
                     <input type="email" className="form-control" id="email" name="email" value={dbUser.email} onChange={handleChange} />
-                    <span className="input-group-text"><FaEnvelope /></span> {/* Icono de email */}
+                    <span className="input-group-text"><FaEnvelope /></span>
                   </div>
                 </div>
                 <div className="mb-3 col-sm-12 col-md-6">
                   <label htmlFor="birthday" className="form-label">Birthday</label>
                   <div className="input-group">
                     <input type="date" className="form-control" id="birthday" name="birthday" value={formatDate(dbUser.birthday)} onChange={handleChange} />
+                    <span className="input-group-text"><FaBirthdayCake /></span> 
                   </div>
                 </div>
                 <div className="mb-3 col-sm-12 col-md-6">

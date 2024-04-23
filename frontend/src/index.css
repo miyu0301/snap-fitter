@@ -345,11 +345,14 @@ text-align: right;
 }
 
 .profile-image-container{
-    position: relative !important;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-    text-align: center;
-    padding: 20px;
+position: relative !important;
+background-color: #f8f8f8;
+border-radius: 8px;
+text-align: center;
+padding: 20px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+display: none;
 }
 
 
@@ -566,11 +569,11 @@ height: calc(50% - 100px) !important;
 }
 
 .form-check-input:checked {
-    background-color: #24A2E8;
-    border-color: #24A2E8;
+background-color: #24A2E8;
+border-color: #24A2E8;
 }
 .tr-sm{
-    font-size: 13px;
+font-size: 13px;
 }
 
 
@@ -703,8 +706,8 @@ text-align: center;
 text-align: center;
 }
 .profileImage{
-    width: 200px!important;
-    height: 200px!important;
+width: 200px!important;
+height: 200px!important;
 }
 }
 
