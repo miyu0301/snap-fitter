@@ -328,12 +328,28 @@ border-right:2px solid #24A2E8;
 color: #000000;
 }
 
+.profileImage{
+transition: border 0.5s linear;
+}
+
+.profileImage:hover{
+border: solid 2px #000000;
+}
+
 .home-text-container{
 padding: 0px 100px;
 }
 
 .text-right{
 text-align: right;
+}
+
+.profile-image-container{
+    position: relative !important;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    text-align: center;
+    padding: 20px;
 }
 
 
@@ -404,7 +420,7 @@ height: 100%;
 border: 8px solid rgba(0, 0, 0, 0.1);
 border-radius: 50%;
 border-top-color: #24a2e8;
-animation: spin 10s infinite linear;
+animation: spin 4s infinite linear;
 position: absolute;
 top: 0px;
 left: 0px; 
@@ -677,6 +693,19 @@ white-space: nowrap;
 width: fit-content;
 }
 
+.md-hide{
+display: none;
+}
+.profile-image-container{
+text-align: center;
+}
+.md-text-center{
+text-align: center;
+}
+.profileImage{
+    width: 200px!important;
+    height: 200px!important;
+}
 }
 
 @media only screen and (max-width: 767px) { 

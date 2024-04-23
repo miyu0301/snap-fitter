@@ -1,4 +1,5 @@
 import logo from '../assets/images/logo_v2.png';
+import isotype from '../assets/images/isotype.png';
 import { Link } from 'react-router-dom';
 import UserNavbar from '../partials/navbar';
 import { useUser } from '../user/userProvider';
@@ -37,7 +38,7 @@ const Welcome = () => {
         <div className='col-50'>
           <div className="container text-container vertical-center-form">
           <div className='text-center'>
-            <img src={logo} width={200} alt='Logo of the app' />
+            <img src={isotype} width={200} alt='Logo of the app' />
           </div>
             <h4 className='anton-regular txt-md mb-4 text-center mb-4'>Welcome, {dbUser ? dbUser.username : ''}!</h4>
 

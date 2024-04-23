@@ -34,7 +34,7 @@ function UserNavbar(props: any) {
 
 <Navbar expand="lg" className="bg-white" sticky="top">
       <Container>
-        <Navbar.Brand href="/welcome"><img src={logo} width={100} alt='Logo of the app' /></Navbar.Brand>
+        <Navbar.Brand href="/welcome"><img src={logo} width={200} alt='Logo of the app' /></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
           <Nav>            

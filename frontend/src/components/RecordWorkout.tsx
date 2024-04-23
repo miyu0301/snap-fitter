@@ -1,4 +1,5 @@
 import logo from '../assets/images/logo_v2.png';
+import isotype from '../assets/images/isotype.png';
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import UserNavbar from '../partials/navbar';
@@ -236,7 +237,7 @@ const RecordWorkout: React.FC = () => {
           <div className="container text-container align-items-center vertical-center-form">
           <div className="w-100">
           <div className='text-center mb-4'>
-          <img src={logo} width={200} alt='Logo of the app' />
+          <img src={isotype} width={200} alt='Logo of the app' />
           </div>
 
             {!showTimer && !showWorkoutTime ? (
