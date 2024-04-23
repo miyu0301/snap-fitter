@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../assets/images/logo_v2.png';
+import logo from '../assets/images/logo_v1.png';
 import { Link } from 'react-router-dom'
 
 const Home = () => {

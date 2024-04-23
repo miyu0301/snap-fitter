@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/images/logo_v2.png';
+import logo from '../assets/images/logo_v1.png';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import DefaultLayout from '../partials/DefaultLayout';

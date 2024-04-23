@@ -5,7 +5,7 @@ import { useState } from 'react';
 import DefaultLayout from '../partials/DefaultLayout';
 import Cookies from 'js-cookie';
 import { useAuth } from '../auth/AuthProvider';
-import logo from '../assets/images/logo_v2.png';
+import logo from '../assets/images/logo_v1.png';
 import { FaHome } from "react-icons/fa";
 import { BsLockFill, BsPersonFill } from 'react-icons/bs';
 
