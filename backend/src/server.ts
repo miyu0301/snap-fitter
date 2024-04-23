@@ -56,6 +56,7 @@ io.on("connection", (socket) => {
       to_user_id: data.to_user_id,
       to_room_id: data.to_room_id,
       comment: data.comment,
+      image_path: data.image_path,
     });
   });
 });

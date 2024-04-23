@@ -11,8 +11,6 @@ import axios from "axios";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 const Chat = () => {
-  // const { dbUser } = useUser();
-  // console.log(dbUser);
   const auth = useAuth();
   const logined_user_id = auth.getSessionId();
   if (logined_user_id === undefined) {

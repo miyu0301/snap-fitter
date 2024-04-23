@@ -46,7 +46,8 @@ const getChats = async (req: Request, res: Response): Promise<void> => {
         "chats.to_user_id",
         "chats.to_room_id",
         "chats.comment",
-        "chats.created_datetime"
+        "chats.created_datetime",
+        "users.image_path"
       )
       .orderBy("chats.created_datetime", "asc");
 
@@ -105,7 +106,14 @@ const getDirectMessageList = async (
       )
       .join("users", "combined.user_id", "=", "users.id")
       .groupBy("users.id", "users.username")
-      .select("users.id", "users.username", "users.goal_id", "users.level_id");
+      .select(
+        "users.id",
+        "users.username",
+        "users.goal_id",
+        "users.level_id",
+        "users.image_path"
+      );
+    console.log(list);
     res.json(list);
   } catch (err: any) {
     res.status(500).send(err.message);

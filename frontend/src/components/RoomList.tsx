@@ -33,7 +33,6 @@ const RoomList = ({
         const res = await axios.get(
           import.meta.env.VITE_API_ENV + "/room/room_list/" + loginedUser?.id
         );
-        console.log(res.data);
         setRooms(res.data);
       } catch (err) {
         console.log(err);
@@ -47,8 +46,12 @@ const RoomList = ({
       <div className="h-custom-50">
         <div className="roomListHeader">
           <p className="m-0 p-0">Room list</p>
-          <Button className="no-button" variant="primary" onClick={() => setCreateModal(true)}>
-          <CiSquarePlus size="2rem" />
+          <Button
+            className="no-button"
+            variant="primary"
+            onClick={() => setCreateModal(true)}
+          >
+            <CiSquarePlus size="2rem" />
           </Button>
         </div>
         <Modal show={createModal} onHide={closeModal}>
@@ -59,22 +62,22 @@ const RoomList = ({
           />
         </Modal>
         <div className="itemsScroll">
-        {rooms.map((room: Room, idx: number) => (
-        <div className="roomItems">
-            <div className="roomItemIcon">
-            <IoChatbubblesOutline size="1.5rem" />
-            </div>   
+          {rooms.map((room: Room, idx: number) => (
+            <div className="roomItems">
+              <div className="roomItemIcon">
+                <IoChatbubblesOutline size="1.5rem" />
+              </div>
 
-            <div
-            className="roomItem"
-            key={idx}
-            style={{ cursor: "pointer" }}
-            onClick={() => setToRoomId(room.id)}
-            >
-            {room.room_name}
+              <div
+                className="roomItem"
+                key={idx}
+                style={{ cursor: "pointer" }}
+                onClick={() => setToRoomId(room.id)}
+              >
+                {room.room_name}
+              </div>
             </div>
-        </div>
-        ))}
+          ))}
         </div>
       </div>
     </>

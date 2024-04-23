@@ -6,9 +6,8 @@ import { format } from "date-fns";
 import { io } from "socket.io-client";
 // import { useUser } from "../user/userProvider";
 import RoomEditModal from "./RoomEditModal";
-import { UserInfo } from "../Common";
+import common, { UserInfo } from "../Common";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 
 type Chat = {
@@ -18,6 +17,7 @@ type Chat = {
   username: string;
   comment: string;
   created_datetime: Date;
+  image_path: string;
 };
 
 const ChatRoom = ({
@@ -67,7 +67,6 @@ const ChatRoom = ({
         const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
           params,
         });
-        console.log(res.data);
         setChats(res.data);
       } catch (err) {
         console.log(err);
@@ -125,6 +124,7 @@ const ChatRoom = ({
         to_user_id: roomChatMode ? undefined : toUserId,
         to_room_id: roomChatMode ? toRoomId : undefined,
         comment: comment,
+        image_path: loginedUser ? loginedUser.image_path : "",
       };
 
       socket.emit("sendMessage", newChat);
@@ -142,6 +142,8 @@ const ChatRoom = ({
     if (message.is_to_room) {
       if (message.to_room_id == toRoomId) {
         let updatedChats = [...chats];
+        console.log("message");
+        console.log(message);
         updatedChats.push(message);
         setChats(updatedChats);
       }
@@ -156,52 +158,63 @@ const ChatRoom = ({
 
   return (
     <>
-     
-        {roomChatMode ? (
-          <div className="d-flex gap-3 mb-4">
-            <p className="m-0 p-0"><b>{toRoomName}</b></p>         
-              <Button className="no-button" variant="primary" onClick={() => setEditModal(true)}>
-              <IoSettingsOutline size="2rem" />
-              </Button>
-          </div>
-        ) : (
-          <p className="dmName">{toUsername}</p>
-        )}
-        <div className="overflow-auto" style={{ height: "60vh" }}>
-          {chats.map((chat: Chat, idx: number) => (
-            <div key={idx}>
-              
-              
-              <div className="d-flex align-items-center gap-2">
-              <div><FaUserCircle size="2rem" /></div>
+      {roomChatMode ? (
+        <div className="d-flex gap-3 mb-4">
+          <p className="m-0 p-0">
+            <b>{toRoomName}</b>
+          </p>
+          <Button
+            className="no-button"
+            variant="primary"
+            onClick={() => setEditModal(true)}
+          >
+            <IoSettingsOutline size="2rem" />
+          </Button>
+        </div>
+      ) : (
+        <p className="dmName">{toUsername}</p>
+      )}
+      <div className="overflow-auto" style={{ height: "60vh" }}>
+        {chats.map((chat: Chat, idx: number) => (
+          <div key={idx}>
+            <div className="d-flex align-items-center gap-2">
+              <span>
+                <img
+                  src={common.getProfileImagePath(chat.image_path)}
+                  className="img-fluid rounded-circle profileImage"
+                  style={{ width: "3em", height: "3em", cursor: "pointer" }}
+                />
+              </span>
               <div className="chat-comment">
-              <div className="chat-date">
-                {format(new Date(chat.created_datetime), "yyyy/MM/dd HH:mm:ss")}
-              </div>
-              <div className="chat-username">{chat.username}</div>
-              <div>{chat.comment}</div>
-              </div>
-              
+                <div className="chat-date">
+                  {format(
+                    new Date(chat.created_datetime),
+                    "yyyy/MM/dd HH:mm:ss"
+                  )}
+                </div>
+                <div className="chat-username">{chat.username}</div>
+                <div>{chat.comment}</div>
               </div>
             </div>
-          ))}
-        </div>
-        <Form onSubmit={handleSubmit}>
-          <div className="d-flex align-items-center">
-            <Form.Group className="w-100" controlId="exercise_id">
-              <Form.Control
-                className="chatInput"
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="primary" className="chatBtnSubmit" type="submit">
-              Send <IoMdSend />
-            </Button>
           </div>
-        </Form>
-     
+        ))}
+      </div>
+      <Form onSubmit={handleSubmit}>
+        <div className="d-flex align-items-center">
+          <Form.Group className="w-100" controlId="exercise_id">
+            <Form.Control
+              className="chatInput"
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </Form.Group>
+          <Button variant="primary" className="chatBtnSubmit" type="submit">
+            Send <IoMdSend />
+          </Button>
+        </div>
+      </Form>
+
       <Modal show={editModal} onHide={closeModal}>
         <RoomEditModal
           closeModal={closeModal}
