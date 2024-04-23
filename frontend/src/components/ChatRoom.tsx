@@ -12,6 +12,7 @@ import { IoMdSend } from "react-icons/io";
 
 type Chat = {
   is_to_room: boolean;
+  from_user_id: number | undefined;
   to_user_id: number | undefined;
   to_room_id: number | undefined;
   username: string;
@@ -120,6 +121,7 @@ const ChatRoom = ({
       let newChat: Chat = {
         created_datetime: created_datetime,
         username: loginedUser ? loginedUser.username : "",
+        from_user_id: loginedUser ? loginedUser.id : 0,
         is_to_room: roomChatMode,
         to_user_id: roomChatMode ? undefined : toUserId,
         to_room_id: roomChatMode ? toRoomId : undefined,
@@ -142,8 +144,6 @@ const ChatRoom = ({
     if (message.is_to_room) {
       if (message.to_room_id == toRoomId) {
         let updatedChats = [...chats];
-        console.log("message");
-        console.log(message);
         updatedChats.push(message);
         setChats(updatedChats);
       }
@@ -177,7 +177,13 @@ const ChatRoom = ({
       <div className="overflow-auto" style={{ height: "60vh" }}>
         {chats.map((chat: Chat, idx: number) => (
           <div key={idx}>
-            <div className="d-flex align-items-center gap-2">
+            <div
+              className={`d-flex align-items-center gap-2 ${
+                chat.from_user_id == loginedUser?.id
+                  ? "flex-row-reverse"
+                  : "flex-row"
+              } `}
+            >
               <span>
                 <img
                   src={common.getProfileImagePath(chat.image_path)}

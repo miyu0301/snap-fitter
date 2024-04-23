@@ -52,6 +52,7 @@ io.on("connection", (socket) => {
     io.emit("receiveMessage", {
       created_datetime: data.created_datetime,
       username: data.username,
+      from_user_id: data.from_user_id,
       is_to_room: data.is_to_room,
       to_user_id: data.to_user_id,
       to_room_id: data.to_room_id,

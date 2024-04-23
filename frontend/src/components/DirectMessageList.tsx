@@ -47,7 +47,7 @@ const DirectMessageList = ({
         </div>
         <div className="itemsScroll">
           {recipients.map((recipient: UserInfo, idx: number) => (
-            <div className="dmItem">
+            <div key={idx} className="dmItem">
               <div className="dmProfilePicure">
                 <span>
                   <img
