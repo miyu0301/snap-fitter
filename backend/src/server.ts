@@ -15,6 +15,7 @@ const io = new Server(server, {
   },
 });
 
+app.use("/profile_images", express.static("profile_images"));
 app.use(express.json());
 app.use(cors());
 

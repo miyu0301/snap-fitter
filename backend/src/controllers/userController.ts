@@ -107,6 +107,7 @@ interface RequestBodyUpdate {
   birthday?: Date;
   height?: number;
   weight?: number;
+  image_path?: string;
 }
 interface RequestParamsUpdate {
   id: string;
@@ -130,6 +131,9 @@ const updateUser = async (
         updateData[key as keyof RequestBodyUpdate] = value;
       }
     });
+    if (req.file) {
+      updateData["image_path"] = req.file.filename;
+    }
     const updated = await knex("users")
       .where("id", id)
       .update(updateData)

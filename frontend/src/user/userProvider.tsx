@@ -80,7 +80,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
   //const profileInfo = fetch user id
 
-  const handleDBUpdate = async (user: any) => {
+  const handleDBUpdate = async (formData: FormData) => {
     try {
       const sessionId = getSessionId(); // We get the session from useAuth
       if (!sessionId) {
@@ -89,10 +89,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
       const response = await fetch(`${API_URL}/users/${sessionId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
+        body: formData,
       });
 
       if (response.ok) {
