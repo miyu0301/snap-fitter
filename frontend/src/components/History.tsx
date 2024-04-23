@@ -8,7 +8,7 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import { Form, InputGroup } from "react-bootstrap";
 import { useAuth } from "../auth/AuthProvider";
-import { UserInfo } from "../Common";
+import common, { UserInfo } from "../Common";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRunning } from "react-icons/fa";
@@ -103,53 +103,66 @@ const History = () => {
 
   return (
     <>
-      <UserNavbar username={loginedUser ? loginedUser.username : ""} />
+      <UserNavbar
+        username={loginedUser ? loginedUser.username : ""}
+        imagePath={
+          loginedUser ? common.getProfileImagePath(loginedUser?.image_path) : ""
+        }
+      />
 
       <div className="container mt-80">
-        
         <div className="historyHeader">
-        <h1 className="anton-regular uppercase mb-4"><FaRunning /> MY WORKOUTS</h1>
+          <h1 className="anton-regular uppercase mb-4">
+            <FaRunning /> MY WORKOUTS
+          </h1>
         </div>
 
-
-        {records.length == 0 && <div className="alert alert-warning text-center">You haven't added any activities yet, start now!</div>}
+        {records.length == 0 && (
+          <div className="alert alert-warning text-center">
+            You haven't added any activities yet, start now!
+          </div>
+        )}
         {records.length > 0 && (
           <>
-          
             <Form className="d-flex justify-content-end gap-4 datesFilters">
-              <Form.Group className="mb-3 d-flex flex-column" controlId="start_datetime">
+              <Form.Group
+                className="mb-3 d-flex flex-column"
+                controlId="start_datetime"
+              >
                 <Form.Label className="small">Start</Form.Label>
-                <InputGroup>                
-                <DatePicker
-                  selected={startDate}
-                  onChange={(e) => handleStartDate(e)}
-                  dateFormat="MMM d, yyyy"
-                  customInput={<Form.Control />}
-                  className="brr-0"
-                />
-                <InputGroup.Text>
-                <BsCalendar />
-                </InputGroup.Text>
+                <InputGroup>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(e) => handleStartDate(e)}
+                    dateFormat="MMM d, yyyy"
+                    customInput={<Form.Control />}
+                    className="brr-0"
+                  />
+                  <InputGroup.Text>
+                    <BsCalendar />
+                  </InputGroup.Text>
                 </InputGroup>
               </Form.Group>
 
-              <Form.Group className="mb-3 d-flex flex-column" controlId="start_datetime">
+              <Form.Group
+                className="mb-3 d-flex flex-column"
+                controlId="start_datetime"
+              >
                 <Form.Label className="small">End</Form.Label>
-                <InputGroup>  
-                <DatePicker
-                  selected={endDate}
-                  onChange={(e) => handleEndDate(e)}
-                  dateFormat="MMM d, yyyy"
-                  customInput={<Form.Control />}
-                  className="brr-0"
-                />
-                <InputGroup.Text>
-                <BsCalendar />
-                </InputGroup.Text>
+                <InputGroup>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(e) => handleEndDate(e)}
+                    dateFormat="MMM d, yyyy"
+                    customInput={<Form.Control />}
+                    className="brr-0"
+                  />
+                  <InputGroup.Text>
+                    <BsCalendar />
+                  </InputGroup.Text>
                 </InputGroup>
               </Form.Group>
-            </Form>         
-            
+            </Form>
 
             <div className="form-check form-switch">
               <input
@@ -175,7 +188,7 @@ const History = () => {
                 onUpdate={onUpdate}
               />
             )}
-            
+
             <Modal show={editModal} onHide={closeModal}>
               <HistoryEditModal
                 targetId={targetId}
@@ -183,11 +196,8 @@ const History = () => {
                 onUpdate={onUpdate}
               />
             </Modal>
-
           </>
         )}
-
-
       </div>
     </>
   );

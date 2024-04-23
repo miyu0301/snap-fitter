@@ -61,6 +61,10 @@ export const common = {
     return format(datetime_value, "MMM d, yyyy");
   },
 
+  getProfileImagePath: (file_name: string) => {
+    return `${import.meta.env.VITE_API_ENV}/profile_images/${file_name}`;
+  },
+
   GENDER_DICT: {
     1: "Male",
     2: "Female",
@@ -85,4 +89,5 @@ export type UserInfo = {
   username: string;
   goal_id: 1 | 2 | 3;
   level_id: 1 | 2 | 3;
+  image_path: string;
 };

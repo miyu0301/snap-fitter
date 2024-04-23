@@ -2,5 +2,6 @@
 backend/node_modules/
 backend/dist/
 backend/note.txt
-backend/profile_images/
+backend/profile_images/*
+!backend/profile_images/default_profile_image.png
 # backend/.env

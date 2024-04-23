@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
   return knex.schema.table('users', function(table) {
-    table.string('image_path');
+    table.string('image_path').defaultTo("default_profile_image.png");
   });
 };
 

@@ -18,7 +18,7 @@ import { BsGraphUp } from "react-icons/bs";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import FloatingButton from "./FloatingButton";
-import profileImage from "../assets/images/profile_placeholder.jpg";
+import common from "../Common";
 
 const Profile = () => {
   const user = useUser();
@@ -38,7 +38,7 @@ const Profile = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [age, setAge] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null); // State to store the selected image
-  const [selectedImageSrc, setSelectedImageSrc] = useState<any>(profileImage);
+  const [selectedImageSrc, setSelectedImageSrc] = useState<any>("");
   const [selectedGender, setSelectedGender] = useState<number | null>(null);
   const auth = useAuth();
   const sessionID: any = auth.getSessionId();
@@ -51,9 +51,7 @@ const Profile = () => {
           setDbUser(userData);
           if (userData.image_path) {
             setSelectedImageSrc(
-              `${import.meta.env.VITE_API_ENV}/profile_images/${
-                userData.image_path
-              }`
+              common.getProfileImagePath(userData.image_path)
             );
           }
           setSelectedGender(userData.gender);
@@ -150,7 +148,7 @@ const Profile = () => {
 
   return (
     <>
-      <UserNavbar username={dbUser.username} />
+      <UserNavbar username={dbUser.username} imagePath={selectedImageSrc} />
       <div className="container mt-80">
         <div className="row">
           <div className="col-sm-12 col-md-3 border-right md-hide">

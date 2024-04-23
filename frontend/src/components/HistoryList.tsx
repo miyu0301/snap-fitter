@@ -43,46 +43,68 @@ function HistoryList({
 
   return (
     <div className="table-responsive historyList">
-    <Table striped  hover className="table-auto">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th><BsCalendar /> Start date</th>
-          <th><BsCalendar /> End date</th>
-          <th><FaRegClock /> Pause</th>
-          <th><FaRunning /> Workout</th>
-          <th><FaRegClock /> Duration</th>
-          <th><LuFlame /> Burned Calories</th>
-        </tr>
-      </thead>
-      <tbody>
-        {records.map((record, idx: number) => (
-          <tr className="tr-sm" key={idx}>
-            <td>{idx + 1}</td>
-            {/* <td>{common.getDatetimeForDisplay(record.start_datetime)}</td>
-            <td>{common.getDatetimeForDisplay(record.end_datetime)}</td> */}
-            <td>{common.getMinutesForDisplay(record.pause)}</td>
-            <td>{record.exercise_name}</td>
-            <td>
-              {common.calculateDurationForDisplay(
-                new Date(record.start_datetime),
-                new Date(record.end_datetime),
-                record.pause
-              )}
-            </td>
-            <td>{record.burned_calories} cal</td>
-            <td>
-              {" "}
-              <div>
-                <button className="no-button ms-4" onClick={() => onEditModal(record.id)}><FiEdit size="1.3rem" /></button>
-                <button className="no-button ms-4" onClick={() => deleteRecord(record.id)}><MdOutlineDelete size="1.5rem" /></button>
-              </div>
-            </td>
-            <td></td>
+      <Table striped hover className="table-auto">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>
+              <BsCalendar /> Start date
+            </th>
+            <th>
+              <BsCalendar /> End date
+            </th>
+            <th>
+              <FaRegClock /> Pause
+            </th>
+            <th>
+              <FaRunning /> Workout
+            </th>
+            <th>
+              <FaRegClock /> Duration
+            </th>
+            <th>
+              <LuFlame /> Burned Calories
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {records.map((record, idx: number) => (
+            <tr className="tr-sm" key={idx}>
+              <td>{idx + 1}</td>
+              <td>{common.getDatetimeForDisplay(record.start_datetime)}</td>
+              <td>{common.getDatetimeForDisplay(record.end_datetime)}</td>
+              <td>{common.getMinutesForDisplay(record.pause)}</td>
+              <td>{record.exercise_name}</td>
+              <td>
+                {common.calculateDurationForDisplay(
+                  new Date(record.start_datetime),
+                  new Date(record.end_datetime),
+                  record.pause
+                )}
+              </td>
+              <td>{record.burned_calories} cal</td>
+              <td>
+                {" "}
+                <div>
+                  <button
+                    className="no-button ms-4"
+                    onClick={() => onEditModal(record.id)}
+                  >
+                    <FiEdit size="1.3rem" />
+                  </button>
+                  <button
+                    className="no-button ms-4"
+                    onClick={() => deleteRecord(record.id)}
+                  >
+                    <MdOutlineDelete size="1.5rem" />
+                  </button>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 }
