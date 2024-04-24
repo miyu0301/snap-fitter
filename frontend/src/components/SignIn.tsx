@@ -6,8 +6,10 @@ import DefaultLayout from '../partials/DefaultLayout';
 import Cookies from 'js-cookie';
 import { useAuth } from '../auth/AuthProvider';
 import logo from '../assets/images/logo_v1.png';
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaRegUser } from "react-icons/fa";
 import { BsLockFill, BsPersonFill } from 'react-icons/bs';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import { BiHome } from 'react-icons/bi';
 
 interface FormData {
   username: string;
@@ -99,7 +101,7 @@ const SignIn = () => {
           <div className='text-center'>
             <Link to="/"><img src={logo} width={250} alt='Logo of the app' /></Link>
           </div>
-          <p className='txt-ms text-center'>Login</p>
+          <p className='txt-ms text-center anton-regular mt-2'>Login</p>
             {errors['general'] && <div className="alert alert-danger small text-center">{errors['general']}</div>} {/* Display general error message */}
             <Form className='form-w' onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="username">
@@ -113,7 +115,7 @@ const SignIn = () => {
                   placeholder="Joe Doe"
                 />
                 <InputGroup.Text>
-                <BsPersonFill />
+                <FaRegUser />
                 </InputGroup.Text>
                 </InputGroup>
                 {errors['username'] && <Form.Text className="text-danger">{errors['username']}</Form.Text>}
@@ -131,21 +133,21 @@ const SignIn = () => {
                   autoComplete="password"                  
                 />
                 <InputGroup.Text>
-                <BsLockFill />
+                <RiLockPasswordLine />
                 </InputGroup.Text>
                 </InputGroup>
                 {errors['password'] && <Form.Text className="text-danger">{errors['password']}</Form.Text>}                
               </Form.Group>
 
 
-              <p className="txt-sm">Forgot your password?</p>
+              {/* <p className="txt-sm">Forgot your password?</p> */}
               <Button type="submit" className="button btn-solid w-100 text-center">Enter</Button>
             </Form>
             {/* <Button variant="outline-dark w-100 mt-4">Continue with Google</Button>
             <Button variant="outline-dark w-100 mt-4">Continue with Facebook</Button> */}
             <p className="txt-sm mt-4 text-center">Don't have an account?<br></br><Link to="/sign-up">Sign up here</Link></p>
             <p className="txt-sm mt-4 text-center"><Link to="/">
-              <FaHome className="text-dark" size="1.8em" /></Link>
+              <BiHome className="text-dark" size="1.8em" /></Link>
             </p>
           </div>
         </div>
