@@ -46,7 +46,7 @@ function UserNavbar(props: any) {
                   <span>
                     <img
                       src={props.imagePath}
-                      className="img-fluid rounded-circle profileImage"
+                      className="img-fluid rounded-circle"
                       style={{ width: "3em", height: "3em", cursor: "pointer" }}
                     />
                   </span>
