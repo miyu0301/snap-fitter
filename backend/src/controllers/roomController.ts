@@ -191,7 +191,10 @@ const getRoomWithMembers = async (id: number): Promise<Room | null> => {
       "rooms.create_user_id as create_user_id",
       "rooms.created_datetime as created_datetime",
       "users.id as user_id",
-      "users.username as username"
+      "users.level_id as level_id",
+      "users.goal_id as goal_id",
+      "users.username as username",
+      "users.image_path as image_path"
     );
 
   if (rooms.length > 0) {
@@ -203,10 +206,21 @@ const getRoomWithMembers = async (id: number): Promise<Room | null> => {
       room_name: rooms[0].room_name,
       create_user_id: rooms[0].create_user_id,
       created_datetime: rooms[0].created_datetime,
-      members: rooms.map((room: { user_id: number; username: string }) => ({
-        id: room.user_id,
-        username: room.username,
-      })),
+      members: rooms.map(
+        (room: {
+          user_id: number;
+          username: string;
+          level_id: number;
+          goal_id: number;
+          image_path: string;
+        }) => ({
+          id: room.user_id,
+          username: room.username,
+          level_id: room.level_id,
+          goal_id: room.goal_id,
+          image_path: room.image_path,
+        })
+      ),
       member_ids: member_ids,
     };
     return result;

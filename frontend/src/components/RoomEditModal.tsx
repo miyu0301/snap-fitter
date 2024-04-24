@@ -6,6 +6,7 @@ import { Form, Button, ListGroup } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { useUser } from "../user/userProvider";
 import common, { UserInfo } from "../Common";
+import { FaRegTrashAlt, FaUserCircle } from "react-icons/fa";
 
 function RoomEditModal({
   closeModal,
@@ -35,6 +36,8 @@ function RoomEditModal({
         const room = await axios.get(
           import.meta.env.VITE_API_ENV + "/room/" + toRoomId
         );
+        console.log("room.data");
+        console.log(room.data);
         setRoomName(room.data.room_name);
         setSelectedUsers(room.data.members);
         setSelectedUsersIds(room.data.member_ids);
@@ -113,7 +116,7 @@ function RoomEditModal({
     <>
       {" "}
       <Modal.Header closeButton>
-        <Modal.Title>Create Room</Modal.Title>
+        <Modal.Title>Edit Room</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {" "}
@@ -141,9 +144,25 @@ function RoomEditModal({
                   onClick={(e) => handleSelectMember(e, user)}
                   action
                 >
-                  {`${user.username} ${common.GOAL_DICT[user.goal_id]} / ${
-                    common.LEVEL_DICT[user.level_id]
-                  }`}
+                  <div className="d-flex gap-2 align-items-center">
+                    <span>
+                      <img
+                        src={common.getProfileImagePath(user.image_path)}
+                        className="img-fluid rounded-circle profileImage"
+                        style={{
+                          width: "2em",
+                          height: "2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </span>
+                    <div className="dmUserName">{user.username}</div>
+                    <div className="small dmGoal">
+                      {common.GOAL_DICT[user.goal_id] +
+                        " / " +
+                        common.LEVEL_DICT[user.level_id]}
+                    </div>
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -152,12 +171,32 @@ function RoomEditModal({
         {selectedUsers.length > 0 && (
           <div>
             <strong>Selected Users:</strong>
-            <ul>
+            <ul className="roomSelectedUserList">
               {selectedUsers.map((user: UserInfo) => (
                 <li key={user.id}>
-                  {user.username}{" "}
+                  <div className="d-flex gap-2 align-items-center">
+                    <span>
+                      <img
+                        src={common.getProfileImagePath(user.image_path)}
+                        className="img-fluid rounded-circle profileImage"
+                        style={{
+                          width: "2em",
+                          height: "2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </span>
+                    <div className="dmUserName">{user.username}</div>
+                    <div className="small dmGoal">
+                      {common.GOAL_DICT[user.goal_id] +
+                        " / " +
+                        common.LEVEL_DICT[user.level_id]}
+                    </div>
+                  </div>
+
+                  {/* {user.username}{" "} */}
                   <button onClick={() => handleRemoveMember(user.id)}>
-                    Remove
+                    <FaRegTrashAlt />
                   </button>
                 </li>
               ))}
@@ -166,10 +205,14 @@ function RoomEditModal({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button className="button btn-outline" variant="" onClick={closeModal}>
           Close
         </Button>
-        <Button variant="primary" type="submit" onClick={handleEditRoom}>
+        <Button
+          className="button btn-solid w-50"
+          type="submit"
+          onClick={handleEditRoom}
+        >
           Update
         </Button>
       </Modal.Footer>
