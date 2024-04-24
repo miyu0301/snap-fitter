@@ -21,9 +21,11 @@ function RoomCreateModal({
   const [roomName, setRoomName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<UserInfo[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([loginedUser]);
+  const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([
+    loginedUser as UserInfo,
+  ]);
   const [selectedUserIds, setSelectedUsersIds] = useState<number[]>([
-    loginedUser.id,
+    loginedUser?.id as number,
   ]);
 
   const handleCraeteRoom = async () => {
@@ -121,9 +123,25 @@ function RoomCreateModal({
                   onClick={(e) => handleSelectMember(e, user)}
                   action
                 >
-                  {`${user.username} ${common.GOAL_DICT[user.goal_id]} / ${
-                    common.LEVEL_DICT[user.level_id]
-                  }`}
+                  <div className="d-flex gap-2 align-items-center">
+                    <span>
+                      <img
+                        src={common.getProfileImagePath(user.image_path)}
+                        className="img-fluid rounded-circle profileImage"
+                        style={{
+                          width: "2em",
+                          height: "2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </span>
+                    <div className="dmUserName">{user.username}</div>
+                    <div className="small dmGoal">
+                      {common.GOAL_DICT[user.goal_id] +
+                        " / " +
+                        common.LEVEL_DICT[user.level_id]}
+                    </div>
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -135,9 +153,24 @@ function RoomCreateModal({
             <ul className="roomSelectedUserList">
               {selectedUsers.map((user: UserInfo) => (
                 <li key={user.id}>
-                  <div className="dmProfilePicure">
-                    <FaUserCircle className="me-2" size="1.8rem" />
-                    {user.username}{" "}
+                  <div className="d-flex gap-2 align-items-center">
+                    <span>
+                      <img
+                        src={common.getProfileImagePath(user.image_path)}
+                        className="img-fluid rounded-circle profileImage"
+                        style={{
+                          width: "2em",
+                          height: "2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </span>
+                    <div className="dmUserName">{user.username}</div>
+                    <div className="small dmGoal">
+                      {common.GOAL_DICT[user.goal_id] +
+                        " / " +
+                        common.LEVEL_DICT[user.level_id]}
+                    </div>
                   </div>
 
                   <button onClick={() => handleRemoveMember(user.id)}>
