@@ -45,10 +45,14 @@ app.use("/chat", chatRoutes);
 app.use("/room", roomRoutes);
 
 io.on("connection", (socket) => {
-  console.log("A user has connected");
+  console.log("A user has connected!");
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
 
   socket.on("sendMessage", (data) => {
-    console.log("Message has been sent: ", data.comment);
+    console.log("Message has been sent: ", data);
     io.emit("receiveMessage", {
       created_datetime: data.created_datetime,
       username: data.username,

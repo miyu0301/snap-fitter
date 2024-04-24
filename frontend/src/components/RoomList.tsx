@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal } from "react-bootstrap";
 import RoomCreateModal from "./RoomCreateModal";
-// import { useUser } from "../user/userProvider";
 import { UserInfo } from "../Common";
 import { CiSquarePlus } from "react-icons/ci";
 import { IoChatbubblesOutline } from "react-icons/io5";
@@ -20,7 +19,6 @@ const RoomList = ({
   loginedUser: UserInfo | undefined;
   setToRoomId: (id: number) => void;
 }) => {
-  // const { dbUser } = useUser();
   const [rooms, setRooms] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const [update, onUpdate] = useState(false);
@@ -56,6 +54,7 @@ const RoomList = ({
         </div>
         <Modal show={createModal} onHide={closeModal}>
           <RoomCreateModal
+            loginedUser={loginedUser}
             closeModal={closeModal}
             onUpdate={onUpdate}
             setToRoomId={setToRoomId}
@@ -63,7 +62,7 @@ const RoomList = ({
         </Modal>
         <div className="itemsScroll">
           {rooms.map((room: Room, idx: number) => (
-            <div className="roomItems">
+            <div key={idx} className="roomItems">
               <div className="roomItemIcon">
                 <IoChatbubblesOutline size="1.5rem" />
               </div>

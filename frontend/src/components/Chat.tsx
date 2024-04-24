@@ -9,6 +9,7 @@ import { useAuth } from "../auth/AuthProvider";
 import common, { UserInfo } from "../Common";
 import axios from "axios";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { Socket, io } from "socket.io-client";
 
 const Chat = () => {
   const auth = useAuth();
@@ -16,11 +17,27 @@ const Chat = () => {
   if (logined_user_id === undefined) {
     throw new Error("Session ID is undefined");
   }
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [loginedUser, setLoginedUser] = useState<UserInfo>();
   const [loading, setLoading] = useState(true);
   const [toUserId, setToUserId] = useState(0);
   const [toRoomId, setToRoomId] = useState(0);
   const [pageUpdate, onPageUpdate] = useState(false);
+
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_API_ENV, {
+      autoConnect: false,
+    });
+    setSocket(socket);
+    socket.connect();
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+    return () => {
+      console.log("Disconnecting socket...");
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fechAllRecords = async () => {
@@ -71,6 +88,7 @@ const Chat = () => {
                 </div>
                 <div className="w-100 chatRoom">
                   <ChatRoom
+                    socket={socket}
                     loginedUser={loginedUser}
                     toUserId={toUserId}
                     toRoomId={toRoomId}

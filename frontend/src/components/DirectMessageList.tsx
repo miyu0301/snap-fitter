@@ -26,7 +26,6 @@ const DirectMessageList = ({
             "/chat/direct_message_list/" +
             loginedUser?.id
         );
-        console.log(res.data);
         setRecipients(res.data);
         // setToUserId(res.data[0].user_id);
       } catch (err) {

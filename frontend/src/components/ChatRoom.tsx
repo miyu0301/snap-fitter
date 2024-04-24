@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Form, Button, Modal } from "react-bootstrap";
 import { format } from "date-fns";
-import { io } from "socket.io-client";
-// import { useUser } from "../user/userProvider";
 import RoomEditModal from "./RoomEditModal";
 import common, { UserInfo } from "../Common";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdSend } from "react-icons/io";
+import { Socket } from "socket.io-client";
 
 type Chat = {
   is_to_room: boolean;
@@ -22,26 +21,20 @@ type Chat = {
 };
 
 const ChatRoom = ({
+  socket,
   loginedUser,
   toUserId,
   toRoomId,
   setToRoomId,
   onPageUpdate,
 }: {
+  socket: Socket | null;
   loginedUser: UserInfo | undefined;
   toUserId: number;
   toRoomId: number;
   setToRoomId: (id: number) => void;
   onPageUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const socket = io(import.meta.env.VITE_API_ENV, {
-    autoConnect: false,
-  });
-  socket.connect();
-  socket.on("connect_error", (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
-  // const { dbUser } = useUser();
   const [roomChatMode, setRoomChatMode] = useState(false);
   const [toUsername, setToUsername] = useState("");
   const [toRoomName, setToRoomName] = useState("");
@@ -52,23 +45,45 @@ const ChatRoom = ({
   const closeModal = () => setEditModal(false);
 
   useEffect(() => {
+    socket?.on("receiveMessage", (message) => {
+      if (message.is_to_room) {
+        if (
+          message.to_room_id == toRoomId &&
+          message.from_user_id != loginedUser?.id
+        ) {
+          setChats((prevChats) => [...prevChats, message]);
+        }
+      } else {
+        if (message.from_user_id == toUserId) {
+          setChats((prevChats) => [...prevChats, message]);
+        }
+      }
+      return () => {
+        socket?.off("receiveMessage");
+      };
+    });
+  }, [socket, toUserId, toRoomId]);
+
+  useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const user = await axios.get(
-          import.meta.env.VITE_API_ENV + "/users/" + toUserId
-        );
-        setRoomChatMode(false);
-        setToUsername(user.data.username);
+        if (toUserId) {
+          const user = await axios.get(
+            import.meta.env.VITE_API_ENV + "/users/" + toUserId
+          );
+          setRoomChatMode(false);
+          setToUsername(user.data.username);
 
-        const params = {
-          from_user_id: loginedUser?.id,
-          user_id: toUserId,
-          room_id: undefined,
-        };
-        const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
-          params,
-        });
-        setChats(res.data);
+          const params = {
+            from_user_id: loginedUser?.id,
+            user_id: toUserId,
+            room_id: undefined,
+          };
+          const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
+            params,
+          });
+          setChats(res.data);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -79,20 +94,22 @@ const ChatRoom = ({
   useEffect(() => {
     const fechAllRecords = async () => {
       try {
-        const room = await axios.get(
-          import.meta.env.VITE_API_ENV + "/room/" + toRoomId
-        );
-        setRoomChatMode(true);
-        setToRoomName(room.data.room_name);
+        if (toRoomId != 0) {
+          const room = await axios.get(
+            import.meta.env.VITE_API_ENV + "/room/" + toRoomId
+          );
+          setRoomChatMode(true);
+          setToRoomName(room.data.room_name);
 
-        const params = {
-          user_id: undefined,
-          room_id: toRoomId,
-        };
-        const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
-          params,
-        });
-        setChats(res.data);
+          const params = {
+            user_id: undefined,
+            room_id: toRoomId,
+          };
+          const res = await axios.get(import.meta.env.VITE_API_ENV + "/chat", {
+            params,
+          });
+          setChats(res.data);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -129,7 +146,7 @@ const ChatRoom = ({
         image_path: loginedUser ? loginedUser.image_path : "",
       };
 
-      socket.emit("sendMessage", newChat);
+      socket?.emit("sendMessage", newChat);
       // add chats
       let updatedChats: Chat[] = [...chats];
       updatedChats.push(newChat);
@@ -139,22 +156,6 @@ const ChatRoom = ({
       console.error("Failed to update record", err);
     }
   };
-
-  socket.on("receiveMessage", (message) => {
-    if (message.is_to_room) {
-      if (message.to_room_id == toRoomId) {
-        let updatedChats = [...chats];
-        updatedChats.push(message);
-        setChats(updatedChats);
-      }
-    } else {
-      if (message.to_user_id == toUserId) {
-        let updatedChats = [...chats];
-        updatedChats.push(message);
-        setChats(updatedChats);
-      }
-    }
-  });
 
   return (
     <>

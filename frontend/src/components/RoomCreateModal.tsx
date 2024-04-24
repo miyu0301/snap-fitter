@@ -4,33 +4,33 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import { useUser } from "../user/userProvider";
 import common, { UserInfo } from "../Common";
 import { FaRegTrashAlt, FaUserCircle } from "react-icons/fa";
 
 function RoomCreateModal({
+  loginedUser,
   closeModal,
   onUpdate,
   setToRoomId,
 }: {
+  loginedUser: UserInfo | undefined;
   closeModal: () => void;
   onUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   setToRoomId: (id: number) => void;
 }) {
-  const { dbUser } = useUser();
   const [roomName, setRoomName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<UserInfo[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([dbUser]);
+  const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([loginedUser]);
   const [selectedUserIds, setSelectedUsersIds] = useState<number[]>([
-    dbUser.id,
+    loginedUser.id,
   ]);
 
   const handleCraeteRoom = async () => {
     try {
       const formData = {
         room_name: roomName,
-        create_user_id: dbUser.id,
+        create_user_id: loginedUser?.id,
         members: selectedUserIds,
       };
 
@@ -134,14 +134,14 @@ function RoomCreateModal({
             <strong>Selected Users:</strong>
             <ul className="roomSelectedUserList">
               {selectedUsers.map((user: UserInfo) => (
-                <li  key={user.id}>
+                <li key={user.id}>
                   <div className="dmProfilePicure">
-                  <FaUserCircle className="me-2" size="1.8rem" />
-                  {user.username}{" "}
+                    <FaUserCircle className="me-2" size="1.8rem" />
+                    {user.username}{" "}
                   </div>
-                  
+
                   <button onClick={() => handleRemoveMember(user.id)}>
-                  <FaRegTrashAlt />
+                    <FaRegTrashAlt />
                   </button>
                 </li>
               ))}
@@ -153,7 +153,11 @@ function RoomCreateModal({
         <Button variant="" className="button btn-outline" onClick={closeModal}>
           Close
         </Button>
-        <Button  className="button btn-solid w-50" type="submit" onClick={handleCraeteRoom}>
+        <Button
+          className="button btn-solid w-50"
+          type="submit"
+          onClick={handleCraeteRoom}
+        >
           Create
         </Button>
       </Modal.Footer>
