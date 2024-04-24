@@ -52,7 +52,6 @@ const getChats = async (req: Request, res: Response): Promise<void> => {
       .orderBy("chats.created_datetime", "asc");
 
     const chats = await query;
-    console.log(chats);
     res.json(chats);
   } catch (err: any) {
     res.status(500).send(err.message);
@@ -113,7 +112,6 @@ const getDirectMessageList = async (
         "users.level_id",
         "users.image_path"
       );
-    console.log(list);
     res.json(list);
   } catch (err: any) {
     res.status(500).send(err.message);
