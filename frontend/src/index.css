@@ -87,6 +87,12 @@ border-radius:6px;
     color: #ffffff!important;
 }
 
+.black-button{
+    border:solid 2px #000000!important;
+    background-color: #000000!important;
+    color: #ffffff!important;
+}
+
 
 /*buttons*/
 .btn-outline{

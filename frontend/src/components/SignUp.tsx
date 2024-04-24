@@ -9,6 +9,7 @@ import { BsEnvelopeFill, BsLockFill, BsPersonFill } from 'react-icons/bs';
 import { FaHome, FaRegUser } from 'react-icons/fa';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { HiOutlineMail } from 'react-icons/hi';
+import { BiHome } from 'react-icons/bi';
 
 
 interface FormData {
@@ -120,7 +121,7 @@ navigate('/your-goal');
           <Form className='form-w' onSubmit={handleSubmit}>
             
           <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Username</Form.Label>
           <InputGroup className={errors.username ? 'is-invalid' : ''}>
           <Form.Control
           type="text"
@@ -175,7 +176,7 @@ navigate('/your-goal');
           {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
           </Form.Group>
 
-          <Button type="submit" className="button outline-button  w-100 mt-2 mb-4" variant="">Sign Up</Button>
+          <Button type="submit" className="button black-button  w-100 mt-2 mb-4" variant="">Sign Up</Button>
 
           </Form>
 
@@ -183,7 +184,7 @@ navigate('/your-goal');
             Do you have an account?<br/><Link to="/sign-in">Sign in here</Link>
           </p>
           <p className="txt-sm mt-4 text-center"><Link to="/">
-              <FaHome className="text-dark" size="1.8em" /></Link>
+          <BiHome className="text-dark" size="1.8em" /></Link>
           </p>
         </div>
       </div>
