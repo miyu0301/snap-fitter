@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { useUser } from '../user/userProvider';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import logo from '../assets/images/logo_v2.png';
+import logo from '../assets/images/logo_v1.png';
 
 const GoalForm = () => {
   const { user, updateUser } = useUser();
@@ -33,9 +33,9 @@ const GoalForm = () => {
       <div className='col-50'>
         <div className="container home-text-container vertical-center-form">
           <div className='text-center'>
-            <img src={logo} width={200} alt='Logo of the app' />
+            <img src={logo} width={250} alt='Logo of the SnapFitter' />
           </div>
-          <h2 className='anton-regular txt-md text-center mb-2 mt-4'>What is your goal?</h2>
+          <p className='anton-regular txt-md text-center mb-2 mt-4'>What is your goal?</p>
           {error && <span className="alert alert-danger error-msg text-center">{error}</span>}
           <Button className={`button btn-select-option mb-4 mt-4 w-100 ${selectedGoal === '1' ? 'active' : ''}`} onClick={() => handleOptionClick('1')}>Gain Muscle</Button>
           <Button className={`button btn-select-option mb-4 w-100 ${selectedGoal === '2' ? 'active' : ''}`} onClick={() => handleOptionClick('2')}>Gain weight</Button>

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FaRegPauseCircle } from 'react-icons/fa';
+import { GrResume } from 'react-icons/gr';
+import { IoIosPause } from 'react-icons/io';
 
 
 interface TimerProps {
@@ -52,11 +55,11 @@ const Timer: React.FC<TimerProps> = ({ onPause, onResume, onEnd }) => {
       
       {isPaused ? (
         <button className="button btn-solid mt-4" onClick={handleResume}>
-          Resume
+          <GrResume /> Resume
         </button>
       ) : (
         <button className="button btn-solid mt-4" onClick={handlePause}>
-          Pause
+          <FaRegPauseCircle /> Pause
         </button>
       )}
       <br />

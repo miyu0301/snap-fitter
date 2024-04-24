@@ -6,7 +6,9 @@ import DefaultLayout from '../partials/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import Cookies from 'js-cookie';
 import { BsEnvelopeFill, BsLockFill, BsPersonFill } from 'react-icons/bs';
-import { FaHome } from 'react-icons/fa';
+import { FaHome, FaRegUser } from 'react-icons/fa';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import { HiOutlineMail } from 'react-icons/hi';
 
 
 interface FormData {
@@ -129,7 +131,7 @@ navigate('/your-goal');
           placeholder="Joe Doe"
           />
           <InputGroup.Text>
-          <BsPersonFill />
+          <FaRegUser />
           </InputGroup.Text>
           </InputGroup>
           {errors.username && <Form.Text className="text-danger">{errors.username}</Form.Text>}
@@ -147,7 +149,7 @@ navigate('/your-goal');
           placeholder="joe@mail.com"          
           />
           <InputGroup.Text>
-          <BsEnvelopeFill />
+          <HiOutlineMail />
           </InputGroup.Text>
           </InputGroup>
           {errors.email && <Form.Text className="text-danger">{errors.email}</Form.Text>}
@@ -167,13 +169,13 @@ navigate('/your-goal');
           autoComplete="password"          
           />
           <InputGroup.Text>
-          <BsLockFill />
+          <RiLockPasswordLine />
           </InputGroup.Text>
           </InputGroup>
           {errors.password && <Form.Text className="text-danger">{errors.password}</Form.Text>}
           </Form.Group>
 
-          <Button type="submit" variant="outline-dark button w-100 mt-2 mb-4">Sign Up</Button>
+          <Button type="submit" className="button outline-button  w-100 mt-2 mb-4" variant="">Sign Up</Button>
 
           </Form>
 

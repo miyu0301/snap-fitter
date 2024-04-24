@@ -152,10 +152,11 @@ function HistoryEditModal({
       {" "}
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Record</Modal.Title>
+          <Modal.Title className="anton-regular">Edit Record</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {" "}
+          <div className="d-flex justify-content-between gap-2">
           <Form.Group className="mb-3" controlId="start_datetime">
             <Form.Label>Start Date Time</Form.Label>
             <DatePicker
@@ -206,9 +207,10 @@ function HistoryEditModal({
               onChange={(e) => handleChange(e)}
             /> */}
           </Form.Group>
+          </div>
           <Form.Group className="mb-3" controlId="pause">
             <Form.Label>Pause</Form.Label>
-            <Form.Control
+            <Form.Control              
               type="number"
               value={formData?.pause}
               onChange={(e) => handleChange(e)}
@@ -241,12 +243,13 @@ function HistoryEditModal({
               })}
             </Form.Select>
           </Form.Group>
+          
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>
+          <Button variant="" className="button btn-outline" onClick={closeModal}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={closeModal}>
+          <Button variant="" className="button btn-solid w-50" type="submit" onClick={closeModal}>
             Save Changes
           </Button>
         </Modal.Footer>

@@ -4,9 +4,10 @@ import { Form, Button } from 'react-bootstrap';
 import { useUser } from '../user/userProvider';
 import { useAuth } from '../auth/AuthProvider';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import logo from '../assets/images/logo_v2.png';
+import logo from '../assets/images/logo_v1.png';
 import { GoArrowLeft } from 'react-icons/go';
 import { FaArrowLeftLong } from 'react-icons/fa6';
+import { common } from "../Common";
 
 const UserPropertiesForm = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const UserPropertiesForm = () => {
   const [birthday, setBirthday] = useState<string>('');
   const [height, setHeight] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
+  
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     gender: '',
     birthday: '',
@@ -108,42 +110,30 @@ const UserPropertiesForm = () => {
       <div className='col-50'>
       <div className="container home-text-container vertical-center-form">
           <div className='text-center'>
-            <img src={logo} width={200} alt='Logo of the app' />
+            <img src={logo} width={250} alt='Logo of the app' />
           </div>
           <Form>
             
             <div className="mb-3">
-            <h2 className='anton-regular txt-md mt-4'>Gender</h2>
-              <Form.Check
-                inline
-                label="Female"
-                name="gender"
-                type="radio"
-                value="1"
-                onChange={handleGenderChange}
-              />
-              <Form.Check
-                inline
-                label="Male"
-                name="gender"
-                type="radio"
-                value="2"
-                onChange={handleGenderChange}
-              />
-              <Form.Check
-                inline
-                label="Other"
-                name="gender"
-                type="radio"
-                value="3"
-                onChange={handleGenderChange}
-              />
+            <p className='anton-regular txt-md mt-4'>Gender</p>
+            {Object.entries(common.GENDER_DICT).map(([key, label]) => (
+            <Form.Check
+            className="radio-button"
+            key={key}
+            inline
+            label={label}
+            name="gender"
+            type="radio"
+            value={key}          
+            onChange={handleGenderChange}
+            />
+            ))}
             {errors.gender && <p className="error-msg alert alert-danger small text-center mt-2">{errors.gender}</p>}
             </div>
 
             
             <div className="mb-3">
-            <h2 className='anton-regular txt-md'>Birthday</h2>
+            <p className='anton-regular txt-md'>Birthday</p>
             <input
               type="date"
               className="date-input w-100 mb-2"
@@ -155,7 +145,7 @@ const UserPropertiesForm = () => {
 
             <div className='d-flex gap-3 mb-2'>
               <div className="input-height w-50">
-                <h2 className='anton-regular txt-md'>Height</h2>
+                <p className='anton-regular txt-md'>Height</p>
                 <input
                   type="text"
                   className="date-input w-100 mb-2"
@@ -167,7 +157,7 @@ const UserPropertiesForm = () => {
               </div>
 
               <div className="input-height w-50">
-                <h2 className='anton-regular txt-md'>Weight</h2>
+                <p className='anton-regular txt-md'>Weight</p>
                 <input
                   type="text"
                   className="date-input w-100 mb-2"

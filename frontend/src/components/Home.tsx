@@ -19,8 +19,8 @@ const Home = () => {
         <p>Log your daily activities and let our app do the math for you.</p>
         <p className='mb-4'>Start taking care of yourself today!</p>
         
-        <Link className="button btn-outline w-50 br-l" to="/sign-up">Sign Up</Link>
-        <Link className="button btn-solid w-50 br-r" to="/sign-in">Sign in</Link>
+        <Link className="button blue-button w-50 br-l " to="/sign-up">Sign Up</Link>
+        <Link className="button outline-button w-50 br-r" to="/sign-in">Sign in</Link>
 
         {/* <Link className="button" to="/profile">Profile</Link>
         <Link className="button" to="/history">History</Link> */}

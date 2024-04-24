@@ -39,23 +39,20 @@ const Welcome = () => {
 
         <div className="col-50">
           <div className="container text-container vertical-center-form">
-            <div className="text-center">
-              <img src={isotype} width={200} alt="Logo of the app" />
-            </div>
-            <h4 className="anton-regular txt-md mb-4 text-center mb-4">
+            <h2 className="anton-regular txt-md mb-4 text-center mb-4">
               Welcome, {dbUser ? dbUser.username : ""}!
-            </h4>
-
-            <h2 className="anton-regular txt-md mb-4 text-center mt-4">
-              What do you want to do today?
             </h2>
+
+            <p className="anton-regular txt-md mb-4 text-center mt-4">
+              What do you want to do today?
+            </p>
             <Link
               to="/record-workout"
-              className="button btn-select-option w-100 mb-4 text-left"
+              className="button outline-button w-100 mb-4 text-left"
             >
               Record Workout
             </Link>
-            <Link to="/history" className="button btn-select-option w-100">
+            <Link to="/history" className="button outline-button w-100">
               History
             </Link>
           </div>

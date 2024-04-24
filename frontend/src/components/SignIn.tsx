@@ -141,7 +141,7 @@ const SignIn = () => {
 
 
               {/* <p className="txt-sm">Forgot your password?</p> */}
-              <Button type="submit" className="button btn-solid w-100 text-center">Enter</Button>
+              <Button type="submit" className="button outline-button w-100 text-center">Enter</Button>
             </Form>
             {/* <Button variant="outline-dark w-100 mt-4">Continue with Google</Button>
             <Button variant="outline-dark w-100 mt-4">Continue with Facebook</Button> */}

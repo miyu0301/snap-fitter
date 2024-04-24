@@ -1,7 +1,6 @@
-import logo from "../assets/images/logo_v2.png";
 import isotype from "../assets/images/isotype.png";
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import UserNavbar from "../partials/navbar";
 import Timer from "./Timer";
 import FloatingButton from "./FloatingButton";
@@ -12,10 +11,8 @@ import { fetchExercises } from "./Exercises/exercises";
 import { common } from "../Common";
 import { API_URL } from "../auth/AuthConstants";
 import { Link } from "react-router-dom";
-import { FaPlay, FaRunning } from "react-icons/fa";
-import { MdOutlineTimer } from "react-icons/md";
-import { LuFlame } from "react-icons/lu";
 import { GoFlame } from "react-icons/go";
+import { MdOutlineTimer } from "react-icons/md";
 
 type Workout = {
   user_id: number | null;
@@ -39,11 +36,11 @@ const RecordWorkout: React.FC = () => {
   const [activities, setActivities] = useState<[] | any>([]); //store activities from api
   const [selectedActivity, setSelectedActivity] = useState<string>(""); //store the activity selected by the user
   const [selectedActivityName, setSelectedActivityName] = useState<string>("");
-  const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Estado de pausa del temporizador
+  const [isWokoutEnd, setIsWokoutEnd] = useState(false); // Timer pause status
 
-  const [startDateTime, setStartDateTime] = useState<Date | null>(null); // Estado de pausa del temporizador
-  const [endDateTime, setEndDateTime] = useState<Date | null>(null); // Estado de pausa del temporizador
-  const [pauseDuration, setPauseDuration] = useState<Date | null>(null); // Estado de pausa del temporizador
+  const [startDateTime, setStartDateTime] = useState<Date | null>(null);
+  const [endDateTime, setEndDateTime] = useState<Date | null>(null); 
+  const [pauseDuration, setPauseDuration] = useState<Date | null>(null);
 
   const [calories, setCalories] = useState<null | number>(null);
 
@@ -56,6 +53,17 @@ const RecordWorkout: React.FC = () => {
     pause: 0,
     burned_calories: null,
   });
+
+  // Status to store the current status message
+  const [statusMessage, setStatusMessage] = useState<string>("");
+  
+  // State to control the visibility of the loader
+  //const [showLoader, setShowLoader] = useState(false);
+
+  // Function to update the status message
+  const updateStatusMessage = (message: string) => {
+    setStatusMessage(message);
+  };
 
   useEffect(() => {
     /// Getting the user data
@@ -90,6 +98,12 @@ const RecordWorkout: React.FC = () => {
     }
   }, [activities]);
 
+  useEffect(() => {
+    if (showTimer) {
+      updateStatusMessage(`Countdown started!\nYou can do it!`);
+    }
+  }, [showTimer]);
+
   const handleStartClick = () => {
     setShowTimer(true); // Show timer
     const start_datetime = new Date();
@@ -101,15 +115,18 @@ const RecordWorkout: React.FC = () => {
   };
 
   const handlePauseClick = () => {
+    updateStatusMessage("Countdown paused. Click 'Resume' to continue.");
     if (!workout.pauseStartTime) {
       setWorkout({
         ...workout,
         pauseStartTime: new Date(),
       });
+      
     }
   };
 
   const handleResumeClick = () => {
+    updateStatusMessage("Countdown resumed! Keep strong!");
     if (workout.pauseStartTime) {
       const pauseEndTime = new Date();
       const pauseDuration = Math.floor(
@@ -120,11 +137,15 @@ const RecordWorkout: React.FC = () => {
         pause: workout.pause + pauseDuration,
       });
       setPauseDuration(workout.pause + pauseDuration);
+      
     }
   };
 
   const handleEndClick = async () => {
-    console.log({ workout });
+    updateStatusMessage(`We're crunching the numbers...`)
+   
+    //setShowLoader(true); // Show the loader before showing the workout result
+    
     const endTime = new Date();
     setWorkout((prevWorkout) => ({
       ...prevWorkout,
@@ -144,7 +165,7 @@ const RecordWorkout: React.FC = () => {
     const burnedCalories = await caloriesBurned(
       selectedActivityName,
       durationMinutes
-    ); /// llamada a la función asincrona para realizar el
+    );
 
     setWorkout({
       ...workout,
@@ -156,6 +177,9 @@ const RecordWorkout: React.FC = () => {
     setIsWokoutEnd(true);
     setShowWorkoutTime(true);
     setWorkoutTime(duration);
+
+    updateStatusMessage("Ta-da! Your results are in! 🚀!");
+    //setShowLoader(false);
   };
 
   const caloriesBurned = async (
@@ -166,7 +190,7 @@ const RecordWorkout: React.FC = () => {
       const response = await calculateCaloriesBurned(
         selectedActivityName,
         duration
-      ); //función que gestiona la llamada a una api
+      );
       return response[0].total_calories;
     } catch (error) {
       console.error("Error calculating calories:", error);
@@ -179,7 +203,7 @@ const RecordWorkout: React.FC = () => {
     const selectedOption = event.target.selectedOptions[0];
     const name = selectedOption.getAttribute("data-name");
     setSelectedActivity(event.target.value);
-    setSelectedActivityName(name ? name : ""); // Si el atributo data-name está presente, establece el valor; de lo contrario, establece
+    setSelectedActivityName(name ? name : "");
 
     setWorkout({
       ...workout,
@@ -188,7 +212,6 @@ const RecordWorkout: React.FC = () => {
   };
 
   const saveRecordToDatabase = async (workout: Workout) => {
-    console.log({ workout });
     try {
       const response = await fetch(`${API_URL}/exercise`, {
         method: "POST",
@@ -221,7 +244,6 @@ const RecordWorkout: React.FC = () => {
   };
 
   useEffect(() => {
-    //console.log(workout)
     if (isWokoutEnd && calories && endDateTime !== null) {
       const workOutBack = {
         ...workout,
@@ -263,9 +285,13 @@ const RecordWorkout: React.FC = () => {
         <div className="col-50">
           <div className="container text-container align-items-center vertical-center-form">
             <div className="w-100">
-              <div className="text-center mb-4">
-                <img src={isotype} width={200} alt="Logo of the app" />
-              </div>
+              {statusMessage && (
+                <div className="text-center mb-3">
+                  <p className="text-info">{statusMessage}</p>
+                </div>
+              )}
+
+
 
               {!showTimer && !showWorkoutTime ? (
                 <>
@@ -313,14 +339,20 @@ const RecordWorkout: React.FC = () => {
               )}
               {showWorkoutTime && (
                 <div className="text-center">
-                  <p className="mb-0 pb-0">Duration:</p>
-                  <h2 className="anton-regular">
-                    <MdOutlineTimer className="svg-fill" /> {workoutTime}{" "}
-                  </h2>
-                  <p className="mt-4 mb-0 pb-0">Calories:</p>
-                  <h2 className="anton-regular">
-                    <GoFlame className="svg-fill" /> {workout?.burned_calories}
-                  </h2>
+                  <div className="d-flex justify-content-center align-items-center gap-4">
+                    <div className="duration">
+                      <p className="mb-0 pb-0">Duration</p>
+                      <h2 className="anton-regular">
+                        <MdOutlineTimer className="svg-fill" /> {workoutTime}{" "}
+                      </h2>
+                    </div>
+                    <div className="calories">
+                      <p className="mb-0 pb-0">Calories</p>
+                      <h2 className="anton-regular">
+                        <GoFlame className="svg-fill" /> {workout?.burned_calories}
+                      </h2>
+                    </div>
+                  </div>
                   <Button
                     className="btn-solid button bg-dark text-white mt-4 w-50"
                     onClick={handleStartNewRecord}
