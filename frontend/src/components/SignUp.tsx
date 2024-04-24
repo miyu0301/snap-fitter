@@ -113,7 +113,7 @@ navigate('/your-goal');
           <div className='text-center'>
             <Link to="/"><img src={logo} width={250} alt='Logo of the app' /></Link>
           </div>
-          <p className='txt-ms text-center'>Create an account</p>
+          <p className='txt-ms text-center anton-regular mt-2'>Create an account</p>
           
           <Form className='form-w' onSubmit={handleSubmit}>
             

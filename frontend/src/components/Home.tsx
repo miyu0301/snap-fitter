@@ -13,8 +13,8 @@ const Home = () => {
 
         <div className='col-right'>
         <div className="container home-text-container">
-        <p className='anton-regular uppercase mb-0'>Welcome to</p>
-        <h1 className='anton-regular txt-lg'><img src={logo} width={300} alt='Logo of the app' /></h1>
+        {/* <p className='anton-regular uppercase mb-0'>Welcome to</p> */}
+        <h1 className='anton-regular txt-lg'><img src={logo} width={350} alt='Logo of the app' /></h1>
         <p>Your personalized calorie calculator and activity tracker in one place.</p>
         <p>Log your daily activities and let our app do the math for you.</p>
         <p className='mb-4'>Start taking care of yourself today!</p>

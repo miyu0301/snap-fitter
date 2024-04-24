@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import logo from '../assets/images/logo_v2.png';
 import { GoArrowLeft } from 'react-icons/go';
+import { FaArrowLeftLong } from 'react-icons/fa6';
 
 const UserPropertiesForm = () => {
   const navigate = useNavigate();
@@ -181,7 +182,7 @@ const UserPropertiesForm = () => {
 
           <Button className="btn-solid button bg-dark text-white w-100 mt-2" onClick={handleNextClick}>Next<MdOutlineNavigateNext /></Button>
 
-          <Link to="/your-level" className="link mt-4 text-center small"><GoArrowLeft />Back</Link>
+          <Link to="/your-level" className="link mt-4 text-center small"><FaArrowLeftLong /> Back</Link>
         </div>
       </div>
 

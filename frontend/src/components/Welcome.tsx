@@ -40,9 +40,9 @@ const Welcome = () => {
           <div className='text-center'>
             <img src={isotype} width={200} alt='Logo of the app' />
           </div>
-            <h4 className='anton-regular txt-md mb-4 text-center mb-4'>Welcome, {dbUser ? dbUser.username : ''}!</h4>
+            <h2 className='anton-regular txt-md mb-4 text-center mb-4'>👋 Welcome, {dbUser ? dbUser.username : ''}!</h2>
 
-            <h2 className='anton-regular txt-md mb-4 text-center mt-4'>What do you want to do today?</h2>
+            <h4 className='anton-regular txt-md mb-4 text-center mt-4'>What do you want to do today?</h4>
             <Link to="/record-workout" className="button btn-select-option w-100 mb-4 text-left">Record Workout</Link>
             <Link to="/history" className="button btn-select-option w-100">History</Link>
           </div>
